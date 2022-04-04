@@ -42,7 +42,4 @@ def LinearSVM(svs, classes):
     print("hyperplane(the first term is w1 and the last one is w0): \n", hyperplane)
 
 
-svs = [[1, 1], [1, -1], [-1, 1], [-1, -1]]
-classes = [1 , 1, -1, -1]
 
-LinearSVM(svs, classes)
