@@ -68,3 +68,17 @@ table = np.asarray([
     [1,1,-1,1]
 ])
 print(adaboost(len(table), X, y, table))
+
+
+def bagging_algo(output_class, classfier_table):
+    result = classfier_table.copy().sum(axis=0)
+    result[result>=0]=1
+    result[result<0]=-1
+    training_error=0.0
+    n = len(output_class)
+    for i in range(n):
+        if result[i] != output_class[i]:
+            training_error += (1.0/n)
+    print(f"result:{result}, training error is {training_error}")
+
+bagging_algo(y, table)
