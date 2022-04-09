@@ -1,6 +1,9 @@
 import numpy as np
 import random
 
+import pandas as pd
+
+
 def k_means(datapoint, c, cluster_point=None, randomized=False):
     data = datapoint.copy()
     num_cluster = c
@@ -304,11 +307,82 @@ def fuzzyKMeans(dataset, numCluster, initial_membership, b, criteria):
                 old_cluster_point = cluster_point.copy()
         round+=1
 
-dataset = np.asarray([[-1, 3], [1, 4], [0, 5], [4, -1], [3, 0], [5, 1]])
-u = [[1, 0], [0.5, 0.5], [0.5, 0.5], [0.5, 0.5], [0.5, 0.5], [0, 1]]
-fuzzyKMeans(dataset=dataset, numCluster=2, initial_membership=u, b=2, criteria=0.5)
+# dataset = np.asarray([[-1, 3], [1, 4], [0, 5], [4, -1], [3, 0], [5, 1]])
+# u = [[1, 0], [0.5, 0.5], [0.5, 0.5], [0.5, 0.5], [0.5, 0.5], [0, 1]]
+# fuzzyKMeans(dataset=dataset, numCluster=2, initial_membership=u, b=2, criteria=0.5)
 
 
+from sklearn.metrics.pairwise import euclidean_distances
+def agglomerative_clustering(dataset, numCluster, link_type=None):
+    # link_type--> "single", "complete", "average" (還有complete 跟average)
+    distance_matrix = euclidean_distances(dataset, dataset)
+    distance_matrix = np.tril(distance_matrix)
+    distance_matrix[distance_matrix==0] = np.inf
+    print(distance_matrix)
+    df = pd.DataFrame(data=np.ones(dataset.shape[0])*np.inf) # initialized dataframe
+    # error handling if numCluster is over needed
+    if numCluster > distance_matrix.shape[0]:
+        print("Reconsider the number of clusters!")
+        numCluster = distance_matrix.shape[0]
+
+    if link_type == "single":
+        d = {}  # This dictionary keeps record of which data points or cluster are merging
+        for i in range(0, numCluster):
+            print(f"=======Iteration {i+1} Started========")
+            print(f"The minimum value founded is {np.min(distance_matrix)}")
+            #argmin returns the indexes of the first occureneces of the minimum values in flattened matrix
+            ij_min = np.unravel_index(distance_matrix.argmin(),
+                                      distance_matrix.shape)  # from the distance matrix, get the minimum distance
+            # np.unravel_index gives us the position of minimum distance. e.g. (1,2) and (0,1) is where minimum value is present in matrix.
+            # This is what we need as in Hierarchical clustering, we merge the two pairs with minimum distance
+            if i == 0:
+                df.iloc[ij_min[0]] = 0
+                df.iloc[ij_min[1]] = 0
+                print(f"df is {df}")
+            else:
+                try:
+                    a = int(df.iloc[ij_min[0]])
+
+                except:
+                    df.iloc[ij_min[0]] = i
+                    a = i
+
+                try:
+                    b = int(df.iloc[ij_min[1]])
+                except:
+                    df.iloc[ij_min[1]] = i
+                    b = i
+                df[(df[0] == a) | (df[0] == b)] = i
+                print(df)
+            d[i] = ij_min
+            print(f"d is {d}")
+            # The if, else code till here is just filling the dataframe as the two points/clusters combine.
+            # So, for example if 1 and 2 combines, dataframe will have 1 : 0, 2 : 0. Which means point 1 and 2 both are in same cluster (0th cluster)
+            for j in range(0, ij_min[0]):
+                # we want to ignore the diagonal, and diagonal is 0. We replaced 0 by infinte.
+                # So this if condition will skip diagonals
+                if np.isfinite(distance_matrix[ij_min[0]][j]) and np.isfinite(distance_matrix[ij_min[1]][j]):
+                    # after two points/cluster are linked, to calculate new distance we take minimum distance for single linkage
+                    distance_matrix[ij_min[1]][j] = min(distance_matrix[ij_min[0]][j], distance_matrix[ij_min[1]][j])
+            # To avoid the combined data points/cluster in further calculations, we make them infinte.
+            # Our if loop above this, will therefore skip the infinite record entries.
+            distance_matrix[ij_min[0]] = np.inf
+
+            # print out the information we need
+            print(f"Combine datapoint {dataset[d[i][0]]} and datapoint {dataset[d[i][1]]}")
+
+
+        return d, df[0].to_numpy()
+
+
+
+
+hdataset = np.asarray([[-1, 3], [1, 2], [0, 1], [4, 0], [5, 4], [3, 2]])
+
+d , df = agglomerative_clustering(dataset= hdataset, numCluster= 3, link_type="single")
+print("=====Return value 會看不懂沒關系 我會解釋======")
+print(d)
+print(df)
 
 def euclidean_distance(cluster, datapoint):
     """
