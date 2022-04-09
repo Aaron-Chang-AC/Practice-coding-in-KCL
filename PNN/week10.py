@@ -374,6 +374,67 @@ def agglomerative_clustering(dataset, numCluster, link_type=None):
 
         return d, df[0].to_numpy()
 
+    elif link_type == "complete":
+        d_complete = {}
+        for i in range(0, numCluster):
+            ij_min = np.unravel_index(distance_matrix.argmin(), distance_matrix.shape)
+            if i == 0:
+                df.iloc[ij_min[0]] = 0
+                df.iloc[ij_min[1]] = 0
+            else:
+                try:
+                    a = int(df.iloc[ij_min[0]])
+                except:
+                    df.iloc[ij_min[0]] = i
+                    a = i
+                try:
+                    b = int(df.iloc[ij_min[1]])
+                except:
+                    df.iloc[ij_min[1]] = i
+                    b = i
+                df[(df[0] == a) | (df[0] == b)] = i
+            d_complete[i] = ij_min
+            for j in range(0, ij_min[0]):
+                if np.isfinite(distance_matrix[ij_min[0]][j]) and np.isfinite(distance_matrix[ij_min[1]][j]):
+                    # after two points/cluster are linked, to calculate new distance we take maximum distance for complete linkage
+                    distance_matrix[ij_min[1]][j] = max(distance_matrix[ij_min[0]][j], distance_matrix[ij_min[1]][j])
+            distance_matrix[ij_min[0]] = np.inf
+
+            print(f"Combine datapoint {dataset[d_complete[i][0]]} and datapoint {dataset[d_complete[i][1]]}")
+
+        return d_complete, df[0].to_numpy()
+
+    
+    elif link_type == "average":
+        d_average = {}
+        for i in range(0, numCluster):
+            ij_min = np.unravel_index(distance_matrix.argmin(), distance_matrix.shape)
+            if i == 0:
+                df.iloc[ij_min[0]] = 0
+                df.iloc[ij_min[1]] = 0
+            else:
+                try:
+                    a = int(df.iloc[ij_min[0]])
+                except:
+                    df.iloc[ij_min[0]] = i
+                    a = i
+                try:
+                    b = int(df.iloc[ij_min[1]])
+                except:
+                    df.iloc[ij_min[1]] = i
+                    b = i
+                df[(df[0] == a) | (df[0] == b)] = i
+            d_average[i] = ij_min
+            for j in range(0, ij_min[0]):
+                if np.isfinite(distance_matrix[ij_min[0]][j]) and np.isfinite(distance_matrix[ij_min[1]][j]):
+                    # after two points/cluster are linked, to calculate new distance we take average distance for average linkage
+                    distance_matrix[ij_min[1]][j] = (distance_matrix[ij_min[0]][j] + distance_matrix[ij_min[1]][
+                        j]) / 2.0
+            distance_matrix[ij_min[0]] = np.inf
+
+            print(f"Combine datapoint {dataset[d_average[i][0]]} and datapoint {dataset[d_average[i][1]]}")
+
+        return d_average, df[0].to_numpy()
 
 
 
