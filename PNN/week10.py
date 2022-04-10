@@ -404,7 +404,7 @@ def agglomerative_clustering(dataset, numCluster, link_type=None):
 
         return d_complete, df[0].to_numpy()
 
-    
+
     elif link_type == "average":
         d_average = {}
         for i in range(0, numCluster):
@@ -441,7 +441,7 @@ def agglomerative_clustering(dataset, numCluster, link_type=None):
 hdataset = np.asarray([[-1, 3], [1, 2], [0, 1], [4, 0], [5, 4], [3, 2]])
 
 d , df = agglomerative_clustering(dataset= hdataset, numCluster= 3, link_type="single")
-print("=====Return value 會看不懂沒關系 我會解釋======")
+print("=====Return value ======")
 print(d)
 print(df)
 
