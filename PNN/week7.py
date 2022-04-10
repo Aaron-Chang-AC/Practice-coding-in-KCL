@@ -177,7 +177,6 @@ def sparse_coding(V, x, y_t):
     print(f"best sparse code: y_t{np.argmin(error_result)+1}")
 
 
-
 V = np.asarray([[0.4, -0.6],
               [0.55, -0.45],
               [0.5, -0.5],
