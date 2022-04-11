@@ -95,7 +95,7 @@ def minibatch_GAN(k, num_iteration,learning_rate,Dx,X,X_fake,thetas):
                     ex1_f += (1 / n) * diff(discriminate_loss,variable_dict['t' + str(j + 1)]).subs(subs_list_discriminator)
                     ex1_f += (1 / n) * diff(generate_fake_loss,variable_dict['t' + str(j + 1)]).subs(subs_list_generator)
                     result_list[j] = np.add(result_list[j],ex1_f)
-            print(result_list)
+            print(f"Discrminator stochastic gradient:{result_list}")
 
 
             # update theta
@@ -103,7 +103,6 @@ def minibatch_GAN(k, num_iteration,learning_rate,Dx,X,X_fake,thetas):
             print(f"Updated discriminator: {thetas}")
 
 
-minibatch_GAN(k=1, num_iteration=1,learning_rate=0.02, Dx=Dx,X = X,X_fake=X_fake,thetas=thetas)
+minibatch_GAN(num_iteration=1, k=1, learning_rate=0.02, Dx=Dx,X = X,X_fake=X_fake,thetas=thetas)
 # gan(Dx,X,X_fake,thetas)
 
-# print(f_d.subs([(x1, X[0,0]), (x2,  X[0,1]), (t1, thetas[0]), (t2, thetas[1])]))
