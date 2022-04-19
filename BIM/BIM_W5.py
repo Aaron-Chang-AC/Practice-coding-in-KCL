@@ -36,11 +36,11 @@ def check_nodes_in_df(input, df_bidirectional, num_nodes):
     return weight
 
 def TSP():
-    df = read_graph_from_csv()
-    num_nodes = df[['node1','node2']].max().max()+1
+    df = read_graph_from_csv().drop_duplicates(ignore_index=True)
+    num_nodes = df[['node1', 'node2']].max().max() - df[['node1', 'node2']].min().min()+ 1
     print(f"Graph:\n{df}")
     print(f"number of nodes: {num_nodes}")
-    index_list = np.asarray(range(num_nodes))
+    index_list = np.sort(np.asarray(list(set(df['node1'].to_numpy())|set(df['node2'].to_numpy()))))
     permutation_arr = np.asarray(list(itertools.permutations(index_list[1:])))
     temp_arr = np.empty(shape=[0, num_nodes-1])
     temp_arr = np.append(temp_arr, [permutation_arr[0]], axis=0)
@@ -53,16 +53,19 @@ def TSP():
         else:
             temp_arr = np.append(temp_arr, [i.copy()], axis=0)
     
-    solution_arr = np.zeros((len(temp_arr),1))
+    solution_arr = np.full((len(temp_arr),1),index_list[0])
     solution_arr = np.append(solution_arr, temp_arr, axis = 1)
-    solution_arr = np.append(solution_arr, np.zeros((len(temp_arr),1)), axis=1).astype(np.int8)
+    solution_arr = np.append(solution_arr, np.full((len(temp_arr),1),index_list[0]), axis=1).astype(np.int8)
 
     print(f"number of tours: {len(solution_arr)}")
+
     edge_temp = df[['node1','node2']].to_numpy()
     EDGES = np.append(edge_temp,df[['node2','node1']].to_numpy(), axis=0)
     weights_temp = df['weight'].to_numpy()
     weights = np.append(weights_temp,df['weight'].to_numpy())
     df_bidirectional = pd.DataFrame({'node1': EDGES[:,0], 'node2': EDGES[:,1], 'weight': weights})
+    df_bidirectional = df_bidirectional.drop_duplicates(ignore_index=True)
+    print(f"number of edges: {int(len(df_bidirectional)/2)}")
     
     minimum_cost=np.Inf
     solution_weight_sum = []
@@ -84,15 +87,17 @@ def TSP():
     print(f"probability of finding an optimum tour when generating a tour at random: {float(opt_solution_cnt)/len(solution_arr)}")
 
 def nearest_neighbour_heuristic(starting_city=None):
-    df = read_graph_from_csv()
-    num_nodes = df[['node1', 'node2']].max().max() + 1
+    df = read_graph_from_csv().drop_duplicates(ignore_index=True)
+    num_nodes = df[['node1', 'node2']].max().max() - df[['node1', 'node2']].min().min()+ 1
     print(f"Graph:\n{df}")
-    print(f"number of nodes: {num_nodes}\nnumber of edges: {len(df)}")
+    print(f"number of nodes: {num_nodes}")
     edge_temp = df[['node1', 'node2']].to_numpy()
     EDGES = np.append(edge_temp, df[['node2', 'node1']].to_numpy(), axis=0)
     weights_temp = df['weight'].to_numpy()
     weights = np.append(weights_temp, df['weight'].to_numpy())
     df_bidirectional = pd.DataFrame({'node1': EDGES[:, 0], 'node2': EDGES[:, 1], 'weight': weights})
+    df_bidirectional = df_bidirectional.drop_duplicates(ignore_index=True)
+    print(f"number of edges: {int(len(df_bidirectional) / 2)}")
     tour_list=[]
     tour_list.append(starting_city)
     tour_list_index=0
@@ -113,15 +118,18 @@ def nearest_neighbour_heuristic(starting_city=None):
     print(f"total cost: {check_nodes_in_df(tour_list, df_bidirectional, num_nodes)}")
 
 def insersion_heuristic(starting_cities=None):
-    df = read_graph_from_csv()
-    num_nodes = df[['node1', 'node2']].max().max() + 1
+    df = read_graph_from_csv().drop_duplicates(ignore_index=True)
+    num_nodes = df[['node1', 'node2']].max().max() - df[['node1', 'node2']].min().min()+ 1
+    index_list = np.sort(np.asarray(list(set(df['node1'].to_numpy()) | set(df['node2'].to_numpy()))))
     print(f"Graph:\n{df}")
-    print(f"number of nodes: {num_nodes}\nnumber of edges: {len(df)}\n\n")
+    print(f"number of nodes: {num_nodes}")
     edge_temp = df[['node1', 'node2']].to_numpy()
     EDGES = np.append(edge_temp, df[['node2', 'node1']].to_numpy(), axis=0)
     weights_temp = df['weight'].to_numpy()
     weights = np.append(weights_temp, df['weight'].to_numpy())
     df_bidirectional = pd.DataFrame({'node1': EDGES[:, 0], 'node2': EDGES[:, 1], 'weight': weights})
+    df_bidirectional = df_bidirectional.drop_duplicates(ignore_index=True)
+    print(f"number of edges: {int(len(df_bidirectional) / 2)}")
     tour_list = starting_cities.copy()
     tour_list_index = 0
     cnt = len(tour_list)
@@ -129,8 +137,8 @@ def insersion_heuristic(starting_cities=None):
     while cnt < num_nodes:
         choices = {}
         minimum_weight = np.Inf
-        next_city = 0
-        unvisited_city = set(range(num_nodes)) ^ set(tour_list)
+        next_city = int(index_list[0])
+        unvisited_city = set(index_list) ^ set(tour_list)
         for i in unvisited_city:
             for j in range(1,len(tour_list)):
                 if len(choices) == 0:
@@ -155,16 +163,18 @@ def insersion_heuristic(starting_cities=None):
 
 def two_change_TSP(input_config=None):
     print(f"initial config: {input_config}")
-    df = read_graph_from_csv()
-    num_nodes = df[['node1', 'node2']].max().max() + 1
+    df = read_graph_from_csv().drop_duplicates(ignore_index=True)
+    num_nodes = df[['node1', 'node2']].max().max() - df[['node1', 'node2']].min().min()+ 1
     print(f"Graph:\n{df}")
-    print(f"number of nodes: {num_nodes}\nnumber of edges: {len(df)}")
+    print(f"number of nodes: {num_nodes}")
     edge_temp = df[['node1', 'node2']].to_numpy()
     EDGES = np.append(edge_temp, df[['node2', 'node1']].to_numpy(), axis=0)
     weights_temp = df['weight'].to_numpy()
     weights = np.append(weights_temp, df['weight'].to_numpy())
     df_bidirectional = pd.DataFrame({'node1': EDGES[:, 0], 'node2': EDGES[:, 1], 'weight': weights})
+    df_bidirectional = df_bidirectional.drop_duplicates(ignore_index=True)
     result_tour_list=[]
+    print(f"number of edges: {int(len(df_bidirectional) / 2)}")
 
     for i in range(num_nodes):
         node1 = input_config[i]
@@ -235,4 +245,3 @@ two_change_TSP(input_config=np.asarray([0,1,2,3,4,0]))
 calculate the nearest_neighbour_heuristic tour with given starting_cities which is a tour
 insersion_heuristic(starting_cities=np.asarray([0,2,1,0]))
 '''
-
