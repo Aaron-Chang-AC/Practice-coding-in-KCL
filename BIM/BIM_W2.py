@@ -114,6 +114,8 @@ def branch_bound_knapsack_problem(input,maximum_weight):
         if solution_profit >= max:
             true_max_solution = max_solution.copy()
             max = solution_profit
+            true_max_solution_upperbound = max_upper_bound # roger
+            true_max_solution_weight = solution_weight # roger
         
         if max_upper_bound<max:
             break
