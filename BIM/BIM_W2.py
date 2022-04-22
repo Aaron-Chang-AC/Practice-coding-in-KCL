@@ -46,7 +46,9 @@ def greedy(input,solution,maximum_weight):
     for i in input:
         if int(i[0]) not in solution:
             temp[int(i[0])] = i[1] / i[2]
-
+    
+    if (len(temp)==0) or (current_weights>=maximum_weight):
+        return current_profits
     max_key = max(temp, key=temp.get)
     # print(current_profits,max_key)
     temp = {k: v for k, v in sorted(temp.items(), key=lambda item: item[1],reverse=True)}
