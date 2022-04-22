@@ -75,6 +75,21 @@ def extract_max(input,solution_dict,maximum_weight):
             max_solution=solution_dict[i].copy()
     return max_solution, max_upper_bound
 
+def see_solution_detail(input,solution,maximum_weight):
+    profit = get_profit_from_solution(solution,input)
+    weight = get_weight_from_solution(solution, input)
+    upperbound = greedy(input,solution,maximum_weight)
+    print(f"solution: {solution}")
+    if (weight > maximum_weight) and not math.isclose(weight,maximum_weight):
+        print(f"solution profit: {profit}")
+        print(f"solution weight: {weight} > {maximum_weight} (INF)")
+        print(f"solution upperbound: N/A")
+    else:
+        print(f"solution profit: {profit}")
+        print(f"solution weight: {weight}")
+        print(f"solution upperbound: {upperbound}")
+    return
+
 def branch_bound_knapsack_problem(input,maximum_weight):
     solution_dict={}
     visited_solution_dict={}
@@ -178,4 +193,20 @@ input = np.asarray([
     [3, 6, 3],
     [4, 5, 10]
 ], dtype=np.float32)
+
 branch_bound_knapsack_problem(input,maximum_weight=15.0)
+print("\n")
+see_solution_detail(input=input,solution=set([1]),maximum_weight=15.0)
+see_solution_detail(input=input,solution=set([2]),maximum_weight=15.0)
+see_solution_detail(input=input,solution=set([3]),maximum_weight=15.0)
+see_solution_detail(input=input,solution=set([4]),maximum_weight=15.0)
+see_solution_detail(input=input,solution=set([1,2]),maximum_weight=15.0)
+see_solution_detail(input=input,solution=set([1,3]),maximum_weight=15.0)
+see_solution_detail(input=input,solution=set([2,3]),maximum_weight=15.0)
+see_solution_detail(input=input,solution=set([2,4]),maximum_weight=15.0)
+see_solution_detail(input=input,solution=set([3,4]),maximum_weight=15.0)
+see_solution_detail(input=input,solution=set([4,1]),maximum_weight=15.0)
+see_solution_detail(input=input,solution=set([1,2,3]),maximum_weight=15.0)
+see_solution_detail(input=input,solution=set([1,2,4]),maximum_weight=15.0)
+see_solution_detail(input=input,solution=set([1,3,4]),maximum_weight=15.0)
+see_solution_detail(input=input,solution=set([2,3,4]),maximum_weight=15.0)
