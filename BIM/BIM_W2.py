@@ -101,7 +101,8 @@ def branch_bound_knapsack_problem(input,maximum_weight):
     print(f"\ninitial_solution_dict:\n{solution_dict}")
     max = -np.Inf
     true_max_solution = set([])
-
+    true_max_solution_upperbound = 0 # roger
+    true_max_solution_weight = 0 # roger
     while len(solution_dict) > 0:
         print(f"\n-----------------current_solution_dict:-----------------\n{solution_dict}")
         max_solution, max_upper_bound = extract_max(input, solution_dict, maximum_weight)
@@ -140,6 +141,8 @@ def branch_bound_knapsack_problem(input,maximum_weight):
                 if profit_i>=max:
                     max=profit_i
                     true_max_solution=temp_candidate_solution[i].copy()
+                    true_max_solution_upperbound = max_upper_bound # roger
+                    true_max_solution_weight = weight_i # roger
             elif not check_set_in_dict(temp_candidate_solution[i],printed_solution_dict):
                 print(f"invalid solution!!: {temp_candidate_solution[i]} , profit: {profit_i} , weight: {weight_i}\n")
                 printed_solution_dict[cnt_p] = temp_candidate_solution[i].copy()
@@ -153,8 +156,12 @@ def branch_bound_knapsack_problem(input,maximum_weight):
             k = len(new_solution_dict)
             new_solution_dict[k]=solution_dict[i]
         solution_dict = new_solution_dict
+
+    print("============Final Result=============")
     print(f"true_max_solution:\n{true_max_solution}")
     print(f"maximum profit: {max}")
+    print(f"true_max_solution_weight: {true_max_solution_weight}") #roger
+    print(f"true_max_solution_upper_bound: {true_max_solution_upperbound}") # roger
     return
     
 # input = np.asarray([
@@ -169,4 +176,4 @@ input = np.asarray([
     [3, 6, 3],
     [4, 5, 10]
 ], dtype=np.float32)
-branch_bound_knapsack_problem(input,maximum_weight=16.0)
+branch_bound_knapsack_problem(input,maximum_weight=15.0)
