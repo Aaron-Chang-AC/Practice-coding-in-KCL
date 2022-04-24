@@ -116,6 +116,7 @@ def nearest_neighbour_heuristic(starting_city=None):
     tour_list = np.asarray(tour_list)
     print(f"the tour from nearest_neighbour_heuristic:({starting_city} is the first node)\n{tour_list}")
     print(f"total cost: {check_nodes_in_df(tour_list, df_bidirectional, num_nodes)}")
+    return tour_list
 
 def insersion_heuristic(starting_cities=None):
     df = read_graph_from_csv().drop_duplicates(ignore_index=True)
@@ -160,6 +161,7 @@ def insersion_heuristic(starting_cities=None):
 
     print(f"\n\nthe tour from insersion_heuristic:({tour_list[0]} is the first node)\n{tour_list}")
     print(f"total cost: {check_nodes_in_df(tour_list, df_bidirectional, num_nodes)}")
+    return tour_list
 
 def two_change_TSP(input_config=None):
     print(f"initial config: {input_config}")
@@ -201,7 +203,25 @@ def two_change_TSP(input_config=None):
             print(f"solution {i+1}: {result_tour_list[i].tolist()}, total_weight: {solution_weight_sum[i]}")
     print(f"minimum cost of the neighbours: {minimum_cost}")
     return result_tour_list
-    
+
+def number_to_alphabet(alphabet_list = None, input_num_list = None):
+    # input alpha = ["a", "b", "c", "d", "e"]
+    dicts = {}
+    keys_len = len(alphabet_list)
+    result_list = []
+    # create indexing alphabet dictionary
+    for i in range(keys_len):
+        dicts[i] = alphabet_list[i]
+    # check whether input num list is out of index
+    if max(dicts, key=int) < max(input_num_list):
+        print(f"List index out of range: Largest index in alphabet is {max(dicts, key=int)}, got max of {max(input_num_list)} instead")
+
+    for i in input_num_list:
+        for j in list(dicts.keys()):
+            if j==i:
+                result_list.append(list(dicts.values())[j])
+    print(result_list)
+    return result_list
 # EXECUTION_________________________
 '''
 if there are given coordinates for cities, produce a csv file for graph first!!
@@ -245,3 +265,20 @@ two_change_TSP(input_config=np.asarray([0,1,2,3,4,0]))
 calculate the nearest_neighbour_heuristic tour with given starting_cities which is a tour
 insersion_heuristic(starting_cities=np.asarray([0,2,1,0]))
 '''
+# two_change_TSP(input_config=np.asarray([0, 2, 1, 6, 3, 7, 4, 8, 5, 0]))
+
+
+
+"""
+Change number index to alphabet
+number_to_alphabet(alphabet_list = ["a","b","c","e"], input_num_list = [0, 2, 3, 1, 3, 2, 3, 0])
+
+"""
+
+# insertion_tour_list = insersion_heuristic(starting_cities=np.asarray([0,2,1,0]))
+nearest_tour_list = nearest_neighbour_heuristic(starting_city=0)
+
+number_to_alphabet(alphabet_list = ["a","b","c","d","e","f","g","h","k"], input_num_list = nearest_tour_list)
+
+
+
