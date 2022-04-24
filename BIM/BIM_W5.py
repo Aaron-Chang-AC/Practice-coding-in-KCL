@@ -212,15 +212,30 @@ def number_to_alphabet(alphabet_list = None, input_num_list = None):
     # create indexing alphabet dictionary
     for i in range(keys_len):
         dicts[i] = alphabet_list[i]
-    # check whether input num list is out of index
-    if max(dicts, key=int) < max(input_num_list):
-        print(f"List index out of range: Largest index in alphabet is {max(dicts, key=int)}, got max of {max(input_num_list)} instead")
+    if isinstance(input_num_list[0], np.int32):
+        # check whether input num list is out of index
+        if max(dicts, key=int) < max(input_num_list):
+            print(f"List index out of range: Largest index in alphabet is {max(dicts, key=int)}, got max of {max(input_num_list)} instead")
 
-    for i in input_num_list:
-        for j in list(dicts.keys()):
-            if j==i:
-                result_list.append(list(dicts.values())[j])
-    print(f"Tour in alphabetic: {result_list}")
+        for i in input_num_list:
+            for j in list(dicts.keys()):
+                if j==i:
+                    result_list.append(list(dicts.values())[j])
+        print(f"Tour in alphabetic: {result_list}")
+    else:
+        # check whether input num list is out of index
+        if max(dicts, key=int) < max(input_num_list[0]):
+            print(
+                f"List index out of range: Largest index in alphabet is {max(dicts, key=int)}, got max of {max(input_num_list)} instead")
+        for l in input_num_list:
+            temp = []
+            for i in l:
+                for j in list(dicts.keys()):
+                    if j == i:
+                        temp.append(list(dicts.values())[j])
+
+            result_list.append(temp)
+        print(f"Tour in alphabetic: {result_list}")
     return result_list
 # EXECUTION_________________________
 '''
@@ -265,7 +280,6 @@ two_change_TSP(input_config=np.asarray([0,1,2,3,4,0]))
 calculate the nearest_neighbour_heuristic tour with given starting_cities which is a tour
 insersion_heuristic(starting_cities=np.asarray([0,2,1,0]))
 '''
-# two_change_TSP(input_config=np.asarray([0, 2, 1, 6, 3, 7, 4, 8, 5, 0]))
 
 
 
@@ -276,9 +290,9 @@ number_to_alphabet(alphabet_list = ["a","b","c","e"], input_num_list = [0, 2, 3,
 """
 
 # insertion_tour_list = insersion_heuristic(starting_cities=np.asarray([0,2,1,0]))
-nearest_tour_list = nearest_neighbour_heuristic(starting_city=0)
-
-number_to_alphabet(alphabet_list = ["a","b","c","d","e","f","g","h","k"], input_num_list = nearest_tour_list)
+# nearest_tour_list = nearest_neighbour_heuristic(starting_city=0)
+two_change_tour_list = two_change_TSP(input_config=np.asarray([0, 2, 1, 6, 3, 7, 4, 8, 5, 0]))
+number_to_alphabet(alphabet_list = ["a","b","c","d","e","f","g","h","k"], input_num_list = two_change_tour_list)
 
 
 
