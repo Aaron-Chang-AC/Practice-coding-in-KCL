@@ -262,7 +262,7 @@ def sequential_perceptron_learning_using_wk(initial_at,xt,true_label,learning_ra
 # If more than one discriminant function produces the maximum output,
 # choose the function with the highest index (i.e., the one that represents
 # the largest class label)!!
-def sequential_multiclass_learning(initial_at,xt,true_label,learning_rate,epochs):
+def sequential_multiclass_learning(initial_at,xt,true_label,learning_rate,epochs,select_highest_index=True):
     """
     # If more than one discriminant function produces the maximum output,
 
@@ -298,8 +298,15 @@ def sequential_multiclass_learning(initial_at,xt,true_label,learning_rate,epochs
             print(f"-----------------Iteration {cnt+1}---------------")
             gt = np.matmul(at, yt[i].transpose()).transpose()
             print("gt:",gt)
+
+
             reversed_gt = gt[::-1]
             result_class = int(len(reversed_gt) - np.argmax(reversed_gt))
+
+            # if we need to select the lowest index
+            if not(select_highest_index):
+                reversed_gt = gt.copy()
+                result_class = np.argmax(reversed_gt) + 1
 
             true_class = int(true_label[i])
             if result_class != true_class:
@@ -428,7 +435,8 @@ def sequential_widrow_hoff(initial_at,xt,true_label,margin_vector,learning_rate,
 #     ),
 #     true_label = np.asarray([1,1,2,2,3]),
 #     learning_rate = 1.0,
-#     epochs = 10
+#     epochs = 10,
+#     select_highest_index=False
 # )
 #
 # sequential_widrow_hoff(
