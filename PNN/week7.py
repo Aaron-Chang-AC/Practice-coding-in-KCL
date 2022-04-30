@@ -38,27 +38,28 @@ def PCA(S, dimension, new_samples_to_be_classified):
     return results
 
 
-# S = np.asarray([
-#     [1,2,1],
-#     [2,3,1],
-#     [3,5,1],
-#     [2,2,1]
-# ])
+S = np.asarray([
+    [1,2,1],
+    [2,3,1],
+    [3,5,1],
+    [2,2,1]
+])
 # new_samples_to_be_classified = np.asarray([
 #         [3,-2,5]
 # ])
 
-S = np.asarray([
-    [0,1],
-    [3,5],
-    [5,4],
-    [5,6],
-    [8,7],
-    [9,7]
-])
+# S = np.asarray([
+#     [0,1],
+#     [3,5],
+#     [5,4],
+#     [5,6],
+#     [8,7],
+#     [9,7]
+# ])
 
-# results = PCA(S,dimension=1,new_samples_to_be_classified=[])
-# print(PCA(results.T, dimension=1, new_samples_to_be_classified=[]))
+# results = PCA(S,dimension=2,new_samples_to_be_classified=[])
+# # print(results)
+# print(PCA(results.T, dimension=2, new_samples_to_be_classified=[]))
 #
 
 def oja_learning(datapoints, initial_weight,learning_rate = 0.01, epoch=2, mode=None):
@@ -138,14 +139,14 @@ def fisher_linear_discriminant_analysis(datapoints, classes, projection_weight):
 # classes = np.asarray([1, 1, 1, 2, 2])
 # projection_weight = np.asarray([[-1, 5], [2, -3]])
 # fisher_linear_discriminant_analysis(datapoints, classes, projection_weight=projection_weight)
-datapoints = np.asarray([[0,0], [0, 1],[1, 0], [1, 1]])
-weight = np.asarray([0,0,0,-1,0,0,2])
-V = np.asarray([[-0.62, 0.44, -0.91],
-                [-0.81, -0.09, 0.02],
-                [0.74, -0.91, -0.60],
-                [-0.82, -0.92, 0.71],
-                [-0.26, 0.68, 0.15],
-                [0.8, -0.94, -0.83]])
+# datapoints = np.asarray([[0,0], [0, 1],[1, 0], [1, 1]])
+# weight = np.asarray([0,0,0,-1,0,0,2])
+# V = np.asarray([[-0.62, 0.44, -0.91],
+#                 [-0.81, -0.09, 0.02],
+#                 [0.74, -0.91, -0.60],
+#                 [-0.82, -0.92, 0.71],
+#                 [-0.26, 0.68, 0.15],
+#                 [0.8, -0.94, -0.83]])
 def extreme_learning_machine(V, weight, datapoints, H_0):
     datapoints_T = datapoints.T.copy()
     new_datapoints = np.ones((len(datapoints),1))
@@ -177,17 +178,17 @@ def sparse_coding(V, x, y_t):
     print(f"best sparse code: y_t{np.argmin(error_result)+1}")
 
 
-V = np.asarray([[0.4, -0.6],
-              [0.55, -0.45],
-              [0.5, -0.5],
-              [-0.1, 0.9],
-              [-0.5, -0.5],
-              [0.9, 0.1],
-              [0.5, 0.5],
-              [0.45, 0.55]])
-x = np.asarray([-0.05, -0.95])
-y1_t = np.asarray([1, 0, 0, 0, 1, 0, 0, 0])
-y2_t = np.asarray([0, 0, 1, 0, 0, 0, -1, 0])
-y3_t = np.asarray([0, 0, 0, -1, 0, 0, 0, 0])
-y_t = np.asarray([y1_t, y2_t, y3_t])
-sparse_coding(V, x, y_t)
+# V = np.asarray([[0.4, -0.6],
+#               [0.55, -0.45],
+#               [0.5, -0.5],
+#               [-0.1, 0.9],
+#               [-0.5, -0.5],
+#               [0.9, 0.1],
+#               [0.5, 0.5],
+#               [0.45, 0.55]])
+# x = np.asarray([-0.05, -0.95])
+# y1_t = np.asarray([1, 0, 0, 0, 1, 0, 0, 0])
+# y2_t = np.asarray([0, 0, 1, 0, 0, 0, -1, 0])
+# y3_t = np.asarray([0, 0, 0, -1, 0, 0, 0, 0])
+# y_t = np.asarray([y1_t, y2_t, y3_t])
+# sparse_coding(V, x, y_t)

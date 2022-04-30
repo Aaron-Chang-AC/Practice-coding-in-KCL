@@ -66,7 +66,7 @@ def knn_classifier(feature_vectors,given_target,classes,k, euclidean_dist=True):
             print("x", str(i + 1), ": euclidean_distance=", str(round(feature_vectors_dist_map[i], 5)))
         else:
             feature_vectors_dist_map[i] = manhattan_distance(feature_vectors[i], given_target)
-            print("x", str(i + 1), ": manhatten_distance=", str(round(feature_vectors_dist_map[i], 5)))
+            print("x", str(i + 1), ": manhattan_distance=", str(round(feature_vectors_dist_map[i], 5)))
 
 
 

@@ -5,8 +5,50 @@ import matplotlib.pyplot as plt
 import numpy as np
 import math
 
+
+def classify_class_by_given_linear_discriminant_function(initial_at, xt, true_label):
+    at = initial_at
+    num_at = len(at)
+    num_xt = len(xt)
+
+    # augmented notation with 1
+    yt = np.ones((num_xt, 1), dtype=np.float32)
+    yt = np.append(yt, xt, axis=1)
+
+    feature_vector_length = len(yt[0])
+    num_yt = len(yt)
+    print(f"yt= \n {yt}")
+    cnt = 0
+
+    for i in range(num_yt):
+        print(f"-----------------Iteration {cnt + 1}---------------")
+        result_class = []
+        for a in range(num_at):
+            gt = np.matmul(at[a], yt[i].transpose()).transpose()
+            print(f"gt{a}: {gt}")
+            result_class.append(gt)
+        if len(true_label) != 0:
+            predicted_class = int(np.argmax(result_class)+1)
+            true_class = int(true_label[i])
+            if predicted_class != true_class:
+                print(f"Misclassified, the original label is: class {true_class}")
+        else:
+            pass
+        cnt += 1
+        print(f"Maximum Response:{max(result_class)}")
+    return
+
+
+
 # Simple dichotomizer determines class of input with data augmentation
 def dichotomizer_determine_class(initial_at,xt):
+    """
+    Simple dichotomizer determines class of input with data augmentation
+
+    :param initial_at: [w_0, w_1, w_2]
+    :param xt: Feature Vector
+    :return: Class of feature vectors
+    """
     at=initial_at
     num_xt=len(xt)
     yt=np.ones((num_xt,1), dtype=np.float32)
@@ -30,6 +72,20 @@ def dichotomizer_determine_class(initial_at,xt):
 # a = (w0, wt)t
 # misclassified -> when g(x)<=0 !!
 def batch_perceptron_learning(initial_at,xt,true_label,learning_rate,epochs):
+    """
+    # (with augmented notation and sample normalisation)
+
+    # a = (w0, wt)t
+
+    # misclassified -> when g(x)<=0 !!
+
+    :param initial_at:
+    :param xt:
+    :param true_label: the original class of xt
+    :param learning_rate: alpha
+    :param epochs:
+    :return:
+    """
     at = initial_at
     num_xt = len(xt)
 
@@ -66,7 +122,7 @@ def batch_perceptron_learning(initial_at,xt,true_label,learning_rate,epochs):
 
         # update at
         at = at + learning_rate*temp
-        print("at=",at)
+        print("updated at=",at)
         print("\n\n")
         if np.sum(misclassified, dtype=np.int8) > 0:
             misclassified = np.zeros(num_xt, dtype=np.int8)
@@ -78,6 +134,20 @@ def batch_perceptron_learning(initial_at,xt,true_label,learning_rate,epochs):
 # a = (w0, wt)t
 # misclassified -> when g(x)<=0 !!
 def sequential_perceptron_learning_sample_normalisation(initial_at,xt,true_label,learning_rate,epochs):
+    """
+    # (with augmented notation and sample normalisation)
+
+    # a = (w0, wt)t
+
+    # misclassified -> when g(x)<=0 !!
+
+    :param initial_at:
+    :param xt:
+    :param true_label: True label (class) can only be 1 , 2....
+    :param learning_rate:
+    :param epochs:
+    :return:
+    """
     at = initial_at
     num_xt = len(xt)
 
@@ -119,12 +189,27 @@ def sequential_perceptron_learning_sample_normalisation(initial_at,xt,true_label
             misclassified = np.zeros(num_xt, dtype=np.int8)
         else:
             break
+    print(f"Final at: {at}")
     return
 
 # (with augmented notation and no sample normalisation)
 # a = (w0, wt)t
 # misclassified -> when g(x)<=0 !!
 def sequential_perceptron_learning_using_wk(initial_at,xt,true_label,learning_rate,epochs):
+    """
+    # (with augmented notation and no sample normalisation)
+
+    # a = (w0, wt)t
+
+    # misclassified -> when g(x)<=0 !!
+
+    :param initial_at:
+    :param xt:
+    :param true_label:
+    :param learning_rate:
+    :param epochs:
+    :return:
+    """
     at = initial_at
     num_xt = len(xt)
 
@@ -178,6 +263,20 @@ def sequential_perceptron_learning_using_wk(initial_at,xt,true_label,learning_ra
 # choose the function with the highest index (i.e., the one that represents
 # the largest class label)!!
 def sequential_multiclass_learning(initial_at,xt,true_label,learning_rate,epochs):
+    """
+    # If more than one discriminant function produces the maximum output,
+
+    # choose the function with the highest index (i.e., the one that represents
+
+    # the largest class label)!!
+
+    :param initial_at: Number of inital_at depends on the number of class (true label)
+    :param xt:
+    :param true_label:
+    :param learning_rate:
+    :param epochs:
+    :return:
+    """
     at = initial_at
     num_at = len(at)
     num_xt = len(xt)
@@ -192,10 +291,11 @@ def sequential_multiclass_learning(initial_at,xt,true_label,learning_rate,epochs
     print(yt)
 
     misclassified=np.zeros(num_yt, dtype=np.int8)
-
+    cnt = 0
     for e in range(epochs):
-        print("\n\nepoch ",str(e+1),":")
+        print("\n\n=====epoch ",str(e+1),"=======")
         for i in range(num_yt):
+            print(f"-----------------Iteration {cnt+1}---------------")
             gt = np.matmul(at, yt[i].transpose()).transpose()
             print("gt:",gt)
             reversed_gt = gt[::-1]
@@ -207,14 +307,17 @@ def sequential_multiclass_learning(initial_at,xt,true_label,learning_rate,epochs
                 at[result_class-1] = at[result_class-1] - learning_rate * yt[i]
                 misclassified[i] = 1
                 print("y", str(i), ":gt=", gt, "pred_class: ", str(result_class) ," true_class: ", str(true_class), " misclassified")
-                print("at=",at)
+                print("updated at=",at)
             else:
                 print("y", str(i), ":gt=", gt, "pred_class: ", str(result_class) ," true_class: ", str(true_class), " correct")
+            cnt += 1
         print("\n\n")
         if np.sum(misclassified, dtype=np.int8) > 0:
             misclassified = np.zeros(num_xt, dtype=np.int8)
         else:
             break
+
+    print(f"Final result at:\n {at}")
     return
 
 def sequential_widrow_hoff(initial_at,xt,true_label,margin_vector,learning_rate,epochs):

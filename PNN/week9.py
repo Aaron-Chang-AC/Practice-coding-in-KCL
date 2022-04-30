@@ -55,19 +55,19 @@ def adaboost(k_max, dataset, output_class, classfier_table):
             break # if condition different comment out
 
 
-X = np.asarray([[1,0],[-1,0],[0,1],[0,-1]])
-y = np.asarray([1,1,-1,-1])
-table = np.asarray([
-    [1,-1,1,1],
-    [-1,1,-1,-1],
-    [1,-1,-1,-1],
-    [-1,1,1,1],
-    [1,1,1,-1],
-    [-1,-1,-1,1],
-    [-1,-1,1,-1],
-    [1,1,-1,1]
-])
-print(adaboost(len(table), X, y, table))
+# X = np.asarray([[1,0],[-1,0],[0,1],[0,-1]])
+# y = np.asarray([1,1,-1,-1])
+# table = np.asarray([
+#     [1,-1,1,1],
+#     [-1,1,-1,-1],
+#     [1,-1,-1,-1],
+#     [-1,1,1,1],
+#     [1,1,1,-1],
+#     [-1,-1,-1,1],
+#     [-1,-1,1,-1],
+#     [1,1,-1,1]
+# ])
+# print(adaboost(len(table), X, y, table))
 
 
 def bagging_algo(output_class, classfier_table):
@@ -81,4 +81,4 @@ def bagging_algo(output_class, classfier_table):
             training_error += (1.0/n)
     print(f"result:{result}, training error is {training_error}")
 
-bagging_algo(y, table)
+# bagging_algo(y, table)

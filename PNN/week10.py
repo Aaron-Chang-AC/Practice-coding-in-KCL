@@ -438,12 +438,12 @@ def agglomerative_clustering(dataset, numCluster, link_type=None):
 
 
 
-hdataset = np.asarray([[-1, 3], [1, 2], [0, 1], [4, 0], [5, 4], [3, 2]])
-
-d , df = agglomerative_clustering(dataset= hdataset, numCluster= 3, link_type="single")
-print("=====Return value ======")
-print(d)
-print(df)
+# hdataset = np.asarray([[-1, 3], [1, 2], [0, 1], [4, 0], [5, 4], [3, 2]])
+#
+# d , df = agglomerative_clustering(dataset= hdataset, numCluster= 3, link_type="single")
+# print("=====Return value ======")
+# print(d)
+# print(df)
 
 def euclidean_distance(cluster, datapoint):
     """
@@ -469,7 +469,7 @@ def abs_distance(cluster, datapoint):
         result.append(np.linalg.norm(cluster[i] - datapoint, ord=1))
     return result
 
-datapoint = np.asarray([[-1, 3],[1, 4],[0, 5], [4, -1],[3, 0], [5, 1]])
+# datapoint = np.asarray([[-1, 3],[1, 4],[0, 5], [4, -1],[3, 0], [5, 1]])
 
 # PCA
 # S = np.asarray([
@@ -483,7 +483,7 @@ datapoint = np.asarray([[-1, 3],[1, 4],[0, 5], [4, -1],[3, 0], [5, 1]])
 # ])
 
 # print(k_means(datapoint, 2, [[-1, 3], [5, 1]], randomized=False))
-# print(PCA(S,dimension=2,new_samples_to_be_classified=new_samples_to_be_classified))
+# print(PCA(S,dimension=1,new_samples_to_be_classified=new_samples_to_be_classified))
 # print(euclidean_distance(np.asarray([[-2.8284, 0],[2.8284, 0]]), np.asarray([-0.7071, -3.5355])))
 
 

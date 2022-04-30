@@ -103,6 +103,6 @@ def minibatch_GAN(k, num_iteration,learning_rate,Dx,X,X_fake,thetas):
             print(f"Updated discriminator: {thetas}")
 
 
-minibatch_GAN(num_iteration=1, k=1, learning_rate=0.02, Dx=Dx,X = X,X_fake=X_fake,thetas=thetas)
+# minibatch_GAN(num_iteration=1, k=1, learning_rate=0.02, Dx=Dx,X = X,X_fake=X_fake,thetas=thetas)
 # gan(Dx,X,X_fake,thetas)
 
