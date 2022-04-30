@@ -11,6 +11,7 @@ def my_loss(output, target):
 
 class my_network():
     def __init__(self):
+        print("**************PLEASE CHECK YOUR LOSS FUNCTION*****************\n")
         # weight for layer 0 -> 1
         self.w11= torch.tensor([1], dtype=torch.float, requires_grad=True)
         self.w21= torch.tensor([2], dtype=torch.float, requires_grad=True)
@@ -70,7 +71,7 @@ class my_network():
 
 # result = my_network().update_weight(learning_rate=0.1)
 Net = my_network()
-check = False
+check = False # check for detail dJ1 and dJ2 use True, if combined use False
 if check:
     Net.seperate_loss()
 else:
