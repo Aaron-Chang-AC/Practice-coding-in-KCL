@@ -8,6 +8,12 @@ import collections
 
 
 def confusion_matrix(y_pred,y_true):
+    """
+
+    :param y_pred: Input predicted class in np arrays
+    :param y_true: Input true class in np arrays
+    :return: Print TP/FP/TN/FN/Error_rate/Accuracy/Recall/Precision/F1-Score
+    """
     num = len(y_pred)
     TP=0.0
     FP=0.0
@@ -37,14 +43,32 @@ def euclidean_distance(x,y):
     temp=x-y
     return np.sqrt(np.dot(temp.T,temp))
 
-def knn_classifier(feature_vectors,given_target,classes,k):
+def manhattan_distance(x, y):
+    return sum(abs(val1-val2) for val1, val2 in zip(x,y))
+
+def knn_classifier(feature_vectors,given_target,classes,k, euclidean_dist=True):
+    """
+
+    :param feature_vectors:
+    :param given_target:
+    :param classes:
+    :param k:
+    :param euclidean_dist: if use euclidean True, if use manhatten False
+    :return:
+    """
     num = len(feature_vectors)
     feature_vectors_class_map = {}
     feature_vectors_dist_map = {}
     for i in range(num):
         feature_vectors_class_map[i] = classes[i]
-        feature_vectors_dist_map[i] = euclidean_distance(feature_vectors[i], given_target)
-        print("x",str(i+1),": euclidean_distance=", str(round(feature_vectors_dist_map[i], 5)))
+        if euclidean_dist:
+            feature_vectors_dist_map[i] = euclidean_distance(feature_vectors[i], given_target)
+            print("x", str(i + 1), ": euclidean_distance=", str(round(feature_vectors_dist_map[i], 5)))
+        else:
+            feature_vectors_dist_map[i] = manhattan_distance(feature_vectors[i], given_target)
+            print("x", str(i + 1), ": manhatten_distance=", str(round(feature_vectors_dist_map[i], 5)))
+
+
 
     distances_keys = sorted(feature_vectors_dist_map, key= feature_vectors_dist_map.get)
     sorted_distances_dict = {}
