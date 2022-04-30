@@ -168,16 +168,16 @@ def extreme_learning_machine(V, weight, datapoints, H_0):
 # extreme_learning_machine(V, weight, datapoints, H_0=0.5)
 
 
-def sparse_coding(V, x, y_t):
+def sparse_coding(V, x, y_t, LAMBDA = 0):
     error_result = np.zeros(len(y_t))
     for i in range(len(y_t)):
         error = np.subtract(x.T, (V.T @ y_t[i].T))
-        error = np.linalg.norm(error)
+        error = np.linalg.norm(error) + LAMBDA * np.linalg.norm(y_t[i],ord=0)
         error_result[i]=error
         print(f"error for y_t{i+1}: {error}")
     print(f"best sparse code: y_t{np.argmin(error_result)+1}")
 
-
+# Note that LAMBDA is the coefficient for L0 norm
 # V = np.asarray([[0.4, -0.6],
 #               [0.55, -0.45],
 #               [0.5, -0.5],
@@ -191,4 +191,18 @@ def sparse_coding(V, x, y_t):
 # y2_t = np.asarray([0, 0, 1, 0, 0, 0, -1, 0])
 # y3_t = np.asarray([0, 0, 0, -1, 0, 0, 0, 0])
 # y_t = np.asarray([y1_t, y2_t, y3_t])
-# sparse_coding(V, x, y_t)
+# sparse_coding(V, x, y_t, LAMBDA=0.0)
+
+V = np.asarray([
+    [1, -4],
+    [1, 3],
+    [2, 2],
+    [1, -1]
+], dtype = np.float32)
+x = np.asarray([2.0, 3.0])
+
+y1_t = np.asarray([1, 2, 0, -1])
+y2_t = np.asarray([0, 0.5, 1, 0])
+
+y_t = np.asarray([y1_t, y2_t])
+sparse_coding(V, x, y_t, LAMBDA=1.0)
