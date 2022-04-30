@@ -139,6 +139,7 @@ class WalkSAT_Solver:
                     else:
                         x = unsat_clause[np.argmin(break_count)]
                     self.flip(x)
+                    print(f"Current configuration: {self.assignment}")
 
         end = time.time()
         print('Nb flips:  {0}      '.format(self.nb_flips))
