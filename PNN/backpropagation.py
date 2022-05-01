@@ -117,6 +117,7 @@ class my_network():
         # print(f"Updated weight of w11: {self.w11}")
 
     def test(self):
+        print("============================TEST RESULT==============================")
         y1 = self.w11 * self.x_data[:, 0] + self.w10
         y2 = self.w21 * self.x_data[:, 0] + self.w22 * self.x_data[:, 1]
         y1 = tansigmoid(y1)
@@ -124,8 +125,7 @@ class my_network():
         z1 = self.m11 * y1 + self.m12 * y2 + self.m10
         z = tansigmoid(z1)
         print(f"The tested result after update is: {z}")
-        loss = my_loss(z, self.target_data)
-        print(f"The updated result loss now is: {loss}")
+        print(f"The updated result loss now is: {my_loss(z, self.target_data)}")
         return z
 
 Net = my_network()
