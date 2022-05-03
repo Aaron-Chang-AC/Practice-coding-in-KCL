@@ -163,6 +163,15 @@ class WalkSAT_Solver:
             print('UNKNOWN')
             return None
 
+    def assignment_to_binary(self):
+        binary_assignment = []
+        for i in self.assignment:
+            if i < 0:
+                binary_assignment.append(0)
+            elif i > 0:
+                binary_assignment.append(1)
+        print(f"Final binary form answer is: {binary_assignment}")
+        return binary_assignment
 
 def main():
     # try:
@@ -175,9 +184,11 @@ def main():
     #     exit(0)
     input_cnf_file = "C:/Users/KuanHaoChen/Documents/GitHub/EXAMPREP/BIM/cnf.cnf"
     verbose = 1  # 0 or 1, 1 to see details
+    # if assignment is empty, generate randomly
     assignment = [1, -2, -3, -4, -5, -6, 7, 8, -9, 10, 11, 12, -13, -14, 15, 16, 17, -18, -19, -20]
     solver = WalkSAT_Solver(input_cnf_file, assignment, verbose)
     solver.solve()
+    solver.assignment_to_binary()
 
 if __name__ == '__main__':
     main()
