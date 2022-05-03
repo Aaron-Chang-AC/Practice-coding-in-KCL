@@ -115,9 +115,8 @@ class WalkSAT_Solver:
     def solve(self):
         initial = time.time()
         self.initialize_pool()
-        iter = 0
+        iter = 1
         while self.nb_tries < self.MAX_TRIES and not self.is_sat:
-
             self.generate()
             print(f"Initial configuration is {self.assignment}") # roger
             self.initialize_cost()
@@ -125,7 +124,7 @@ class WalkSAT_Solver:
                 print(f"===========Iteration {iter}==================")
                 if self.check() == 1:  # if no unsat clause => finish
                     self.is_sat = True
-                    if iter == 0:
+                    if iter == 1:
                         print("The original solution is SAT")
                     else:
                         print(f"Process ended in --{iter}-- round")
@@ -145,8 +144,11 @@ class WalkSAT_Solver:
                         x = random.choice(unsat_clause)
                     else:
                         x = unsat_clause[np.argmin(break_count)]
+                    old = self.assignment.copy() # roger
                     self.flip(x)
                     print(f"Current configuration: {self.assignment}")
+                    difference = list(set(old)^set(self.assignment))
+                    print(f"Number flipped from {difference[0]} to {difference[1]}")
                 iter += 1
 
         end = time.time()
@@ -173,7 +175,7 @@ def main():
     #     exit(0)
     input_cnf_file = "C:/Users/KuanHaoChen/Documents/GitHub/EXAMPREP/BIM/cnf.cnf"
     verbose = 1  # 0 or 1, 1 to see details
-    assignment = [1, -2, 3, -4, -5, -6, 7, 8, -9, 10, 11, 12, -13, -14, 15, 16, 17, -18, -19, -20]
+    assignment = [1, -2, -3, -4, -5, -6, 7, 8, -9, 10, 11, 12, -13, -14, 15, 16, 17, -18, -19, -20]
     solver = WalkSAT_Solver(input_cnf_file, assignment, verbose)
     solver.solve()
 
