@@ -69,7 +69,7 @@ class Ant_colony():
                     tp_dict[f"{start_point}_{self.df_bidirectional.loc[ind, 'node2']}"] = transition_probability
                     print(f"p_{start_point}_{self.df_bidirectional.loc[ind, 'node2']}(t)={transition_probability}")
         return total_pheromone, tp_dict
-    def path_from_point(self, starting_point, highest):
+    def path_from_point(self, starting_point, ending_point, highest):
 
         df_temp = {}
         walked = []
@@ -102,7 +102,13 @@ class Ant_colony():
 
             print(f"Path walked: {walked}")
             if starting_point == df_temp["end_point"]:
+                print("Next route will be repeated")
                 break
+            if ending_point == df_temp["end_point"]:
+                walked.append(ending_point)
+                print(f"Reached destination, Final Route: {walked}")
+                return walked
+            # update for next round
             starting_point = df_temp['end_point']
             step += 1
         return walked
@@ -134,19 +140,15 @@ class Ant_colony():
         return new_pheromone
 
 
-
-
-
-
 def main():
     input = "ant.csv"
     alpha = 1
     num_of_ants = 10000
     ant = Ant_colony(input=input, alpha=alpha, num_of_ants=num_of_ants)
     ant.make_graph()
-    ant.transition_probability(start_point=3, intermediate_solution=[1, 3])
-    ant.path_from_point(starting_point= 1,highest=True)
-    ant.value_of_concentration(edge=[1,5], Q = 0.01, evaporate_constant= 0.2, iter= 1)
+    # ant.transition_probability(start_point=3, intermediate_solution=[1, 3])
+    ant.path_from_point(starting_point= 1, ending_point=5, highest=True)
+    # ant.value_of_concentration(edge=[1,5], Q = 0.01, evaporate_constant= 0.2, iter= 1)
 
 
 main()
