@@ -115,13 +115,20 @@ class WalkSAT_Solver:
     def solve(self):
         initial = time.time()
         self.initialize_pool()
+        iter = 0
         while self.nb_tries < self.MAX_TRIES and not self.is_sat:
+
             self.generate()
             print(f"Initial configuration is {self.assignment}") # roger
             self.initialize_cost()
             while self.nb_flips < self.MAX_FLIPS and not self.is_sat:
+                print(f"===========Iteration {iter}==================")
                 if self.check() == 1:  # if no unsat clause => finish
                     self.is_sat = True
+                    if iter == 0:
+                        print("The original solution is SAT")
+                    else:
+                        print(f"Process ended in --{iter}-- round")
                 else:
                     assert len(self.unsat_clauses) > 0
                     # Choose a variable x to flip
@@ -140,6 +147,7 @@ class WalkSAT_Solver:
                         x = unsat_clause[np.argmin(break_count)]
                     self.flip(x)
                     print(f"Current configuration: {self.assignment}")
+                iter += 1
 
         end = time.time()
         print('Nb flips:  {0}      '.format(self.nb_flips))
@@ -165,7 +173,7 @@ def main():
     #     exit(0)
     input_cnf_file = "C:/Users/KuanHaoChen/Documents/GitHub/EXAMPREP/BIM/cnf.cnf"
     verbose = 1  # 0 or 1, 1 to see details
-    assignment = [1, -2, 3, -4]
+    assignment = [1, -2, 3, -4, -5, -6, 7, 8, -9, 10, 11, 12, -13, -14, 15, 16, 17, -18, -19, -20]
     solver = WalkSAT_Solver(input_cnf_file, assignment, verbose)
     solver.solve()
 
