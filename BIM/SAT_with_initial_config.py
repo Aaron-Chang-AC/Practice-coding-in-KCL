@@ -170,7 +170,7 @@ class WalkSAT_Solver:
                 binary_assignment.append(0)
             elif i > 0:
                 binary_assignment.append(1)
-        print(f"Final binary form answer is: {binary_assignment}")
+        print(f"Binary Satisfied Assignment is: {binary_assignment}")
         return binary_assignment
 
 def main():
