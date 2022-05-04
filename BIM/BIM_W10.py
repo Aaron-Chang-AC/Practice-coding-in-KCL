@@ -4,9 +4,21 @@ import pandas as pd
 import itertools
 
 class Ant_colony():
-    def __init__(self, input, alpha, num_of_ants):
+    def __init__(self, input, alpha, beta, theta, phi, num_of_ants):
+        """
+
+        :param input: CSV file name
+        :param alpha: construction parameter
+        :param beta: construction parameter
+        :param theta: heuristic information (For TSP mainly)
+        :param phi: evaporate constant
+        :param num_of_ants: Number of ants
+        """
         self.input = input
         self.alpha = alpha
+        self.beta = beta
+        self.theta = theta
+        self.phi = phi
         self.df_bidirectional = None
         self.num_of_ants = num_of_ants
 
@@ -39,7 +51,7 @@ class Ant_colony():
         self.df_bidirectional = df_bidirectional
 
 
-    def transition_probability(self, start_point, intermediate_solution):
+    def transition_probability(self, start_point, intermediate_solution, mode):
         # self.make_graph()
         total_pheromone = 0.0
         tp_dict = {}
@@ -49,25 +61,34 @@ class Ant_colony():
                 # print(self.df_bidirectional["node1"][ind], self.df_bidirectional["node2"][ind])
                 try:
                     if self.df_bidirectional.loc[ind, "node2"] != intermediate_solution[0] and self.df_bidirectional.loc[ind, "node2"] != intermediate_solution[1]:
-                        total_pheromone += self.df_bidirectional.loc[ind,"pheromone"]
-                except:
-                    total_pheromone += self.df_bidirectional.loc[ind, "pheromone"]
+                        total_pheromone += ((self.df_bidirectional.loc[ind,"pheromone"])**self.alpha) * (self.theta**self.beta)
 
-        print(f"Total Pheromone is: {total_pheromone}")
-        # pheromone each
+                except: # when there is no intermediate_solution
+                    total_pheromone += ((self.df_bidirectional.loc[ind,"pheromone"])**self.alpha) * (self.theta**self.beta)
+        if mode:
+            print(f"Total Pheromone is: {total_pheromone}")
+
+        # calculate pheromone for each
         for ind in range(len(self.df_bidirectional)):
             if self.df_bidirectional.loc[ind, "node1"] == start_point:
                 # print(self.df_bidirectional["node1"][ind], self.df_bidirectional["node2"][ind])
                 try:
                     if self.df_bidirectional.loc[ind, "node2"] != intermediate_solution[0] and self.df_bidirectional.loc[
                         ind, "node2"] != intermediate_solution[1]:
-                        transition_probability = (self.df_bidirectional.loc[ind,'pheromone'])/ total_pheromone
+                        transition_probability = (((self.df_bidirectional.loc[ind,"pheromone"])**self.alpha) * (self.theta**self.beta))/ total_pheromone
                         tp_dict[f"{start_point}_{self.df_bidirectional.loc[ind, 'node2']}"] = transition_probability
-                        print(f"p_{start_point}_{self.df_bidirectional.loc[ind, 'node2']}(t)={transition_probability}")
+                        if mode:
+                            print(f"p_{start_point}_{self.df_bidirectional.loc[ind, 'node2']}(t)={transition_probability}")
                 except:
-                    transition_probability = (self.df_bidirectional.loc[ind, 'pheromone']) / total_pheromone
+                    transition_probability =  (((self.df_bidirectional.loc[ind,"pheromone"])**self.alpha) * (self.theta**self.beta)) / total_pheromone
                     tp_dict[f"{start_point}_{self.df_bidirectional.loc[ind, 'node2']}"] = transition_probability
-                    print(f"p_{start_point}_{self.df_bidirectional.loc[ind, 'node2']}(t)={transition_probability}")
+                    if mode:
+                        print(f"p_{start_point}_{self.df_bidirectional.loc[ind, 'node2']}(t)={transition_probability}")
+        max_index = np.argmax(list(tp_dict.values()))
+        min_index = np.argmin(list(tp_dict.values()))
+        if mode:
+            print(f"Maximum pheromone is path: {list(tp_dict.keys())[max_index]}")
+            print(f"Minimum pheromone is path: {list(tp_dict.keys())[min_index]}")
         return total_pheromone, tp_dict
     def path_from_point(self, starting_point, ending_point, highest):
 
@@ -113,25 +134,25 @@ class Ant_colony():
             step += 1
         return walked
 
-    def value_of_concentration(self, edge, Q, evaporate_constant, iter):
-        _, transition_prob_dic = self.transition_probability(start_point=edge[0], intermediate_solution=[])
-        print("============Process started below=======")
+    def value_of_concentration(self, edge, Q):
+        _, transition_prob_dic = self.transition_probability(start_point=edge[0], intermediate_solution=[], mode=False)
+        print("============Process started below============")
         f_x_k_t = 0.0
-        original_pheromone = 0.0
+        current_pheromone = 0.0
         edge_transition_prob = transition_prob_dic[f"{edge[0]}_{edge[1]}"]
         print(f"Transition probability for the edge: {edge_transition_prob}")
         average_number_of_ants = self.num_of_ants * edge_transition_prob
         print(f"Average number of ants using the edge: {average_number_of_ants}")
         for ind in range(len(self.df_bidirectional)):
             if self.df_bidirectional.loc[ind, "node1"] == edge[0] and self.df_bidirectional.loc[ind, "node2"] == edge[1]:
-                original_pheromone = self.df_bidirectional.loc[ind, "pheromone"]
+                current_pheromone = self.df_bidirectional.loc[ind, "pheromone"]
                 # quality of the solution -->edge distance
                 f_x_k_t = self.df_bidirectional.loc[ind, "distances"]
         print(f"f_x_k_t: {f_x_k_t}")
         delta_pheromone_update = Q / f_x_k_t
         print(f"Delta pheromone update: {delta_pheromone_update}")
-        # evaporation
-        evaported_pheromone = (1- evaporate_constant) * original_pheromone
+        # evaporation (where should i place this)
+        evaported_pheromone = (1- self.phi) * current_pheromone
 
         # update to original
         new_pheromone = evaported_pheromone + average_number_of_ants * delta_pheromone_update
@@ -140,15 +161,23 @@ class Ant_colony():
         return new_pheromone
 
 
+
+
+
+
 def main():
+
     input = "ant.csv"
     alpha = 1
+    beta = 1
+    theta = 1 # heuristic information associated with edge (i, j),, theta_ij = 1 / c_ij
+    phi = 0.2 # evaporate constant
     num_of_ants = 10000
-    ant = Ant_colony(input=input, alpha=alpha, num_of_ants=num_of_ants)
+    ant = Ant_colony(input=input, alpha=alpha, beta= beta, theta= theta, phi=phi, num_of_ants=num_of_ants)
     ant.make_graph()
-    # ant.transition_probability(start_point=3, intermediate_solution=[1, 3])
+    ant.transition_probability(start_point=3, intermediate_solution=[1, 3], mode=True) # if mode, print out
     ant.path_from_point(starting_point= 1, ending_point=5, highest=True)
-    # ant.value_of_concentration(edge=[1,5], Q = 0.01, evaporate_constant= 0.2, iter= 1)
+    ant.value_of_concentration(edge=[1,5], Q = 0.01)
 
 
 main()
