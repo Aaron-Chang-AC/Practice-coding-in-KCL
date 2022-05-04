@@ -90,8 +90,24 @@ class Ant_colony():
             print(f"Maximum pheromone is path: {list(tp_dict.keys())[max_index]}")
             print(f"Minimum pheromone is path: {list(tp_dict.keys())[min_index]}")
         return total_pheromone, tp_dict
-    def path_from_point(self, starting_point, ending_point, highest):
 
+    def given_path_total_pheromone(self, path):
+        pheromone = 0.0
+        # path = [4, 2, 5]
+        for i in range(len(path)):
+            for ind in range(len(self.df_bidirectional)):
+                if self.df_bidirectional.loc[ind, "node1"] == path[i]:
+                    try:
+                        if self.df_bidirectional.loc[ind, "node2"] == path[i+1]:
+                            pheromone += self.df_bidirectional.loc[ind, "pheromone"]
+                    except:
+                        # when it loop to the last element
+                        break
+        print(f"The sum of pheromone with the given path is : {pheromone}")
+        return pheromone
+
+
+    def path_from_point(self, starting_point, ending_point, highest):
         df_temp = {}
         walked = []
         step = 1
@@ -161,12 +177,15 @@ class Ant_colony():
         return new_pheromone
 
 
-
-
-
-
 def main():
-
+    # 1, 2, 8, 0.7
+    # 1, 3, 3, 1.1
+    # 1, 5, 30, 0.2
+    # 2, 3, 4, 0.5
+    # 2, 4, 2, 1.5
+    # 3, 4, 1, 3.4
+    # 3, 5, 9, 1.4
+    # 4, 5, 5, 2.2
     input = "ant.csv"
     alpha = 1
     beta = 1
@@ -175,9 +194,10 @@ def main():
     num_of_ants = 10000
     ant = Ant_colony(input=input, alpha=alpha, beta= beta, theta= theta, phi=phi, num_of_ants=num_of_ants)
     ant.make_graph()
-    ant.transition_probability(start_point=3, intermediate_solution=[1, 3], mode=True) # if mode, print out
-    ant.path_from_point(starting_point= 1, ending_point=5, highest=True)
-    ant.value_of_concentration(edge=[1,5], Q = 0.01)
+    # ant.transition_probability(start_point=3, intermediate_solution=[1, 3], mode=True) # if mode, print out
+    ant.given_path_total_pheromone(path=[2, 5, 4])
+    # ant.path_from_point(starting_point= 1, ending_point=5, highest=True)
+    # ant.value_of_concentration(edge=[1,5], Q = 0.01)
 
 
 main()
