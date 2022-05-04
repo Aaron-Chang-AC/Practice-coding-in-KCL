@@ -4,20 +4,18 @@ import pandas as pd
 import itertools
 
 class Ant_colony():
-    def __init__(self, input, alpha, beta, theta, phi, num_of_ants):
+    def __init__(self, input, alpha, beta, phi, num_of_ants):
         """
 
         :param input: CSV file name
         :param alpha: construction parameter
         :param beta: construction parameter
-        :param theta: heuristic information (For TSP mainly)
         :param phi: evaporate constant
         :param num_of_ants: Number of ants
         """
         self.input = input
         self.alpha = alpha
         self.beta = beta
-        self.theta = theta
         self.phi = phi
         self.df_bidirectional = None
         self.num_of_ants = num_of_ants
@@ -37,15 +35,18 @@ class Ant_colony():
         edge_temp = df[['node1', 'node2']].to_numpy()
         EDGES = np.append(edge_temp, df[['node2', 'node1']].to_numpy(), axis=0)
         # distance
-        distance_temp = df['distance'].to_numpy()
-        distances = np.append(distance_temp, df['distance'].to_numpy())
+        cost_temp = df['cost'].to_numpy()
+        cost = np.append(cost_temp, df['cost'].to_numpy())
         # pheromone
         pheromone_temp = df['pheromone'].to_numpy()
         pheromones = np.append(pheromone_temp, df['pheromone'].to_numpy())
 
+        # heuristic
+        heuristic_temp = df['heuristic'].to_numpy()
+        heuristic = np.append(heuristic_temp, df['heuristic'].to_numpy())
         # bidirectional graph
         df_bidirectional = pd.DataFrame(
-            {'node1': EDGES[:, 0], 'node2': EDGES[:, 1], 'distances': distances, 'pheromone': pheromones})
+            {'node1': EDGES[:, 0], 'node2': EDGES[:, 1], 'cost': cost, 'pheromone': pheromones, 'heuristic': heuristic})
         df_bidirectional = df_bidirectional.drop_duplicates(ignore_index=True)
         # print(df_bidirectional)
         self.df_bidirectional = df_bidirectional
@@ -61,10 +62,10 @@ class Ant_colony():
                 # print(self.df_bidirectional["node1"][ind], self.df_bidirectional["node2"][ind])
                 try:
                     if self.df_bidirectional.loc[ind, "node2"] != intermediate_solution[0] and self.df_bidirectional.loc[ind, "node2"] != intermediate_solution[1]:
-                        total_pheromone += ((self.df_bidirectional.loc[ind,"pheromone"])**self.alpha) * (self.theta**self.beta)
+                        total_pheromone += ((self.df_bidirectional.loc[ind,"pheromone"])**self.alpha) * (self.df_bidirectional.loc[ind,"heuristic"]**self.beta)
 
                 except: # when there is no intermediate_solution
-                    total_pheromone += ((self.df_bidirectional.loc[ind,"pheromone"])**self.alpha) * (self.theta**self.beta)
+                    total_pheromone += ((self.df_bidirectional.loc[ind,"pheromone"])**self.alpha) * (self.df_bidirectional.loc[ind,"heuristic"]**self.beta)
         if mode:
             print(f"Total Pheromone is: {total_pheromone}")
 
@@ -75,12 +76,12 @@ class Ant_colony():
                 try:
                     if self.df_bidirectional.loc[ind, "node2"] != intermediate_solution[0] and self.df_bidirectional.loc[
                         ind, "node2"] != intermediate_solution[1]:
-                        transition_probability = (((self.df_bidirectional.loc[ind,"pheromone"])**self.alpha) * (self.theta**self.beta))/ total_pheromone
+                        transition_probability = (((self.df_bidirectional.loc[ind,"pheromone"])**self.alpha) * (self.df_bidirectional.loc[ind,"heuristic"]**self.beta))/ total_pheromone
                         tp_dict[f"{start_point}_{self.df_bidirectional.loc[ind, 'node2']}"] = transition_probability
                         if mode:
                             print(f"p_{start_point}_{self.df_bidirectional.loc[ind, 'node2']}(t)={transition_probability}")
                 except:
-                    transition_probability =  (((self.df_bidirectional.loc[ind,"pheromone"])**self.alpha) * (self.theta**self.beta)) / total_pheromone
+                    transition_probability =  (((self.df_bidirectional.loc[ind,"pheromone"])**self.alpha) * (self.df_bidirectional.loc[ind,"heuristic"]**self.beta)) / total_pheromone
                     tp_dict[f"{start_point}_{self.df_bidirectional.loc[ind, 'node2']}"] = transition_probability
                     if mode:
                         print(f"p_{start_point}_{self.df_bidirectional.loc[ind, 'node2']}(t)={transition_probability}")
@@ -91,20 +92,7 @@ class Ant_colony():
             print(f"Minimum pheromone is path: {list(tp_dict.keys())[min_index]}")
         return total_pheromone, tp_dict
 
-    def given_path_total_pheromone(self, path):
-        pheromone = 0.0
-        # path = [4, 2, 5]
-        for i in range(len(path)):
-            for ind in range(len(self.df_bidirectional)):
-                if self.df_bidirectional.loc[ind, "node1"] == path[i]:
-                    try:
-                        if self.df_bidirectional.loc[ind, "node2"] == path[i+1]:
-                            pheromone += self.df_bidirectional.loc[ind, "pheromone"]
-                    except:
-                        # when it loop to the last element
-                        break
-        print(f"The sum of pheromone with the given path is : {pheromone}")
-        return pheromone
+
 
 
     def path_from_point(self, starting_point, ending_point, highest):
@@ -176,28 +164,38 @@ class Ant_colony():
         print(f"tao_{edge[0]},{edge[1]}_(t+1)= {new_pheromone}")
         return new_pheromone
 
+    def given_path_total_number(self, path, mode):
+        return_number = 0.0
+        # path = [4, 2, 5]
+        for i in range(len(path)):
+            for ind in range(len(self.df_bidirectional)):
+                if self.df_bidirectional.loc[ind, "node1"] == path[i]:
+                    try:
+                        if self.df_bidirectional.loc[ind, "node2"] == path[i + 1]:
+                            return_number += self.df_bidirectional.loc[ind, mode]
+                    except:
+                        # when it loop to the last element
+                        break
+        print(f"The sum of {mode} with the given path is : {return_number}")
+        return return_number
+
+
+
 
 def main():
-    # 1, 2, 8, 0.7
-    # 1, 3, 3, 1.1
-    # 1, 5, 30, 0.2
-    # 2, 3, 4, 0.5
-    # 2, 4, 2, 1.5
-    # 3, 4, 1, 3.4
-    # 3, 5, 9, 1.4
-    # 4, 5, 5, 2.2
     input = "ant.csv"
     alpha = 1
     beta = 1
-    theta = 1 # heuristic information associated with edge (i, j),, theta_ij = 1 / c_ij
     phi = 0.2 # evaporate constant
     num_of_ants = 10000
-    ant = Ant_colony(input=input, alpha=alpha, beta= beta, theta= theta, phi=phi, num_of_ants=num_of_ants)
+    ant = Ant_colony(input=input, alpha=alpha, beta= beta, phi=phi, num_of_ants=num_of_ants)
     ant.make_graph()
-    # ant.transition_probability(start_point=3, intermediate_solution=[1, 3], mode=True) # if mode, print out
-    ant.given_path_total_pheromone(path=[2, 5, 4])
+    # ant.transition_probability(start_point=2, intermediate_solution=[], mode=True) # if mode, print out
     # ant.path_from_point(starting_point= 1, ending_point=5, highest=True)
-    # ant.value_of_concentration(edge=[1,5], Q = 0.01)
+    # ant.value_of_concentration(edge=[1,5], Q = 0.01) # not quite useful
+
+    ant.transition_probability(start_point=2, intermediate_solution=[], mode=True) # if mode, print out
+    ant.given_path_total_number(path=[2, 5, 4], mode="cost") # mode can be "cost", "pheromone" or "heuristic"
 
 
 main()
