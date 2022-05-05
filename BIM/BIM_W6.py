@@ -7,7 +7,28 @@ import itertools
 def read_graph_from_csv():
     df = pd.read_csv('graph.csv', encoding='unicode_escape')
     return df
-
+def fast_calculate_cut_cost(L, R):
+    cost=0.0
+    df = read_graph_from_csv().drop_duplicates(ignore_index=True)
+    num_nodes = df[['node1', 'node2']].max().max() - df[['node1', 'node2']].min().min() + 1
+    print(f"Graph:\n{df}")
+    print(f"number of nodes: {num_nodes}\nnumber of edges: {len(df)}")
+    edge_temp = df[['node1', 'node2']].to_numpy()
+    EDGES = np.append(edge_temp, df[['node2', 'node1']].to_numpy(), axis=0)
+    weights_temp = df['weight'].to_numpy()
+    weights = np.append(weights_temp, df['weight'].to_numpy())
+    df_bidirectional = pd.DataFrame({'node1': EDGES[:, 0], 'node2': EDGES[:, 1], 'weight': weights})
+    df_bidirectional = df_bidirectional.drop_duplicates(ignore_index=True)
+    for i in range(len(L)):
+        for j in range(len(R)):
+            temp = df_bidirectional.loc[
+                (df_bidirectional['node1'] == L[i]) & (
+                    df_bidirectional['node2'] == R[j])].to_numpy()
+            # print(temp)
+            if len(temp)>0:
+                cost += temp[0, 2]
+    print(f"cost of the cut: {cost}")
+    return cost
 def calculate_cut_cost(L, R, df_bidirectional):
     cost=0.0
     for i in range(len(L)):
@@ -99,6 +120,7 @@ def weighted_graph_bisection_problem_SA(L=None, R=None, random_numbers=None, ini
     
 
 # EXECUTION_________________________
-weighted_graph_bisection_problem_SA(L=np.asarray([3,4,6,1,10],dtype=np.int8), R=np.asarray([2,5,7,8,9],dtype=np.int8),
-                                    random_numbers=np.asarray([0.7, 0.56, 0.16, 0.35, 0.32, 0.45, 0.67, 0.12, 0.78],dtype=np.float32),
-                                    initial_temperature=100, temperature_reducing_rate=0.9, k=2, transitions_each_phase=1)
+# weighted_graph_bisection_problem_SA(L=np.asarray([3,4,6,1,10],dtype=np.int8), R=np.asarray([2,5,7,8,9],dtype=np.int8),
+#                                     random_numbers=np.asarray([0.7, 0.56, 0.16, 0.35, 0.32, 0.45, 0.67, 0.12, 0.78],dtype=np.float32),
+#                                     initial_temperature=100, temperature_reducing_rate=0.9, k=2, transitions_each_phase=1)
+fast_calculate_cut_cost(L=np.asarray([3,5,6,7,10],dtype=np.int8), R=np.asarray([2,4,1,8,9],dtype=np.int8))
