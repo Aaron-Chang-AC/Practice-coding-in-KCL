@@ -179,23 +179,34 @@ class Ant_colony():
         print(f"The sum of {mode} with the given path is : {return_number}")
         return return_number
 
+    def calculate_heuristic(self):
+        for ind in range(len(self.df_bidirectional)):
+            # remember to change function according to given
+            self.df_bidirectional.loc[ind, "heuristic"] = round(100 / self.df_bidirectional.loc[ind, "cost"], 4)
+
+        self.df_bidirectional.to_csv(self.input, index = False)
+        print("Heuristic information is updated")
 
 
 
 def main():
+    print("When there is no heurisitic information, put 1")
+    print("When there is no pheromone information, put 0")
     input = "ant.csv"
     alpha = 1
     beta = 1
     phi = 0.2 # evaporate constant
-    num_of_ants = 10000
+    num_of_ants = 2
     ant = Ant_colony(input=input, alpha=alpha, beta= beta, phi=phi, num_of_ants=num_of_ants)
     ant.make_graph()
     # ant.transition_probability(start_point=2, intermediate_solution=[], mode=True) # if mode, print out
     # ant.path_from_point(starting_point= 1, ending_point=5, highest=True)
     # ant.value_of_concentration(edge=[1,5], Q = 0.01) # not quite useful
 
-    ant.transition_probability(start_point=2, intermediate_solution=[], mode=True) # if mode, print out
-    ant.given_path_total_number(path=[2, 5, 4], mode="cost") # mode can be "cost", "pheromone" or "heuristic"
+    # remember to update accordingly
+    ant.calculate_heuristic()
+    ant.transition_probability(start_point=5, intermediate_solution=[], mode=True) # if mode, print out
+    ant.given_path_total_number(path=[4, 2, 5], mode="cost") # mode can be "cost", "pheromone" or "heuristic"
 
 
 main()
