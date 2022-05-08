@@ -52,6 +52,7 @@ def tournament_selection(individuals_fitness_dict=None, pick_k_individuals=None)
 # EXECUTION_________________________
 '''
 # individuals_fitness_dict: key -> names of individuals, values -> fitness of individuals
+'''
 individuals_fitness_dict = {
     "a":3,
     "b":9,
@@ -63,4 +64,4 @@ individuals_fitness_dict = {
 roulette_wheel_selection(individuals_fitness_dict=individuals_fitness_dict)
 rank_selection(individuals_fitness_dict=individuals_fitness_dict)
 tournament_selection(individuals_fitness_dict=individuals_fitness_dict, pick_k_individuals=3)
-'''
+

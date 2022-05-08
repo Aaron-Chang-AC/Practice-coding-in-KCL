@@ -182,13 +182,44 @@ def branch_bound_knapsack_problem(input,maximum_weight):
     print(f"true_max_solution_weight: {true_max_solution_weight}") #roger
     print(f"true_max_solution_upper_bound: {true_max_solution_upperbound}") # roger
     return
-    
+
+def combs(a):
+    if len(a) == 0:
+        return [[]]
+    cs = []
+    for c in combs(a[1:]):
+        cs += [c, c+[a[0]]]
+    return cs
+
+def iterate_item(input, maximum_weight):
+    item_list = []
+    for i in range(len(input)):
+        item_list.append(int(input[i][0]))
+    combination_list = combs(item_list)
+    # sort
+    combination_list.sort(key=len)
+    for i in range(len(combination_list)):
+        combination_list[i].sort()
+
+    # for i in range(len(combination_list)):
+    #     if combination_list[i] == item_list:
+    #         combination_list.remove(combination_list[i])
+    # combination_list.remove([])
+
+    print(f"Tree node {combination_list}")
+    for i in range(len(combination_list)):
+        print("==========NEW ITEM DETAIL=========")
+        print(see_solution_detail(input=input, solution=set(combination_list[i]), maximum_weight= maximum_weight))
+
+
 # input = np.asarray([
 #     [1,4,6],
 #     [2,5,4],
 #     [3,6,3],
 #     [4,5,10]
 # ], dtype=np.float32)
+
+# check in the form of (i, p_i, w_i)
 input = np.asarray([
     [1, 4, 6],
     [2, 5, 4],
@@ -199,47 +230,4 @@ input = np.asarray([
 branch_bound_knapsack_problem(input,maximum_weight=15.0)
 print("\n")
 
-# see_solution_detail(input=input,solution=set([1]),maximum_weight=15.0)
-# see_solution_detail(input=input,solution=set([2]),maximum_weight=15.0)
-# see_solution_detail(input=input,solution=set([3]),maximum_weight=15.0)
-# see_solution_detail(input=input,solution=set([4]),maximum_weight=15.0)
-# see_solution_detail(input=input,solution=set([1,2]),maximum_weight=15.0)
-# see_solution_detail(input=input,solution=set([1,3]),maximum_weight=15.0)
-# see_solution_detail(input=input,solution=set([2,3]),maximum_weight=15.0)
-# see_solution_detail(input=input,solution=set([2,4]),maximum_weight=15.0)
-# see_solution_detail(input=input,solution=set([3,4]),maximum_weight=15.0)
-# see_solution_detail(input=input,solution=set([4,1]),maximum_weight=15.0)
-# see_solution_detail(input=input,solution=set([1,2,3]),maximum_weight=15.0)
-# see_solution_detail(input=input,solution=set([1,2,4]),maximum_weight=15.0)
-# see_solution_detail(input=input,solution=set([1,3,4]),maximum_weight=15.0)
-# see_solution_detail(input=input,solution=set([2,3,4]),maximum_weight=15.0)
-
-def combs(a):
-    if len(a) == 0:
-        return [[]]
-    cs = []
-    for c in combs(a[1:]):
-        cs += [c, c+[a[0]]]
-    return cs
-
-def iterate_item(input):
-    item_list = []
-    for i in range(len(input)):
-        item_list.append(int(input[i][0]))
-    combination_list = combs(item_list)
-    # sort
-    combination_list.sort(key=len)
-    for i in range(len(combination_list)):
-        combination_list[i].sort()
-
-    for i in range(len(combination_list)):
-        if combination_list[i] == item_list:
-            combination_list.remove(combination_list[i])
-    combination_list.remove([])
-
-    print(f"Tree node {combination_list}")
-    for i in range(len(combination_list)):
-        print("==========NEW ITEM DETAIL=========")
-        print(see_solution_detail(input=input, solution=set(combination_list[i]), maximum_weight=15))
-
-iterate_item(input)
+iterate_item(input, maximum_weight=15.0)

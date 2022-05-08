@@ -185,7 +185,7 @@ def main():
     input_cnf_file = "C:/Users/KuanHaoChen/Documents/GitHub/EXAMPREP/BIM/cnf.cnf"
     verbose = 1  # 0 or 1, 1 to see details
     # if assignment is empty, generate randomly
-    assignment = [1, -2, -3, -4, -5, -6, 7, 8, -9, 10, 11, 12, -13, -14, 15, 16, 17, -18, -19, -20]
+    assignment = [-1, 2, -3, -4, -5, -6, 7, 8, -9, 10, 11, 12, -13, -14, 15, 16, 17, -18, -19, -20]
     solver = WalkSAT_Solver(input_cnf_file, assignment, verbose)
     solver.solve()
     solver.assignment_to_binary()

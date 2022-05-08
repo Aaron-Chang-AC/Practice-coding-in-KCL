@@ -104,9 +104,11 @@ def TSP():
             opt_solution_cnt += 1
             print(f"optimal solution {opt_solution_cnt}: {solution_dict[i]}")
     print(f"number of optimal solutions: {opt_solution_cnt}")
+    print("===However check if the question is asking distinct optimum tour or tours with optimum cost (due to symmetry)==")
+    print("===Normally due to symmetry, times 2 to the number of vertices===")
     print(f"probability of finding an optimum tour when generating a tour at random: {float(opt_solution_cnt)/len(solution_dict)}")
 
-TSP()
+
 '''
 for week4 tutorial Q1
 
@@ -123,3 +125,6 @@ for week4 tutorial Q3 : Note that modifing the csv file is needed when the quest
 TSP()
 
 '''
+# error_witness(number_of_bits=8,x=54,y=173)
+error_witness(number_of_bits=8,x=int('10100001',2),y=int('11000011',2))
+# TSP()

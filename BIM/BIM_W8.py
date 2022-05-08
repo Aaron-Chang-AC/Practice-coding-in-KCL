@@ -150,7 +150,7 @@ def job_scheduling(jobs=None, machines=None):
             best_makespan = temp_makespan
             best_schedule = i.copy()
     print(f"optimal solution of job_scheduling: {best_schedule}\nbest_makespan:{best_makespan}")
-    return
+    return best_schedule
 def quick_check_makespan(jobs=None, machines=None, add_constraints=None):
     task_list = []
     constraints = []
@@ -228,9 +228,9 @@ quick_check_makespan(jobs=copy.deepcopy(jobs), machines=copy.deepcopy(machines),
 
 '''
 jobs = [
-    [task(1, 1, 5), task(2, 2, 4), task(3, 3, 2)],
-    [task(4, 3, 2), task(5, 1, 3), task(6, 2, 7)],
-    [task(7, 1, 3), task(8, 2, 6), task(9, 3, 1)]
+    [task(1, 1, 3), task(2, 2, 2), task(3, 3, 3)],
+    [task(4, 2, 4), task(5, 1, 2), task(6, 3, 3)],
+    [task(7, 2, 2), task(8, 3, 1), task(9, 1, 2)]
 ]
 machines = {
     1: machine(),
@@ -238,6 +238,8 @@ machines = {
     3: machine()
 }
 
-job_scheduling(jobs=copy.deepcopy(jobs), machines=copy.deepcopy(machines))
-print(calculate_makespan(solution=[4, 7, 1, 8, 5, 2, 6, 3, 9], jobs=copy.deepcopy(jobs), machines=copy.deepcopy(machines)))
-quick_check_makespan(jobs=copy.deepcopy(jobs), machines=copy.deepcopy(machines), add_constraints=[[8,2,6],[1,7,5],[4,3,9]])
+# job_scheduling(jobs=copy.deepcopy(jobs), machines=copy.deepcopy(machines))
+# print(calculate_makespan(solution=[4, 7, 1, 8, 5, 2, 6, 3, 9], jobs=copy.deepcopy(jobs), machines=copy.deepcopy(machines)))
+quick_check_makespan(jobs=copy.deepcopy(jobs), machines=copy.deepcopy(machines), add_constraints=[[1,5,9],[4,7,2],[6,3,8]])
+
+# [8,2,6],[1,7,5],[4,3,9]

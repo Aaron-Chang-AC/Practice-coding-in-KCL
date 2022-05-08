@@ -85,7 +85,7 @@ class MST:
             parent[yroot] = xroot
             rank[xroot] += 1
 
-    def kruskal(self):
+    def kruskal(self, return_mode):
         result_vertices = [] # store resultant MST
         total_weight = 0
         # sort all edges in non-decreasing order
@@ -113,16 +113,16 @@ class MST:
                 result_vertices.append([u, v, w])
                 self.union(parent, rank, x, y)
         for u, v, weight in result_vertices:
-            print(f"Final Answer {self.num_alpha_convert(int(u))} --> {self.num_alpha_convert(int(v))} and weight is {weight}")
+            if return_mode == "alphabet":
+                print(f"Final Answer {self.num_alpha_convert(int(u))} --> {self.num_alpha_convert(int(v))} and weight is {weight}")
+            else:
+                print(f"Final Answer {u} --> {v} and weight is {weight}")
+
             total_weight += weight
         print(f"Total weight is: {total_weight}")
 
 
-
-
-
-
-
+# only capital alphabet!!!!
 alphabet_input= [
     ["A", "B", 3],
     ["A", "D", 5],
@@ -138,10 +138,20 @@ alphabet_input= [
     ["E", "H", 3],
     ["E", "F", 10],
     ["G", "H", 2]
+    # [0, 1, 30],
+    # [0, 2, 27],
+    # [0, 3, 24],
+    # [0, 4, 10],
+    # [1, 2, 26],
+    # [1, 3, 23],
+    # [1, 4, 20],
+    # [2, 3, 40],
+    # [2, 4, 25],
+    # [3, 4, 17],
 ]
 
 input = "graph.csv"
 mst = MST(input)
 mst.transform_alphabet_to_csv(alphabet_input=alphabet_input)
 mst.make_graph()
-mst.kruskal()
+mst.kruskal(return_mode="alphabet") # "alphabet" or "numerical"

@@ -239,60 +239,58 @@ def number_to_alphabet(alphabet_list = None, input_num_list = None):
     return result_list
 # EXECUTION_________________________
 '''
-if there are given coordinates for cities, produce a csv file for graph first!!
-X is the coordinates for cities
-
-X = np.asarray([
-    [4,11],
-    [15,10],
-    [10,5],
-    [25,10],
-    [35,10],
-    [46,11],
-    [20,5],
-    [30,5],
-    [40,5]
-], dtype=np.float32)
-
-transform_coordinate_to_csv(X)
-
-'''
-
-'''
 Execute TSP()
 
 TSP()
 '''
-
-'''
-calculate the nearest_neighbour_heuristic tour with given starting_city which is a number
-
-nearest_neighbour_heuristic(starting_city=0)
-'''
+TSP()
 
 '''
 calculate the two-change neighbourhoods with given an input configuration which is a tour
-two_change_TSP(input_config=np.asarray([0,1,2,3,4,0]))
-# two_change_TSP(input_config=np.asarray([0, 2, 1, 6, 3, 7, 4, 8, 5, 0]))
+finish back to the origin starting point
 '''
+two_change_TSP(input_config=np.asarray([0,2,1,4,3,0]))
+# two_change_TSP(input_config=np.asarray([0, 2, 1, 6, 3, 7, 4, 8, 5, 0]))
+
+
+
+
+# ==========================TSP Construction Heuristics=============================
+
+'''
+if there are given coordinates for cities, produce a csv file for graph first!!
+X is the coordinates for cities
+'''
+# X = np.asarray([
+#     [4,11],
+#     [15,10],
+#     [10,5],
+#     [25,10],
+#     [35,10],
+#     [46,11],
+#     [20,5],
+#     [30,5],
+#     [40,5]
+# ], dtype=np.float32)
+#
+# transform_coordinate_to_csv(X)
+
+
+'''
+# calculate the nearest_neighbour_heuristic tour with given starting_city which is a number
+'''
+# nearest_neighbour_heuristic = nearest_neighbour_heuristic(starting_city=0)
+# number_to_alphabet(alphabet_list = ["a","b","c","d","e","f","g","h","k"], input_num_list = nearest_neighbour_heuristic)
+
+# print("====================================Two Change======================================")
+# two_change_TSP(input_config=np.asarray(nearest_neighbour_heuristic))
 
 '''
 calculate the nearest_neighbour_heuristic tour with given starting_cities which is a tour
-insersion_heuristic(starting_cities=np.asarray([0,2,1,0]))
 '''
+# insertion_heuristic = insersion_heuristic(starting_cities=np.asarray([0,2,1,0]))
+# number_to_alphabet(alphabet_list = ["a","b","c","d","e","f","g","h","k"], input_num_list = insertion_heuristic)
 
-
-
-"""
-Change number index to alphabet
-number_to_alphabet(alphabet_list = ["a","b","c","e"], input_num_list = [0, 2, 3, 1, 3, 2, 3, 0])
-
-"""
-
-# insertion_tour_list = insersion_heuristic(starting_cities=np.asarray([0,2,1,0]))
-# nearest_tour_list = nearest_neighbour_heuristic(starting_city=0)
-two_change_tour_list = two_change_TSP(input_config=np.asarray([0, 2, 1, 6, 3, 7, 4, 8, 5, 0]))
-number_to_alphabet(alphabet_list = ["a","b","c","d","e","f","g","h","k"], input_num_list = two_change_tour_list)
 
 
 
