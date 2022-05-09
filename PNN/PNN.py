@@ -394,6 +394,29 @@ Week 5
 # print(f"Max pooling: \n {w5.max_pooling(pools=pool_result)}")
 
 # ====================================================================================================
+# calculate output dimension after CNN
+# [height, width, channels] for input
+# [height, width, channels, number of mask] for mask
+input_dimension = [49, 49, 3]
+mask_dimension = [1, 1, 0,  20]
+pooling = 2
+stride = 1
+padding = 1
+use_pooling = False
+
+if not use_pooling:
+      output = w5.calculate_outputDimension(input_dimension=input_dimension, mask_dimension=mask_dimension, pooling = None, stride= stride, padding=padding)
+      print(f"Output dimension is: \n [height, width, channel]  \n {output}")
+
+      print(f"If flattering, the final length of feature vector is: {np.prod(output)}")
+
+else:
+      output =w5.calculate_outputDimension(input_dimension=input_dimension, mask_dimension=mask_dimension, pooling= pooling, stride=stride, padding=padding)
+      print(f"Output dimension is: \n [height, width, channel]  \n {output}")
+
+      print(f"If flattering, the final length of feature vector is: {np.prod(output)}")
+
+# ====================================================================================================
 
 
 """

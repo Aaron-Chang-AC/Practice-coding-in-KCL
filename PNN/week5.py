@@ -59,7 +59,7 @@ def get_pooling(img, pool_size= 2, stride= 2, padding = None):
     # To store individual pools
     img = np.pad(img, padding, mode='constant')
     pools = []
-    print(img)
+    print(f"Image is: \n {img}")
     # Iterate over all row blocks (single block has `stride` rows)
     for i in np.arange(img.shape[0], step=stride):
         # Iterate over all column blocks (single block has `stride` columns)
@@ -120,6 +120,33 @@ def batch_normalization(input, beta=None, gamma=None, eta=None):
     Varx = np.var(input, axis=0)
     BN = beta + gamma * ((input-Ex)/np.sqrt(Varx+eta))
     return BN
+
+def calculate_outputDimension(input_dimension, mask_dimension, pooling, stride, padding):
+    """
+
+    :param input_dimension: an array in the form of [height, width]
+    :param mask_dimension:
+    :param stride:
+    :param padding:
+    :return:
+    """
+    if pooling == None:
+        if mask_dimension[0] == 1 and mask_dimension[1] == 1:
+            print("1x1 convolution does not change dimension")
+            output = [input_dimension[0], input_dimension[1], mask_dimension[3]]
+        else:
+            output_dim_height = 1+ ((input_dimension[0] - mask_dimension[0] + 2 * padding)/stride)
+            output_dim_weight = 1+ ((input_dimension[1] - mask_dimension[1] + 2 * padding)/stride)
+            output_channel = mask_dimension[3]
+            output = [output_dim_height, output_dim_weight, output_channel]
+    else:
+        output_dim_height = 1 + ((input_dimension[0] - pooling) / stride)
+        output_dim_weight = 1 + ((input_dimension[1] - pooling) / stride)
+        output_channel = mask_dimension[3]
+        output = [output_dim_height, output_dim_weight, output_channel]
+
+
+    return output
 
 '''
 batch normalization for output neurons(tutarial Q5)
