@@ -157,7 +157,8 @@ Week 2 Discriminant Functions
 #     ),
 #     true_label = np.asarray([1,1,2,2,3]),
 #     learning_rate = 1.0,
-#     epochs = 10
+#     epochs = 10,
+#     select_highest_index=True
 # )
 # ===================================================================================
 # w2.sequential_widrow_hoff(
@@ -183,20 +184,23 @@ Week 2 Discriminant Functions
 Week 3 
 
 """
-# simple_neuron(
-#     initial_theta = 0.0,
-#     initial_w = np.asarray([0.1,-0.5,0.4], dtype=np.float32),
+
+
+# ======================================================
+
+# w3.simple_neuron(
+#     initial_theta = -2,
+#     initial_w = np.asarray([-1, 3], dtype=np.float32),
 #     xt = np.asarray(
 #         [
-#             [0.1, -0.5, 0.4],
-#             [0.1, 0.5, 0.4]
+#             [2, 0.5]
 #         ]
 #     ),
-#     H_0 = 0.5
+#     H_0 = 1
 #
 # )
-#
-# sequential_delta_learning_rule(
+# ============================================================
+# w3.sequential_delta_learning_rule(
 #     initial_theta=-1.0,
 #     initial_w = np.asarray([0,0], dtype=np.float32),
 #     xt=np.asarray(
@@ -216,8 +220,9 @@ Week 3
 #     epochs=10
 #
 # )
-#
-# batch_delta_learning_rule(
+
+# =============================================================
+# w3.batch_delta_learning_rule(
 #     initial_theta=1.5,
 #     initial_w = np.asarray([2], dtype=np.float32),
 #     xt=np.asarray(
@@ -233,10 +238,10 @@ Week 3
 #     epochs=7
 #
 # )
-#
+# ================================================================
 # #NOTE: the dimension of yt is same as
 # # (W * xt)t
-# negative_feedback_network_original(
+# w3.negative_feedback_network_original(
 #     initial_W = np.asarray(
 #         [
 #             [1,1,0],
@@ -251,15 +256,170 @@ Week 3
 #         ],
 #         dtype=np.float32
 #     ),
-#     alpha=0.5,
-#     epochs=5
+#     alpha=0.25,
+#     epochs=4
 #
 # )
+
+"""
+Week 4
+
+"""
+
+
+"""
+Week 5
+- Activation Function (ReLU, LReLU, tanh, heavside)
+- Batch Normalization
+- Mask Convolution (Refer to code if possible, bit complicated)
+
+# For pooling----
+- Average Pooling
+- Max Pooling
+"""
+# ====================================================================================================
+# # Activation_function
+
+# input = np.asarray([
+#     [1, 0.5, 0.2],
+#     [-1, -0.5, -0.2],
+#     [0.1, -0.1, 0]
+# ], dtype=np.float32)
+# alpha = 0.1
+# threshold = 0.1
+# H_0 = 0.5
+#
+# print(f'ReLU result: \n {w5.activation_function(input, mode="relu")}')
+# print(f'LReLU result: \n {w5.activation_function(input, alpha=0.1, mode="lrelu")}')
+# print(f'Tanh result: \n {w5.activation_function(input, mode="tanh")}')
+# print(f'Heaviside result: \n {w5.activation_function(input, H_0=0.5, threshold=0.1, mode="heaviside")}')
+# ====================================================================================================
+
+# # Batch normalization for output neurons
+# input1 = np.array([
+#     [1, 0.5,  0.2],
+#     [ -1, -0.5,  -0.2],
+#     [0.1, -0.1,  0],
+# ])
+#
+# input2 = np.array([
+#     [1, -1,  0.1],
+#     [0.5, -0.5,  -0.1],
+#     [0.2, -0.2,  0],
+# ])
+#
+# input3 = np.array([
+#     [0.5, -0.5,  -0.1],
+#     [ 0, -0.4,  0],
+#     [0.5, 0.5,  0.2],
+# ])
+#
+# input4 = np.array([
+#     [0.2, 1,  -0.2],
+#     [-1, -0.6,  -0.1],
+#     [0.1, 0,  0.1],
+# ])
+#
+# final_input_array = np.stack([input1, input2, input3, input4])
+# # print(final_input_array)
+# print(w5.batch_normalization(final_input_array, beta=0, gamma=1, eta=0.1))
+
+# ====================================================================================================
+# # For the purpose of image convolution with mask H
+# # multiple channels and each channel corresponds to a mask
+# # padding=0, stride=1, dilation=2:
+#
+# conv_input1 = np.array([
+#     [0.2, 1,  0],
+#     [ -1, 0,  -0.1],
+#     [0.1, 0,  0.1]
+# ])
+# conv_input2 = np.array([
+#     [1, 0.5,  0.2],
+#     [ -1, -0.5,  -0.2],
+#     [0.1, -0.1,  0]
+# ])
+# H1 = np.array([
+#     [1,  -0.1],
+#     [1,  -0.1]
+# ])
+# H2 = np.array([
+#     [0.5,  0.5],
+#     [-0.5, -0.5]
+# ])
+# # parameters setting
+# padding=0
+# stride=1
+# dilation = 2
+# use_dilation = True # set True if dilation is used
+#
+# if use_dilation:
+#     # only use when dilation is involved
+#     img_after_dilation1 = w5.get_dilation(conv_input1, dilation=dilation)
+#     print(f"conv_input1 after dilation:\n{img_after_dilation1}")
+#     img_after_dilation2 = w5.get_dilation(conv_input2, dilation=dilation)
+#     print(f"conv_input2 after dilation:\n{img_after_dilation2}")
+#
+#     pool_result1 = w5.get_pooling(img=img_after_dilation1, pool_size=H1.shape[0], stride=stride, padding=padding)
+#     pool_result2 = w5.get_pooling(img=img_after_dilation2, pool_size=H2.shape[0], stride=stride, padding=padding)
+#     final_addition = w5.mask_convolution(img=img_after_dilation1, mask=H1, pools=pool_result1, stride=stride,
+#                                          padding=padding) + w5.mask_convolution(img=img_after_dilation2, mask=H2,
+#                                                                                 pools=pool_result2, stride=stride,
+#                                                                                 padding=padding)
+#     print(f"Final addition result: \n{final_addition}")
+#
+# else:
+#     pool_result1 = w5.get_pooling(img=conv_input1, pool_size= H1.shape[0], stride=stride, padding=padding)
+#     pool_result2 = w5.get_pooling(img=conv_input2, pool_size= H2.shape[0], stride=stride, padding=padding)
+#     final_addition = w5.mask_convolution(img=conv_input1, mask = H1, pools=pool_result1, stride=stride, padding=padding)+w5.mask_convolution(img=conv_input2, mask = H2, pools=pool_result2, stride=stride, padding=padding)
+#     print(f"Final addition result: \n{final_addition}")
+
+
+# ====================================================================================================
+
+# # Find average or maximum pooling
+# conv_input = np.array([
+#     [0.2, 1,  0,  0.4],
+#     [ -1, 0,  -0.1,  -0.1],
+#     [0.1, 0,  -1,  -0.5],
+#     [ 0.4, -0.7,  -0.5,  1]
+# ])
+#
+# pooling_region = 3 # pool size, e.g. 2x2 pooling region just need to write 2
+# stride = 1
+# padding = 0
+#
+# pool_result = w5.get_pooling(img=conv_input, pool_size=pooling_region, stride= stride, padding=padding)
+# print(f"Average pooling: \n {w5.average_pooling(pools=pool_result)}")
+# print(f"Max pooling: \n {w5.max_pooling(pools=pool_result)}")
+
+# ====================================================================================================
+
 
 """
 Week 6
  
 """
 
+"""
+Week 7
 
+"""
 
+# # =======================================================================
+# V = np.asarray([
+#     [1, -4],
+#     [1, 3],
+#     [2, 2],
+#     [1, -1]
+# ], dtype = np.float32)
+# x = np.asarray([2.0, 3.0])
+#
+# y1_t = np.asarray([1, 2, 0, -1])
+# y2_t = np.asarray([0, 0.5, 1, 0])
+#
+# y_t = np.asarray([y1_t, y2_t])
+# w7.sparse_coding(V, x, y_t, LAMBDA=1.0)
+# # ==========================================================================
+#
+#
