@@ -41,20 +41,45 @@ def activation_function(input, alpha=None, H_0=None, threshold=None, mode=None):
     elif mode == "heaviside":
         return heaviside_f(input, H_0, threshold)
 
-def get_dilation(img, dilation=None):
-    result=[]
-    rows = img.shape[0]
-    cols = img.shape[1]
-    cnt=0
+# def get_dilation(img, dilation=None):
+#     result=[]
+#     rows = img.shape[0]
+#     cols = img.shape[1]
+#     cnt=0
+#     for i in range(rows):
+#         if ((i + 1) % dilation) == 1:
+#             result.append([])
+#             cnt+=1
+#         for j in range(cols):
+#             if (((i+1) % dilation) == 1) and (((j+1) % dilation) == 1):
+#                 result[cnt-1].append(img[i, j])
+#     return np.asarray(result)
+
+def mask_dilation(mask, dilation=None):
+    if dilation == 1:
+        return mask
+    result = []
+    rows = (mask.shape[0] - 1) * dilation + 1
+    cols = (mask.shape[1] - 1) * dilation + 1
+    cnt = 0
+    mask_idx = 0
     for i in range(rows):
         if ((i + 1) % dilation) == 1:
             result.append([])
             cnt+=1
-        for j in range(cols):
-            if (((i+1) % dilation) == 1) and (((j+1) % dilation) == 1):
-                result[cnt-1].append(img[i, j])
+            temp = mask[mask_idx].copy()
+            mask_idx += 1
+            temp_idx = 0
+            for j in range(cols):
+                if (((i + 1) % dilation) == 1) and (((j + 1) % dilation) == 1):
+                    result[cnt - 1].append(temp[temp_idx])
+                    temp_idx += 1
+                else:
+                    result[cnt - 1].append(0.0)
+        else:
+            result.append([0.0] * cols)
+            cnt += 1
     return np.asarray(result)
-
 def get_pooling(img, pool_size= 2, stride= 2, padding = None):
     # To store individual pools
     img = np.pad(img, padding, mode='constant')
@@ -203,14 +228,14 @@ H2 = np.array([
 ])
 stride=1
 padding=0
-img_after_dilation1 = get_dilation(conv_input1, dilation=2)
-img_after_dilation2 = get_dilation(conv_input2, dilation=2)
-print(f"conv_input1 after dilation:\n{img_after_dilation1}")
-print(f"conv_input2 after dilation:\n{img_after_dilation2}")
 
-pool_result1 = get_pooling(img=img_after_dilation1, pool_size= H1.shape[0], stride=stride, padding=padding)
-pool_result2 = get_pooling(img=img_after_dilation2, pool_size= H2.shape[0], stride=stride, padding=padding)
-print(mask_convolution(img=img_after_dilation1, mask = H1, pools=pool_result1, stride=stride, padding=padding)+mask_convolution(img=img_after_dilation2, mask = H2, pools=pool_result2, stride=stride, padding=padding))
+H1_after_dilation1 = mask_dilation(H1, dilation=2)
+H2_after_dilation2 = mask_dilation(H2, dilation=2)
+
+pool_result1 = get_pooling(img=conv_input1, pool_size= H1_after_dilation1.shape[0], stride=stride, padding=padding)
+pool_result2 = get_pooling(img=conv_input2, pool_size= H2_after_dilation2.shape[0], stride=stride, padding=padding)
+
+print(mask_convolution(img=conv_input1, mask = H1_after_dilation1, pools=pool_result1, stride=stride, padding=padding)+mask_convolution(img=conv_input2, mask = H2_after_dilation2, pools=pool_result2, stride=stride, padding=padding))
 
 '''
 
@@ -247,6 +272,34 @@ print(activation_function(input, alpha=0.1, mode="lrelu"))
 print(activation_function(input, mode="tanh"))
 print(activation_function(input, H_0=0.5, threshold=0.1, mode="heaviside"))
 '''
+conv_input1 = np.array([
+    [0.2, 1,  0],
+    [ -1, 0,  -0.1],
+    [0.1, 0,  0.1]
+])
+conv_input2 = np.array([
+    [1, 0.5,  0.2],
+    [ -1, -0.5,  -0.2],
+    [0.1, -0.1,  0]
+])
+H1 = np.array([
+    [1,  -0.1],
+    [1,  -0.1]
+])
+H2 = np.array([
+    [0.5,  0.5],
+    [-0.5, -0.5]
+])
+stride=1
+padding=0
+
+H1_after_dilation1 = mask_dilation(H1, dilation=2)
+H2_after_dilation2 = mask_dilation(H2, dilation=2)
+
+pool_result1 = get_pooling(img=conv_input1, pool_size= H1_after_dilation1.shape[0], stride=stride, padding=padding)
+pool_result2 = get_pooling(img=conv_input2, pool_size= H2_after_dilation2.shape[0], stride=stride, padding=padding)
+
+print(mask_convolution(img=conv_input1, mask = H1_after_dilation1, pools=pool_result1, stride=stride, padding=padding)+mask_convolution(img=conv_input2, mask = H2_after_dilation2, pools=pool_result2, stride=stride, padding=padding))
 
 
 
