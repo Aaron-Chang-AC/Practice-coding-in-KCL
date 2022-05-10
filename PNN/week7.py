@@ -37,16 +37,47 @@ def PCA(S, dimension, new_samples_to_be_classified):
 
     return results
 
+# Dr Michael Version
+def KL_Transform(S, dimension, new_samples_to_be_classified):
+    n = len(S)
+    X = S.copy().T
+    print(f"original dataset(each column is a sample):\n{X}\n")
+    m = X.mean(axis=1)
+    Xi_m = X - m.reshape(-1, 1)
+    covariance_matrix = (Xi_m @ Xi_m.T) / n
+    print(f"covariance_matrix:\n{covariance_matrix}\n")
+    W, V = np.linalg.eigh(covariance_matrix) # W is eigenvalues in ascending order and V is the normalized eigenvector
+    # sort in descending
+    idx = W.argsort()[::-1]
+    W = W[idx]
+    V = V[:,idx]
 
-S = np.asarray([
-    [1,2,1],
-    [2,3,1],
-    [3,5,1],
-    [2,2,1]
-])
+    print(f"Eigenvalues (Sorted):\n{W}\n")
+    print(f"Eigenvectors(Sorted):\n{V}\n")
+
+    V_hat = V.copy()[:, 0:dimension]
+    V_hatT = V_hat.T
+    print(f"V_hatT:\n{V_hatT}\n")
+    results = V_hatT @ Xi_m
+    print(f"results(each column is a converted sample):\n{results}\n")
+
+    if len(new_samples_to_be_classified) > 0:
+        new_targets = V_hatT @ new_samples_to_be_classified.T
+        print(f"results(each column is a converted sample):\n{new_targets}\n")
+
+    return results
+
+
+# S = np.asarray([
+#     [1,2,1],
+#     [2,3,1],
+#     [3,5,1],
+#     [2,2,1]
+# ])
 # new_samples_to_be_classified = np.asarray([
 #         [3,-2,5]
 # ])
+# print(KL_Transform(S=S, dimension=2, new_samples_to_be_classified=new_samples_to_be_classified))
 
 # S = np.asarray([
 #     [0,1],
@@ -193,16 +224,3 @@ def sparse_coding(V, x, y_t, LAMBDA = 0):
 # y_t = np.asarray([y1_t, y2_t, y3_t])
 # sparse_coding(V, x, y_t, LAMBDA=0.0)
 
-V = np.asarray([
-    [1, -4],
-    [1, 3],
-    [2, 2],
-    [1, -1]
-], dtype = np.float32)
-x = np.asarray([2.0, 3.0])
-
-y1_t = np.asarray([1, 2, 0, -1])
-y2_t = np.asarray([0, 0.5, 1, 0])
-
-y_t = np.asarray([y1_t, y2_t])
-sparse_coding(V, x, y_t, LAMBDA=1.0)
