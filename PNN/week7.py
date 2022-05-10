@@ -113,6 +113,7 @@ def oja_learning(datapoints, initial_weight,learning_rate = 0.01, epoch=2, mode=
                 weight_change = learning_rate * (y * xt_yw)
                 total_weight_change+=weight_change
                 print(f"xt:\n{Xi_m.T[j]}\ny=wx:\n{y}\nxt-yw:\n{xt_yw}\nphi*y(xt-yw):\n{weight_change}")
+                print(f"--------------------------")
             print(f"total weight change:\n{total_weight_change}")
             initial_weight = np.add(initial_weight,total_weight_change)
             print(f"new weight:\n{initial_weight}\n")
