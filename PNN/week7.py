@@ -47,7 +47,7 @@ def KL_Transform(S, dimension, new_samples_to_be_classified):
     covariance_matrix = (Xi_m @ Xi_m.T) / n
     print(f"covariance_matrix:\n{covariance_matrix}\n")
     W, V = np.linalg.eigh(covariance_matrix) # W is eigenvalues in ascending order and V is the normalized eigenvector
-    # sort in descending
+    # sort in descending for both eigenvalues and eigenvectors
     idx = W.argsort()[::-1]
     W = W[idx]
     V = V[:,idx]
