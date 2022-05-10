@@ -478,33 +478,36 @@ S = np.asarray([
 
 #=====================================================================================
 ## if given eigenvalues and eigenvectors
-# eigenvalues = np.array([0.00, 0.71, 1.90, 3.21])
-# eigenvectors = np.array([
-#     [-0.59, 0.55, 0.11, 0.58],
-#     [-0.56, -0.78, 0.25, 0.12],
-#     [0.25, 0.12, 0.96, -0.04],
-#     [0.52, -0.27, -0.07, 0.81]
-# ])
-# new_samples_to_be_classified = np.asarray([
-#         [5.0, 5.0, 4.4, 3.2]
-# ])
-# dimension = 2
-#
-# # don't change below code if no extra circumstances
-# idx = eigenvalues.argsort()[::-1]
-# W = eigenvalues[idx]
-# V = eigenvectors[:, idx]
-#
-# print(f"Eigenvalues (Sorted):\n{W}\n")
-# print(f"Eigenvectors(Sorted):\n{V}\n")
-#
-# V_hat = V.copy()[:, 0:dimension]
-# V_hatT = V_hat.T
-# print(f"V_hatT:\n{V_hatT}\n")
-#
-# if len(new_samples_to_be_classified) > 0:
-#     new_targets = V_hatT @ new_samples_to_be_classified.T
-#     print(f"Results(each column is a converted sample):\n{new_targets}\n")
+eigenvalues = np.array([0.00, 0.71, 1.90, 3.21])
+eigenvectors = np.array([
+    [-0.59, 0.55, 0.11, 0.58],
+    [-0.56, -0.78, 0.25, 0.12],
+    [0.25, 0.12, 0.96, -0.04],
+    [0.52, -0.27, -0.07, 0.81]
+])
+new_samples_to_be_classified = np.asarray([
+        [5.0, 5.0, 4.4, 3.2]
+])
+dimension = 2
+X = S.copy().T
+m = X.mean(axis=1)
+# don't change below code if no extra circumstances
+idx = eigenvalues.argsort()[::-1]
+W = eigenvalues[idx]
+V = eigenvectors[:, idx]
+
+print(f"Eigenvalues (Sorted):\n{W}\n")
+print(f"Eigenvectors(Sorted):\n{V}\n")
+
+V_hat = V.copy()[:, 0:dimension]
+V_hatT = V_hat.T
+print(f"V_hatT:\n{V_hatT}\n")
+
+if len(new_samples_to_be_classified) > 0:
+    new_m = new_samples_to_be_classified - m
+    print(new_m)
+    new_targets = V_hatT @ (new_m.T)
+    print(f"results(each column is a converted sample):\n{new_targets}\n")
 
 
 
@@ -525,13 +528,13 @@ S = np.asarray([
 
 #===================================================================================================
 # Hebbian Learning Rule
-S = np.asarray([
-    [0, 1],
-    [1, 2],
-    [3, 1],
-    [-1, -2],
-    [-3, -2]
-])
-print(w7.hebbian_learning(datapoints=S, initial_weight=np.asarray([0.5, -0.2]), learning_rate=0.1, epoch=2, mode="sequential"))
+# S = np.asarray([
+#     [0, 1],
+#     [1, 2],
+#     [3, 1],
+#     [-1, -2],
+#     [-3, -2]
+# ])
+# print(w7.hebbian_learning(datapoints=S, initial_weight=np.asarray([0.5, -0.2]), learning_rate=0.1, epoch=2, mode="sequential"))
 
 #===================================================================================================

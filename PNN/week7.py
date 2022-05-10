@@ -62,7 +62,8 @@ def KL_Transform(S, dimension, new_samples_to_be_classified):
     print(f"results(each column is a converted sample):\n{results}\n")
 
     if len(new_samples_to_be_classified) > 0:
-        new_targets = V_hatT @ new_samples_to_be_classified.T
+        new_m = new_samples_to_be_classified - m
+        new_targets = V_hatT @ (new_m.T)
         print(f"results(each column is a converted sample):\n{new_targets}\n")
 
     return results
