@@ -112,7 +112,7 @@ def hebbian_learning(datapoints, initial_weight,learning_rate = 0.01, epoch=2, m
                 # xt_yw = Xi_m.T[j] - (y * initial_weight)
                 weight_change = learning_rate * (y * Xi_m.T[j] )
                 total_weight_change+=weight_change
-                print(f"xt:\n{Xi_m.T[j]}\ny=wx:\n{y}\nphi*y(xt-yw):\n{weight_change}")
+                print(f"xt:\n{Xi_m.T[j]}\ny=wx:\n{y}\nphi*y(xt):\n{weight_change}")
                 print(f"--------------------------")
             print(f"total weight change:\n{total_weight_change}")
             initial_weight = np.add(initial_weight,total_weight_change)
@@ -124,7 +124,9 @@ def hebbian_learning(datapoints, initial_weight,learning_rate = 0.01, epoch=2, m
                 # xt_yw = Xi_m.T[j] - (y * initial_weight)
                 weight_change = learning_rate * (y * Xi_m.T[j])
                 initial_weight= np.add(initial_weight, weight_change)
-                print(f"xt:\n{Xi_m.T[j]}\ny=wx:\n{y}\nphi*y(xt-yw):\n{weight_change}")
+                print(f"xt:\n{Xi_m.T[j]}\ny=wx:\n{y}\nphi*y(xt):\n{weight_change}")
+                print(f"new weight:\n{initial_weight}\n")
+                print(f"--------------------------")
             print(f"new weight:\n{initial_weight}\n")
 
     return initial_weight
