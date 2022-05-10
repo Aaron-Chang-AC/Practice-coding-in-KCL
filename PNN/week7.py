@@ -208,7 +208,52 @@ def fisher_linear_discriminant_analysis(datapoints, classes, projection_weight):
     print(f"Effective projection weight is {projection_weight[winner]}")
     return projection_weight[winner]
 
+def fisher_method(datapoints, classes, projection_weight):
+    class_set = set(sorted(classes.tolist()))
+    number_classes = len(class_set)
+    number_datapoints = len(datapoints)
+    means = np.zeros((number_classes, len(datapoints[0])))
+    counter = np.zeros(number_classes)
 
+    print(class_set)
+
+    for i in range(number_datapoints):
+        means[classes[i] - 1] = np.add(means[classes[i] - 1], datapoints[i])
+        counter[classes[i] - 1] = np.add(counter[classes[i] - 1], 1)
+    for i in range(number_classes):
+        means[i] = means[i] / counter[i]
+        print(f"mean {i + 1}: {means[i]}\n")
+
+    cost = np.zeros(len(projection_weight))
+
+    for i in range(len(projection_weight)):
+        sb = 0.0
+        comb = list(combinations(list(class_set), 2))
+        # print(comb)
+        for j in range(len(comb)):
+            sb = sb + np.square(projection_weight[i] @ (np.subtract(means[comb[j][0] - 1], means[comb[j][1] - 1])))
+
+        print(f"sb for w{i + 1}: {sb}")
+
+        sw = 0.0
+        for j in range(len(datapoints)):
+            sw += np.square(projection_weight[i] @ (np.subtract(datapoints[j], means[classes[j] - 1])))
+
+        print(f"sw for w{i + 1}: {sw}")
+
+        cost[i] = sb / sw
+        print(f"Cost of w{i + 1} is {cost[i]}\n")
+
+    winner = np.argmax(cost)
+    print(f"Effective projection weight is {projection_weight[winner]}")
+    return projection_weight[winner]
+
+# for Fisher’s method (LDA) ####################################
+# datapoints = np.asarray([[1, 2], [2, 1],[3, 3], [6, 5], [7, 8]])
+# classes = np.asarray([1, 1, 1, 2, 2])
+# projection_weight = np.asarray([[-1, 5], [2, -3], [1 , 1]])
+# fisher_method(datapoints, classes, projection_weight=projection_weight)
+###############################################################
 
 # datapoints = np.asarray([[1, 2], [2, 1],[3, 3], [6, 5], [7, 8]])
 # classes = np.asarray([1, 1, 1, 2, 2])
@@ -267,4 +312,5 @@ def sparse_coding(V, x, y_t, LAMBDA = 0):
 # y3_t = np.asarray([0, 0, 0, -1, 0, 0, 0, 0])
 # y_t = np.asarray([y1_t, y2_t, y3_t])
 # sparse_coding(V, x, y_t, LAMBDA=0.0)
+
 
