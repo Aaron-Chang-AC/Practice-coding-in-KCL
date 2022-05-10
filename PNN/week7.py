@@ -93,6 +93,44 @@ def KL_Transform(S, dimension, new_samples_to_be_classified):
 # print(PCA(results.T, dimension=2, new_samples_to_be_classified=[]))
 #
 
+def hebbian_learning(datapoints, initial_weight,learning_rate = 0.01, epoch=2, mode=None):
+    n = len(datapoints)
+    X = datapoints.copy().T
+    print(f"original dataset(each column is a sample):\n{X}\n")
+    m = X.mean(axis=1)
+    Xi_m = X - m.reshape(-1, 1)
+    print(f"zero mean datapoints(each column is a sample):\n{Xi_m}\n")
+    for i in range(epoch):
+        print(f"---------Epoch {i+1} start---------")
+        if mode == "batch":
+            total_weight_change=np.zeros(len(initial_weight))
+            for j in range(n):
+                # y = initial_weight @ datapoints.T[j]
+                # print(initial_weight, Xi_m.T[j])
+                y = np.dot(initial_weight, Xi_m.T[j])
+                print(f"y is {y}")
+                # xt_yw = Xi_m.T[j] - (y * initial_weight)
+                weight_change = learning_rate * (y * Xi_m.T[j] )
+                total_weight_change+=weight_change
+                print(f"xt:\n{Xi_m.T[j]}\ny=wx:\n{y}\nphi*y(xt-yw):\n{weight_change}")
+                print(f"--------------------------")
+            print(f"total weight change:\n{total_weight_change}")
+            initial_weight = np.add(initial_weight,total_weight_change)
+            print(f"new weight:\n{initial_weight}\n")
+        else:
+            for j in range(n):
+                y = np.dot(initial_weight, Xi_m.T[j])
+                print(f"y is {y}")
+                # xt_yw = Xi_m.T[j] - (y * initial_weight)
+                weight_change = learning_rate * (y * Xi_m.T[j])
+                initial_weight= np.add(initial_weight, weight_change)
+                print(f"xt:\n{Xi_m.T[j]}\ny=wx:\n{y}\nphi*y(xt-yw):\n{weight_change}")
+            print(f"new weight:\n{initial_weight}\n")
+
+    return initial_weight
+
+
+
 def oja_learning(datapoints, initial_weight,learning_rate = 0.01, epoch=2, mode=None):
     n = len(datapoints)
     X = datapoints.copy().T
