@@ -9,6 +9,7 @@ import week8 as w8
 import week9 as w9
 import week10 as w10
 import numpy as np
+from sympy import *
 
 
 """
@@ -325,10 +326,10 @@ Week 5
 # print(w5.batch_normalization(final_input_array, beta=0, gamma=1, eta=0.1))
 
 # ====================================================================================================
-# # For the purpose of image convolution with mask H
-# # multiple channels and each channel corresponds to a mask
-# # padding=0, stride=1, dilation=2:
-#
+# For the purpose of image convolution with mask H
+# multiple channels and each channel corresponds to a mask
+# padding=0, stride=1, dilation=2:
+
 # conv_input1 = np.array([
 #     [0.2, 1,  0],
 #     [ -1, 0,  -0.1],
@@ -355,18 +356,16 @@ Week 5
 #
 # if use_dilation:
 #     # only use when dilation is involved
-#     img_after_dilation1 = w5.get_dilation(conv_input1, dilation=dilation)
-#     print(f"conv_input1 after dilation:\n{img_after_dilation1}")
-#     img_after_dilation2 = w5.get_dilation(conv_input2, dilation=dilation)
-#     print(f"conv_input2 after dilation:\n{img_after_dilation2}")
+#     H1_after_dilation1 = w5.mask_dilation(H1, dilation=2)
+#     H2_after_dilation2 = w5.mask_dilation(H2, dilation=2)
 #
-#     pool_result1 = w5.get_pooling(img=img_after_dilation1, pool_size=H1.shape[0], stride=stride, padding=padding)
-#     pool_result2 = w5.get_pooling(img=img_after_dilation2, pool_size=H2.shape[0], stride=stride, padding=padding)
-#     final_addition = w5.mask_convolution(img=img_after_dilation1, mask=H1, pools=pool_result1, stride=stride,
-#                                          padding=padding) + w5.mask_convolution(img=img_after_dilation2, mask=H2,
-#                                                                                 pools=pool_result2, stride=stride,
-#                                                                                 padding=padding)
-#     print(f"Final addition result: \n{final_addition}")
+#     pool_result1 = w5.get_pooling(img=conv_input1, pool_size=H1_after_dilation1.shape[0], stride=stride, padding=padding)
+#     pool_result2 = w5.get_pooling(img=conv_input2, pool_size=H2_after_dilation2.shape[0], stride=stride, padding=padding)
+#
+#     print(w5.mask_convolution(img=conv_input1, mask=H1_after_dilation1, pools=pool_result1, stride=stride,
+#                            padding=padding) + w5.mask_convolution(img=conv_input2, mask=H2_after_dilation2,
+#                                                                pools=pool_result2, stride=stride, padding=padding))
+#
 #
 # else:
 #     pool_result1 = w5.get_pooling(img=conv_input1, pool_size= H1.shape[0], stride=stride, padding=padding)
@@ -394,55 +393,100 @@ Week 5
 # print(f"Max pooling: \n {w5.max_pooling(pools=pool_result)}")
 
 # ====================================================================================================
-# calculate output dimension after CNN
-# [height, width, channels] for input
-# [height, width, channels, number of mask] for mask
-input_dimension = [49, 49, 3]
-mask_dimension = [1, 1, 0,  20]
-pooling = 2
-stride = 1
-padding = 1
-use_pooling = False
-
-if not use_pooling:
-      output = w5.calculate_outputDimension(input_dimension=input_dimension, mask_dimension=mask_dimension, pooling = None, stride= stride, padding=padding)
-      print(f"Output dimension is: \n [height, width, channel]  \n {output}")
-
-      print(f"If flattering, the final length of feature vector is: {np.prod(output)}")
-
-else:
-      output =w5.calculate_outputDimension(input_dimension=input_dimension, mask_dimension=mask_dimension, pooling= pooling, stride=stride, padding=padding)
-      print(f"Output dimension is: \n [height, width, channel]  \n {output}")
-
-      print(f"If flattering, the final length of feature vector is: {np.prod(output)}")
+# # calculate output dimension after CNN
+# # [height, width, channels] for input
+# # [height, width, channels, number of mask] for mask
+# input_dimension = [49, 49, 3]
+# mask_dimension = [1, 1, 0,  20]
+# pooling = 2
+# stride = 1
+# padding = 1
+# use_pooling = False
+#
+# if not use_pooling:
+#       output = w5.calculate_outputDimension(input_dimension=input_dimension, mask_dimension=mask_dimension, pooling = None, stride= stride, padding=padding)
+#       print(f"Output dimension is: \n [height, width, channel]  \n {output}")
+#
+#       print(f"If flattering, the final length of feature vector is: {np.prod(output)}")
+#
+# else:
+#       output =w5.calculate_outputDimension(input_dimension=input_dimension, mask_dimension=mask_dimension, pooling= pooling, stride=stride, padding=padding)
+#       print(f"Output dimension is: \n [height, width, channel]  \n {output}")
+#
+#       print(f"If flattering, the final length of feature vector is: {np.prod(output)}")
 
 # ====================================================================================================
 
 
 """
 Week 6
- 
+- Cost function of GAN: V(D,G) -->w6.gan
+- Mini-batch GAN
 """
+# X=np.asarray([
+#     [1,2],
+#     [3,4]
+# ])
+# X_fake=np.asarray([
+#     [5,6],
+#     [7,8]
+# ])
+# thetas=np.asarray([0.1,0.2])
+# x1, x2, t1, t2 = symbols('x1 x2 t1 t2', real=True)
+# # self define discriminator function
+# Dx = 1/(1+exp(-(t1*x1-t2*x2-2)))
+#
+# # f_d = diff(Dx, t1) # just for testing- comment out
 
+# ==================================================================================================
+# w6.gan(Dx,X,X_fake,thetas)
+# w6.minibatch_GAN(num_iteration=1, k=1, learning_rate=0.02, Dx=Dx,X = X,X_fake=X_fake,thetas=thetas)
+
+#===================================================================================================
 """
 Week 7
-
+- Karhunen-Loeve Transform (PCA)
+- Hebbian Learning Rule
+- Oja's Learning Rule
+- Fisher's Linear Discriminant
+- Extreme Learning Machine
 """
+#===================================================================================================
 
-# # =======================================================================
-# V = np.asarray([
-#     [1, -4],
-#     [1, 3],
-#     [2, 2],
-#     [1, -1]
-# ], dtype = np.float32)
-# x = np.asarray([2.0, 3.0])
-#
-# y1_t = np.asarray([1, 2, 0, -1])
-# y2_t = np.asarray([0, 0.5, 1, 0])
-#
-# y_t = np.asarray([y1_t, y2_t])
-# w7.sparse_coding(V, x, y_t, LAMBDA=1.0)
-# # ==========================================================================
-#
-#
+# KLTransform(Michael Version)/PCA(Wang's Version)
+S = np.asarray([
+    [1,2,1],
+    [2,3,1],
+    [3,5,1],
+    [2,2,1]
+])
+new_samples_to_be_classified = np.asarray([
+        [3,-2,5]
+])
+
+# S = np.asarray([
+#     [0,1],
+#     [3,5],
+#     [5,4],
+#     [5,6],
+#     [8,7],
+#     [9,7]
+# ])
+
+# w7.KL_Transform(S = S, dimension = 2, new_samples_to_be_classified = new_samples_to_be_classified)
+# w7.PCA(S= S, dimension= 2, new_samples_to_be_classified= new_samples_to_be_classified)
+#===================================================================================================
+
+# Oja's Learning Rule
+# mode is either "batch" or anything else
+S = np.asarray([
+    [0,1],
+    [3,5],
+    [5,4],
+    [5,6],
+    [8,7],
+    [9,7]
+])
+print(w7.oja_learning(datapoints=S, initial_weight=np.asarray([-1, 0]), learning_rate=0.01, epoch=2, mode="batch"))
+
+
