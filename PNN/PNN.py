@@ -448,8 +448,10 @@ Week 7
 - Karhunen-Loeve Transform (PCA)
 - Hebbian Learning Rule
 - Oja's Learning Rule
+# Linear Discriminant Analysis
 - Fisher's Linear Discriminant
 - Extreme Learning Machine
+- Sparsity
 """
 #===================================================================================================
 
@@ -464,13 +466,13 @@ Week 7
 #         [3,-2,5]
 # ])
 
-S = np.asarray([
-    [5.0, 5.0, 4.4, 3.2],
-    [6.2, 7.0, 6.3, 5.7],
-    [5.5, 5.0, 5.2, 3.2],
-    [3.1, 6.3, 4.0, 2.5],
-    [6.2, 5.6, 2.3, 6.1],
-])
+# S = np.asarray([
+#     [5.0, 5.0, 4.4, 3.2],
+#     [6.2, 7.0, 6.3, 5.7],
+#     [5.5, 5.0, 5.2, 3.2],
+#     [3.1, 6.3, 4.0, 2.5],
+#     [6.2, 5.6, 2.3, 6.1],
+# ])
 
 
 # w7.KL_Transform(S = S, dimension = 2, new_samples_to_be_classified = new_samples_to_be_classified)
@@ -478,37 +480,37 @@ S = np.asarray([
 
 #=====================================================================================
 ## if given eigenvalues and eigenvectors
-eigenvalues = np.array([0.00, 0.71, 1.90, 3.21])
-eigenvectors = np.array([
-    [-0.59, 0.55, 0.11, 0.58],
-    [-0.56, -0.78, 0.25, 0.12],
-    [0.25, 0.12, 0.96, -0.04],
-    [0.52, -0.27, -0.07, 0.81]
-])
-new_samples_to_be_classified = np.asarray([
-        [5.0, 5.0, 4.4, 3.2]
-])
-dimension = 2
-X = S.copy().T
-m = X.mean(axis=1)
-# don't change below code if no extra circumstances
-idx = eigenvalues.argsort()[::-1]
-W = eigenvalues[idx]
-V = eigenvectors[:, idx]
-
-print(f"Eigenvalues (Sorted):\n{W}\n")
-print(f"Eigenvectors(Sorted):\n{V}\n")
-
-V_hat = V.copy()[:, 0:dimension]
-V_hatT = V_hat.T
-print(f"V_hatT:\n{V_hatT}\n")
-
-if len(new_samples_to_be_classified) > 0:
-    new_m = new_samples_to_be_classified - m
-    print(new_m)
-    new_targets = V_hatT @ (new_m.T)
-    print(f"results(each column is a converted sample):\n{new_targets}\n")
-
+# eigenvalues = np.array([0.00, 0.71, 1.90, 3.21])
+# eigenvectors = np.array([
+#     [-0.59, 0.55, 0.11, 0.58],
+#     [-0.56, -0.78, 0.25, 0.12],
+#     [0.25, 0.12, 0.96, -0.04],
+#     [0.52, -0.27, -0.07, 0.81]
+# ])
+# new_samples_to_be_classified = np.asarray([
+#         [5.0, 5.0, 4.4, 3.2]
+# ])
+# dimension = 2
+# X = S.copy().T
+# m = X.mean(axis=1)
+# # don't change below code if no extra circumstances
+# idx = eigenvalues.argsort()[::-1]
+# W = eigenvalues[idx]
+# V = eigenvectors[:, idx]
+#
+# print(f"Eigenvalues (Sorted):\n{W}\n")
+# print(f"Eigenvectors(Sorted):\n{V}\n")
+#
+# V_hat = V.copy()[:, 0:dimension]
+# V_hatT = V_hat.T
+# print(f"V_hatT:\n{V_hatT}\n")
+#
+# if len(new_samples_to_be_classified) > 0:
+#     new_m = new_samples_to_be_classified - m
+#     print(new_m)
+#     new_targets = V_hatT @ (new_m.T)
+#     print(f"results(each column is a converted sample):\n{new_targets}\n")
+#
 
 
 #===================================================================================================
@@ -538,3 +540,49 @@ if len(new_samples_to_be_classified) > 0:
 # print(w7.hebbian_learning(datapoints=S, initial_weight=np.asarray([0.5, -0.2]), learning_rate=0.1, epoch=2, mode="sequential"))
 
 #===================================================================================================
+
+# # LDA
+# # Fisher's Method
+# datapoints = np.asarray([[1, 2], [2, 1],[3, 3], [6, 5], [7, 8]])
+# classes = np.asarray([1, 1, 1, 2, 2])
+# projection_weight = np.asarray([[-1, 5], [2, -3]])
+# print(w7.fisher_method(datapoints, classes, projection_weight=projection_weight))
+
+#===================================================================================================
+
+# Extreme Learning Machine
+# weight = np.asarray([0,0,0,-1,0,0,2]) # output neuron weight
+# V = np.asarray([[-0.62, 0.44, -0.91],
+#                 [-0.81, -0.09, 0.02],
+#                 [0.74, -0.91, -0.60],
+#                 [-0.82, -0.92, 0.71],
+#                 [-0.26, 0.68, 0.15],
+#                 [0.8, -0.94, -0.83]])
+# datapoints = np.asarray([[0,0], [0, 1],[1, 0], [1, 1]])
+#
+# w7.extreme_learning_machine(V, weight, datapoints, H_0=0.5)
+
+#===================================================================================================
+
+# # Sparse Coding
+# # ||x-(V^t)y||+lambda||y||
+# V = np.asarray([[0.4, -0.6],
+#               [0.55, -0.45],
+#               [0.5, -0.5],
+#               [-0.1, 0.9],
+#               [-0.5, -0.5],
+#               [0.9, 0.1],
+#               [0.5, 0.5],
+#               [0.45, 0.55]])
+# x = np.asarray([-0.05, -0.95])
+# y1_t = np.asarray([1, 0, 0, 0, 1, 0, 0, 0])
+# y2_t = np.asarray([0, 0, 1, 0, 0, 0, -1, 0])
+# y3_t = np.asarray([0, 0, 0, -1, 0, 0, 0, 0])
+# y_t = np.asarray([y1_t, y2_t, y3_t])
+# w7.sparse_coding(V, x, y_t, LAMBDA=0.0)
+
+#===================================================================================================
+"""
+Week 8
+
+"""

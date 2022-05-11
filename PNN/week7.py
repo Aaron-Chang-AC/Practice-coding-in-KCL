@@ -1,3 +1,5 @@
+from itertools import combinations
+
 import numpy as np
 
 def heaviside_function(wx, H_0):
@@ -243,7 +245,7 @@ def fisher_method(datapoints, classes, projection_weight):
 
         cost[i] = sb / sw
         print(f"Cost of w{i + 1} is {cost[i]}\n")
-
+        print(f"----------------------------------------")
     winner = np.argmax(cost)
     print(f"Effective projection weight is {projection_weight[winner]}")
     return projection_weight[winner]
@@ -272,17 +274,18 @@ def extreme_learning_machine(V, weight, datapoints, H_0):
     new_datapoints = np.ones((len(datapoints),1))
     new_datapoints = np.append(new_datapoints, datapoints, axis=1)
     new_datapoints = new_datapoints.T
-    print(new_datapoints)
+    print(f"Augmented input patterns: \n {new_datapoints}")
     VX = V @ new_datapoints
-    print(VX)
+    print(f"V*X is: \n {VX}")
     f = np.vectorize(heaviside_function)
     Y = f(VX, H_0)
-    print(Y)
+    print(f"Y is: \n {Y}")
     new_Y = np.ones((len(Y.T), 1))
     new_Y = np.append(new_Y, Y.T, axis=1)
     new_Y = new_Y.T
     Z = weight @ new_Y
-    print(f"The final response of the output neuron: {Z}")
+    print("The response of the output, z=wy")
+    print(f"The final response of the output neuron z is: {Z}")
 
 
 # extreme_learning_machine(V, weight, datapoints, H_0=0.5)
