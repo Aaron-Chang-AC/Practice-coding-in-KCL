@@ -10,6 +10,8 @@ def adaboost(k_max, dataset, output_class, classfier_table):
     alpha = np.zeros(n_classfier_table)
     hk_list = np.zeros(n_classfier_table)
 
+    final_list = []
+
     k = 0
     for i in range(0, k_max):
         print(f"======================Round {i+1}========================")
@@ -21,6 +23,7 @@ def adaboost(k_max, dataset, output_class, classfier_table):
         print(f"Training Error: \n {training_error}")
 
         hk_list[i] = np.argmin(training_error)
+        ek_index = np.argmin(training_error)   # roger
         ek = np.min(training_error)
         print(f"Overall weighted error rate:{ek}")
         if ek > 0.5:
@@ -38,6 +41,7 @@ def adaboost(k_max, dataset, output_class, classfier_table):
         print(f"Zk is {Z}")
         print(f"W k+1 is {W}")
         print(f"Alpha is {alpha[i]}")
+        final_list.append(str(f"{alpha[i]} * h_{ek_index+1}"))  # roger
         k+=1
 
         temp = np.zeros(n)
@@ -54,6 +58,8 @@ def adaboost(k_max, dataset, output_class, classfier_table):
             print(f"Adaboost Classifier found")
             break # if condition different comment out
 
+    
+    return final_list
 
 def bagging_algo(output_class, classfier_table):
     result = classfier_table.copy().sum(axis=0)
