@@ -1,3 +1,5 @@
+from itertools import combinations
+
 import numpy as np
 
 def heaviside_function(wx, H_0):
@@ -243,7 +245,7 @@ def fisher_method(datapoints, classes, projection_weight):
 
         cost[i] = sb / sw
         print(f"Cost of w{i + 1} is {cost[i]}\n")
-
+        print(f"----------------------------------------")
     winner = np.argmax(cost)
     print(f"Effective projection weight is {projection_weight[winner]}")
     return projection_weight[winner]
