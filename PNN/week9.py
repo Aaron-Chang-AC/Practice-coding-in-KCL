@@ -18,7 +18,7 @@ def adaboost(k_max, dataset, output_class, classfier_table):
             for l in range(n):
                 if classfier_table[j,l] != output_class[l]:
                     training_error[j] += W[l]
-        print(training_error)
+        print(f"Training Error: \n {training_error}")
 
         hk_list[i] = np.argmin(training_error)
         ek = np.min(training_error)
