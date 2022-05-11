@@ -110,8 +110,10 @@ def competitive_learning_algorithm(S,iterations,initial_centers,chosen_order,new
     '''
      chosen_order: A np array which should start from 0, and it contains the indices that we
      can use to select the samples from dataset X
+
      new_data_to_be_classfied: A np array which contains the new given datapoints, if not given
      in the question, just manually give a legal datapoint
+
     '''
     n = len(S)
     n_centers = len(initial_centers)
@@ -211,8 +213,10 @@ def basic_leader_follower_algorithm(S,iterations,initial_centers,chosen_order,ne
     '''
      chosen_order: A np array which should start from 0, and it contains the indices that we
      can use to select the samples from dataset X
+
      new_data_to_be_classfied: A np array which contains the new given datapoints, if not given
      in the question, just manually give a legal datapoint
+
     '''
     n = len(S)
     n_centers = len(initial_centers)
@@ -325,6 +329,7 @@ def basic_leader_follower_algorithm(S,iterations,initial_centers,chosen_order,ne
 
 def fuzzyKMeans(dataset, numCluster, initial_membership, b, criteria):
     """
+
     :param dataset:
     :param numCluster:
     :param initial_membership: u (greek letter mu)
@@ -659,4 +664,4 @@ hdataset = np.asarray([
 # print(df)
 
 
-# print(euclidean_distance(np.asarray([[-2.8284, 0],[2.8284, 0]]), np.asarray([-0.7071, -3.5355])))0]]), np.asarray([-0.7071, -3.5355])))
+# print(euclidean_distance(np.asarray([[-2.8284, 0],[2.8284, 0]]), np.asarray([-0.7071, -3.5355])))
