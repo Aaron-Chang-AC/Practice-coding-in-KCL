@@ -1,10 +1,11 @@
 import numpy as np
 import random
+from scipy.spatial.distance import cityblock
 
 import pandas as pd
 
 
-def k_means(datapoint, c, cluster_point=None, randomized=False):
+def k_means(datapoint, c, cluster_point=None, randomized=False, mode="euclidean"):
     data = datapoint.copy()
     num_cluster = c
     clusters = []
@@ -24,16 +25,22 @@ def k_means(datapoint, c, cluster_point=None, randomized=False):
     euclidean = []
     round = 1
     while True:
-        print(f"-----round {round} -----")
+        print(f"======================Round {round} =================================")
         for i in range(len(datapoint)):
             for j in range(len(clusters)):
-                result = np.linalg.norm(datapoint[i] - clusters[j])
-                euclidean.append(result)
+                if mode=="euclidean":
+                    result = np.linalg.norm(datapoint[i] - clusters[j])
+                    euclidean.append(result)
+                else:
+                    result = cityblock(datapoint[i], clusters[j])
+                    euclidean.append(result)
                 # print(result)
+            print("-------Next sample-------")
             print(f"euclidean distances: {euclidean}")
             print(f"Argmin is {np.argmin(euclidean)}")
             assigned_new_class_list.append(np.argmin(euclidean))
-            print(assigned_new_class_list)
+            print(f"Assigned Class List: {assigned_new_class_list}")
+
             euclidean[:] = [] # empty list
 
         if round==1:
@@ -50,7 +57,7 @@ def k_means(datapoint, c, cluster_point=None, randomized=False):
                     new_coordinates[j] /= int(new_coordinates_cnt[j])
 
             clusters = new_coordinates.copy()
-            print(clusters)
+            print(f"New cluster is: \n {clusters}")
             assigned_new_class_list[:] = []
         else:
             if assigned_class_list == assigned_new_class_list:
