@@ -569,7 +569,7 @@ def abs_distance(cluster, datapoint):
 #     [-1, 3],
 #     [5, 1]
 # ])
-# k_means(datapoint=datapoint, c=2, cluster_point=cluster_point, randomized=False)
+# k_means(datapoint=datapoint, c=2, cluster_point=cluster_point, randomized=False, mode="euclidean")
 
 # PCA different from that of week7
 # new_samples_to_be_classified need to be subtracted by the mean manually first!!
