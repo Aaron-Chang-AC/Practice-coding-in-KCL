@@ -558,6 +558,7 @@ def agglomerative_clustering(dataset, numCluster, link_type=None):
             # To avoid the combined data points/cluster in further calculations, we make them infinte.
             # Our if loop above this, will therefore skip the infinite record entries.
             distance_matrix[ij_min[0]] = np.inf
+            print(distance_matrix)
 
             # print out the information we need
             print(f"Combine datapoint {dataset[d[i][0]]} and datapoint {dataset[d[i][1]]}")
@@ -568,6 +569,8 @@ def agglomerative_clustering(dataset, numCluster, link_type=None):
     elif link_type == "complete":
         d_complete = {}
         for i in range(0, numCluster):
+            print(f"=======Iteration {i+1} Started========")
+            print(f"The minimum value founded is {np.min(distance_matrix)}")
             ij_min = np.unravel_index(distance_matrix.argmin(), distance_matrix.shape)
             if i == 0:
                 df.iloc[ij_min[0]] = 0
@@ -589,7 +592,9 @@ def agglomerative_clustering(dataset, numCluster, link_type=None):
                 if np.isfinite(distance_matrix[ij_min[0]][j]) and np.isfinite(distance_matrix[ij_min[1]][j]):
                     # after two points/cluster are linked, to calculate new distance we take maximum distance for complete linkage
                     distance_matrix[ij_min[1]][j] = max(distance_matrix[ij_min[0]][j], distance_matrix[ij_min[1]][j])
+
             distance_matrix[ij_min[0]] = np.inf
+            print(distance_matrix)
 
             print(f"Combine datapoint {dataset[d_complete[i][0]]} and datapoint {dataset[d_complete[i][1]]}")
 
@@ -622,6 +627,7 @@ def agglomerative_clustering(dataset, numCluster, link_type=None):
                     distance_matrix[ij_min[1]][j] = (distance_matrix[ij_min[0]][j] + distance_matrix[ij_min[1]][
                         j]) / 2.0
             distance_matrix[ij_min[0]] = np.inf
+            print(distance_matrix)
 
             print(f"Combine datapoint {dataset[d_average[i][0]]} and datapoint {dataset[d_average[i][1]]}")
 
