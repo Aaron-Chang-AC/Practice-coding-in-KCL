@@ -586,13 +586,12 @@ Week 7 Feature Extraction
 Week 8 Support Vector Machines
 
 """
-# svs = np.asarray([
-#
-# ])
-# classes = np.asarray([
-#
-# ])
-# print(w8.LinearSVM(svs= svs, classes= classes))
+# svs = [
+#     [-1, 0],
+#     [1, 0]
+# ]
+# classes = [1,-1]
+# w8.LinearSVM(svs, classes)
 
 
 #===================================================================================================
@@ -605,32 +604,183 @@ Week 9 Support Vector Machines
 #===================================================================================================
 # ask aaron what if the same h is resulted and teacher ask us to use the one in high index or low index
 # for adaboost
-X = np.asarray([[1,0],[-1,0],[0,1],[0,-1]])
-y = np.asarray([1,1,-1,-1])
-table = np.asarray([
-    [1,-1,1,1],
-    [-1,1,-1,-1],
-    [1,-1,-1,-1],
-    [-1,1,1,1],
-    [1,1,1,-1],
-    [-1,-1,-1,1],
-    [-1,-1,1,-1],
-    [1,1,-1,1]
-])
-print(w9.adaboost(len(table), X, y, table))
+# X = np.asarray([[1,0],[-1,0],[0,1],[0,-1]])
+# y = np.asarray([1,1,-1,-1])
+# table = np.asarray([
+#     [1,-1,1,1],
+#     [-1,1,-1,-1],
+#     [1,-1,-1,-1],
+#     [-1,1,1,1],
+#     [1,1,1,-1],
+#     [-1,-1,-1,1],
+#     [-1,-1,1,-1],
+#     [1,1,-1,1]
+# ])
+# print(w9.adaboost(len(table), X, y, table, select_highest = False))
 
 #===================================================================================================
 
 # for bagging
-y = np.asarray([1,1,-1,-1])
-table = np.asarray([
-    [1,-1,1,1],
-    [-1,1,-1,-1],
-    [1,-1,-1,-1],
-    [-1,1,1,1],
-    [1,1,1,-1],
-    [-1,-1,-1,1],
-    [-1,-1,1,-1],
-    [1,1,-1,1]
-])
-w9.bagging_algo(y, table)
+# y = np.asarray([1,1,-1,-1])
+# table = np.asarray([
+#     [1,-1,1,1],
+#     [-1,1,-1,-1],
+#     [1,-1,-1,-1],
+#     [-1,1,1,1],
+#     [1,1,1,-1],
+#     [-1,-1,-1,1],
+#     [-1,-1,1,-1],
+#     [1,1,-1,1]
+# ])
+# w9.bagging_algo(y, table)
+
+#===================================================================================================
+
+"""
+Week 10 Clustering
+
+- K-Means
+- Competitive Learning Algorithm
+- Fuzzy K-Means
+- Agglomerative Clustering
+-  
+"""
+from sklearn.metrics.pairwise import euclidean_distances
+
+#===================================================================================================
+
+# for k_means
+# Note that each "row" is a sample, c is the number of clusters
+# cluster_point is the initial clusters
+# datapoint = np.asarray([
+#     [-1, 3],
+#     [1, 4],
+#     [0, 5],
+#     [4, -1],
+#     [3, 0],
+#     [5, 1]
+# ])
+# cluster_point=np.asarray([
+#     [-1, 3],
+#     [5, 1]
+# ])
+# # mode can be either "euclidean" or in "manhattan"
+# w10.k_means(datapoint=datapoint, c=2, cluster_point=cluster_point, randomized=False, mode="manhattan")
+
+
+#===================================================================================================
+
+
+# competitive_learning_algorithm
+# Note that each integer in chosen_order is >= 0
+# S = np.asarray([
+#     [-1,3],
+#     [1,4],
+#     [0,5],
+#     [4,-1],
+#     [3,0],
+#     [5,1]
+# ], dtype=np.float32)
+# initial_centers=np.asarray([
+#     [-0.5,1.5],
+#     [0,2.5],
+#     [1.5,0]
+# ])
+# chosen_order=np.asarray([2,0,0,4,5]) # if no chosen order then 0,1,2,3,....
+# new_data_to_be_classfied = np.asarray([
+#     [0,-2],
+#     [-0.2,2.8],
+#     [0,1.5]
+# ])
+# w10.competitive_learning_algorithm(S,iterations=5,initial_centers= initial_centers,
+#                                chosen_order=chosen_order,
+#                                new_data_to_be_classfied=new_data_to_be_classfied,
+#                                learning_rate=0.1,
+#                                normalization_flag=False
+#                                )
+
+
+#===================================================================================================
+
+# basic_leader_follower_algorithm
+# S = np.asarray([
+#     [-1,3],
+#     [1,4],
+#     [0,5],
+#     [4,-1],
+#     [3,0],
+#     [5,1]
+# ], dtype=np.float32)
+# chosen_order=np.asarray([2,0,0,4,5])
+# initial_centers=np.asarray([
+#     S[chosen_order[0]].tolist()
+# ], dtype=np.float32)
+# new_data_to_be_classfied = np.asarray([
+#     [0,-2],
+#     [-0.2,2.8],
+#     [0,1.5]
+# ])
+# w10.basic_leader_follower_algorithm(S,iterations=5,initial_centers=initial_centers,
+#                                 chosen_order=chosen_order,
+#                                 new_data_to_be_classfied=new_data_to_be_classfied,
+#                                 learning_rate=0.5,
+#                                 theta=3.0,
+#                                 normalization_flag=False
+#                                 )
+
+#===================================================================================================
+
+# for fuzzyKMeans
+# each row is a sample
+# dataset = np.asarray([
+#     [-1, 3],
+#     [1, 4],
+#     [0, 5],
+#     [4, -1],
+#     [3, 0],
+#     [5, 1]
+# ])
+# u = np.asarray([
+#     [1, 0],
+#     [0.5, 0.5],
+#     [0.5, 0.5],
+#     [0.5, 0.5],
+#     [0.5, 0.5],
+#     [0, 1]
+# ])
+# w10.fuzzyKMeans(dataset=dataset, numCluster=2, initial_membership=u, b=2, criteria=0.5)
+
+#===================================================================================================
+
+# for Agglomerative_clustering
+# hdataset = [
+#     [-1, 3],
+#     [1, 2],
+#     [0, 1],
+#     [4, 0],
+#     [5, 4],
+#     [3, 2]
+# ]
+
+## ord 1 --> manhattan /////  ord 2 --> euclidean
+# w10.Agglomerative_clustering(dataset= hdataset, numCluster= 3, link_type="single", ord=2)
+# w10.Agglomerative_clustering(dataset= hdataset, numCluster= 3, link_type="complete", ord=2)
+# w10.Agglomerative_clustering(dataset= hdataset, numCluster= 3, link_type="average", ord=2)
+# w10.Agglomerative_clustering(dataset= hdataset, numCluster= 3, link_type="mean", ord=2) # so-called centroid
+##########################Checking using sklearn#########################
+# from sklearn.cluster import AgglomerativeClustering
+#
+# X = np.asarray([
+#     [-1, 3],
+#     [1, 2],
+#     [0, 1],
+#     [4, 0],
+#     [5, 4],
+#     [3, 2]
+# ])
+# clustering = AgglomerativeClustering(n_clusters=3, linkage="average").fit(X)
+# print(clustering.labels_)
+
+# print(euclidean_distance(np.asarray([[-2.8284, 0],[2.8284, 0]]), np.asarray([-0.7071, -3.5355])))
+
+#===================================================================================================
