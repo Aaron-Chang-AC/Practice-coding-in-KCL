@@ -166,15 +166,14 @@ def iterative_optimization(datapoint, initial_datapoint_class, clusters, selecte
             new_temp_loss.append(sum(J.values()))
             print(f"New loss is: {new_temp_loss}")
 
-    if np.argmin(new_temp_loss) < total_loss:
-        print("New cluster formed, loss is smaller")
-        total_loss = new_temp_loss
+    if np.min(new_temp_loss) < total_loss:
+        total_loss = np.min(new_temp_loss)
+        print(f"New cluster formed, loss is smaller, new total loss is {total_loss}")
         return total_loss
 
 
 
     # Case 2: x_hat not in the original dataset
-
 
 
 
