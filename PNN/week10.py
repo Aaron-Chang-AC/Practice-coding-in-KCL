@@ -9,6 +9,10 @@ def k_means(datapoint, c, cluster_point=None, randomized=False, mode="euclidean"
     data = datapoint.copy()
     num_cluster = c
     clusters = []
+    if mode == "euclidean":
+        print("Euclidean metrics is in use")
+    else:
+        print("Manhattan metrics is in use")
     if randomized == True:
         for i in range(num_cluster):
             clusters.append(random.choice(data))
