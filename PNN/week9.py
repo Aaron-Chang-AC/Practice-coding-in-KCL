@@ -1,7 +1,7 @@
 import numpy as np
 
 
-def adaboost(k_max, dataset, output_class, classfier_table):
+def adaboost(k_max, dataset, output_class, classfier_table, select_highest = False):
     n = len(dataset) #4
     n_classfier_table = len(classfier_table)
     W = np.ones(n) # [1 , 1, 1 ,1 ]
@@ -24,6 +24,11 @@ def adaboost(k_max, dataset, output_class, classfier_table):
 
         hk_list[i] = np.argmin(training_error)
         ek_index = np.argmin(training_error)   # roger
+        if select_highest:
+            hk_list[i] = np.argmin(np.flip(training_error))
+            ek_index = np.argmin(np.flip(training_error))  # roger
+            hk_list[i] = len(training_error) - hk_list[i] - 1
+            ek_index = len(training_error) - ek_index - 1
         ek = np.min(training_error)
         print(f"Overall weighted error rate:{ek}")
         if ek > 0.5:
@@ -73,19 +78,35 @@ def bagging_algo(output_class, classfier_table):
     print(f"result:{result}, training error is {training_error}")
 
 # for adaboost
-# X = np.asarray([[1,0],[-1,0],[0,1],[0,-1]])
-# y = np.asarray([1,1,-1,-1])
-# table = np.asarray([
-#     [1,-1,1,1],
-#     [-1,1,-1,-1],
-#     [1,-1,-1,-1],
-#     [-1,1,1,1],
-#     [1,1,1,-1],
-#     [-1,-1,-1,1],
-#     [-1,-1,1,-1],
-#     [1,1,-1,1]
-# ])
-# print(adaboost(len(table), X, y, table))
+# select select_highest = True
+X = np.asarray([[1,0],[-1,0],[0,1],[0,-1]])
+y = np.asarray([1,1,-1,-1])
+table = np.asarray([
+    [1,-1,1,1],
+    [-1,1,-1,-1],
+    [1,-1,-1,-1],
+    [-1,1,1,1],
+    [1,1,1,-1],
+    [-1,-1,-1,1],
+    [-1,-1,1,-1],
+    [1,1,-1,1]
+])
+print(adaboost(len(table), X, y, table, select_highest = True))
+
+# select select_highest = False
+X = np.asarray([[1,0],[-1,0],[0,1],[0,-1]])
+y = np.asarray([1,1,-1,-1])
+table = np.asarray([
+    [1,-1,1,1],
+    [-1,1,-1,-1],
+    [1,-1,-1,-1],
+    [-1,1,1,1],
+    [1,1,1,-1],
+    [-1,-1,-1,1],
+    [-1,-1,1,-1],
+    [1,1,-1,1]
+])
+print(adaboost(len(table), X, y, table, select_highest = False))
 
 # for bagging
 # y = np.asarray([1,1,-1,-1])
