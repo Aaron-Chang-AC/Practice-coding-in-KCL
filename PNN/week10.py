@@ -89,6 +89,97 @@ def k_means(datapoint, c, cluster_point=None, randomized=False, mode="euclidean"
         print(f"cluster {i + 1}: {clusters[i]}")
     return clusters
 
+datapoint = np.array([
+    [1, 1],
+    [1, 2],
+    [2, 1],
+    [3, 2],
+    [3, 3],
+    [4, 3]
+])
+initial_datapoint_class = np.asarray([0, 0, 0, 1, 1, 1])
+cluster_point=np.asarray([
+    [0, 0],
+    [3, 1]
+])
+selected_datapoint_tomove = np.array([[2,1]])
+
+from collections import Counter
+def iterative_optimization(datapoint, initial_datapoint_class, clusters, selected_datapoint_tomove=None):
+    """
+    Basic idea lies in starting from a reasonable initial partition and move samples from one cluster
+    to another trying to minimize criterion function
+
+    :param datapoint:
+    :return:
+    """
+    num_samples = len(datapoint)
+    num_cluster = len(clusters)
+    n = Counter(initial_datapoint_class)  #{key--> cluster: value-->number of sample in cluster}
+    print(n)
+    J = dict()
+    x_hat = selected_datapoint_tomove
+    # initial cost
+    total_loss = 0.0
+    new_temp_loss = []
+    # calculate the total cost
+    for i, data in enumerate(datapoint):
+        for j in n:
+            if initial_datapoint_class[i]==j:
+                loss = np.linalg.norm(datapoint[i] - clusters[j])
+                try:
+                    J[j] += loss
+                except KeyError:
+                    J[j] = loss
+    print(f"Loss dictionary: {J}")
+    total_loss = sum(J.values())
+    print(f"Initial total loss is: {total_loss}")
+
+    # Case 1: x_hat in the original dataset move to another cluster
+    index = None
+    for i in range(num_samples):
+        for j in range(len(selected_datapoint_tomove)):
+            if np.array_equal(datapoint[i], selected_datapoint_tomove[j]):
+                index = i
+    #
+    new_datapoint_class = initial_datapoint_class.copy()
+    #
+    for i in n:
+        if new_datapoint_class[index] != i:
+            print(f"-----Move to Cluster {i}-----")
+            new_datapoint_class[index] = i
+            n_new = Counter(new_datapoint_class)
+
+            print(f"New datapoint class: {new_datapoint_class}")
+            # print(n)
+            # update loss
+            for j in range(len(selected_datapoint_tomove)):
+                for k in J:
+                    if new_datapoint_class[index] == k:
+                        phi_loss = (n[k] / (n[k] + 1)) * np.linalg.norm(selected_datapoint_tomove[j] - clusters[k])
+                        J[k] += phi_loss
+
+                    elif initial_datapoint_class[index] == k:
+                        phi_loss = (n[k] / (n[k] - 1)) * np.linalg.norm(selected_datapoint_tomove[j] - clusters[k])
+                        J[k] -= phi_loss
+            print(f"Loss dictionary: {J}")
+            new_temp_loss.append(sum(J.values()))
+            print(f"New loss is: {new_temp_loss}")
+
+    if np.argmin(new_temp_loss) < total_loss:
+        print("New cluster formed, loss is smaller")
+        total_loss = new_temp_loss
+        return total_loss
+
+
+
+    # Case 2: x_hat not in the original dataset
+
+
+
+
+iterative_optimization(datapoint=datapoint, initial_datapoint_class=initial_datapoint_class, clusters=cluster_point, selected_datapoint_tomove= selected_datapoint_tomove)
+
 def PCA(S, dimension, new_samples_to_be_classified):
     n = len(S)
     X = S.copy().T
