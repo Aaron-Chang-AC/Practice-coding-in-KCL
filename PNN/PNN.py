@@ -269,7 +269,7 @@ Week 4
 
 
 """
-Week 5
+Week 5 Deep Discriminative Neural Network
 - Activation Function (ReLU, LReLU, tanh, heavside)
 - Batch Normalization
 - Mask Convolution (Refer to code if possible, bit complicated)
@@ -419,7 +419,7 @@ Week 5
 
 
 """
-Week 6
+Week 6 GAN
 - Cost function of GAN: V(D,G) -->w6.gan
 - Mini-batch GAN
 """
@@ -444,7 +444,7 @@ Week 6
 
 #===================================================================================================
 """
-Week 7
+Week 7 Feature Extraction
 - Karhunen-Loeve Transform (PCA)
 - Hebbian Learning Rule
 - Oja's Learning Rule
@@ -583,6 +583,54 @@ Week 7
 
 #===================================================================================================
 """
-Week 8
+Week 8 Support Vector Machines
 
 """
+# svs = np.asarray([
+#
+# ])
+# classes = np.asarray([
+#
+# ])
+# print(w8.LinearSVM(svs= svs, classes= classes))
+
+
+#===================================================================================================
+"""
+Week 9 Support Vector Machines
+
+- Adaboost
+- Bagging Algorithm 
+"""
+#===================================================================================================
+# ask aaron what if the same h is resulted and teacher ask us to use the one in high index or low index
+# for adaboost
+X = np.asarray([[1,0],[-1,0],[0,1],[0,-1]])
+y = np.asarray([1,1,-1,-1])
+table = np.asarray([
+    [1,-1,1,1],
+    [-1,1,-1,-1],
+    [1,-1,-1,-1],
+    [-1,1,1,1],
+    [1,1,1,-1],
+    [-1,-1,-1,1],
+    [-1,-1,1,-1],
+    [1,1,-1,1]
+])
+print(w9.adaboost(len(table), X, y, table))
+
+#===================================================================================================
+
+# for bagging
+y = np.asarray([1,1,-1,-1])
+table = np.asarray([
+    [1,-1,1,1],
+    [-1,1,-1,-1],
+    [1,-1,-1,-1],
+    [-1,1,1,1],
+    [1,1,1,-1],
+    [-1,-1,-1,1],
+    [-1,-1,1,-1],
+    [1,1,-1,1]
+])
+w9.bagging_algo(y, table)
