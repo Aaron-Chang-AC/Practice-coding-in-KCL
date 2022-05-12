@@ -4,12 +4,12 @@ import numpy as np
 def LinearSVM(svs, classes):
     """
 
-    :param svs: list of coordinates
+    :param svs: list of support vectors
     :param classes: list
     :return:
     """
-    support_vectors = np.asarray(svs)
-    y = np.asarray(classes)
+    support_vectors = np.asarray(svs, dtype=np.float32)
+    y = np.asarray(classes, dtype=np.int8)
 
     last_line = y.copy().tolist()
     last_line.append(0)
@@ -41,5 +41,20 @@ def LinearSVM(svs, classes):
     hyperplane[-1] = res[-1]
     print("hyperplane(the first term is w1 and the last one is w0): \n", hyperplane)
 
+# EXECUTION ##################
+# svs = [
+#     [1,1],
+#     [1,-1],
+#     [-1,1],
+#     [-1,-1]
+# ]
+# classes = [1,1,-1,-1]
+# LinearSVM(svs, classes)
 
+svs = [
+    [-1, 0],
+    [1, 0]
+]
+classes = [1,-1]
+LinearSVM(svs, classes)
 
