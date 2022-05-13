@@ -328,7 +328,7 @@ cluster_point=np.asarray([
     [4.000, 1.000],
     [7.000, 1.000]
 ])
-initial_clustering = np.array([0, 0, 0, 1, 1, 1, 1])
+initial_clustering = np.array([0, 0, 0, 1, 1, 1, 1]) # use k-mean to obtain this
 selected_datapoint_tomove = np.array([[6,3]])
 
 iterative_optimization(datapoint=datapoint, initial_clustering= initial_clustering, clusters=cluster_point, selected_datapoint_tomove= selected_datapoint_tomove)
