@@ -3,7 +3,106 @@ import random
 from scipy.spatial.distance import cityblock
 
 import pandas as pd
+import copy
 
+class Cluster:
+    def __init__(self):
+        self.samples = {}
+        self.num_samples = 0
+    def add_sample(self,sample):
+        self.samples[self.num_samples] = sample.copy()
+        self.num_samples+=1
+    def get_samples(self):
+        result = []
+        for i in range(self.num_samples):
+            result.append(self.samples[i])
+        return result
+    def show_cluster(self):
+        for i in range(self.num_samples):
+            print(f"sample{i+1}: {self.samples[i]}")
+
+def calculate_cluster_distance(c1,c2,link_type,ord):
+    dist = np.Inf
+    samples1 = np.asarray(c1.get_samples())
+    samples2 = np.asarray(c2.get_samples())
+    if link_type == "single":
+        for i in range(len(samples1)):
+            for j in range(len(samples2)):
+                temp = np.linalg.norm(samples1[i] - samples2[j],ord=ord)
+                if temp < dist:
+                    dist = temp
+    elif link_type == "complete":
+        dist = -np.Inf
+        for i in range(len(samples1)):
+            for j in range(len(samples2)):
+                temp = np.linalg.norm(samples1[i] - samples2[j],ord=ord)
+                if temp > dist:
+                    dist = temp
+    elif link_type == "average":
+        dist = 0.0
+        for i in range(len(samples1)):
+            for j in range(len(samples2)):
+                dist += np.linalg.norm(samples1[i] - samples2[j],ord=ord)
+        dist = dist / (len(samples1)*len(samples2))
+    else:
+        dist = 0.0
+        mean1 = np.mean(samples1, axis=0)
+        mean2 = np.mean(samples2, axis=0)
+        dist = np.linalg.norm(mean1 - mean2,ord=ord)
+    return dist
+
+def Agglomerative_clustering(dataset, numCluster, link_type=None,ord=2):
+    clusters = {}
+    n = len(dataset)
+    epoch_cnt = 0
+    for i in range(n):
+        print(f"cluster {i+1}")
+        clusters[i] = Cluster()
+        clusters[i].add_sample(dataset[i])
+        clusters[i].show_cluster()
+        print("\n")
+    while len(clusters) > numCluster:
+        epoch_cnt+=1
+        print(f"------------EPOCH {epoch_cnt} -----------")
+        m = len(clusters)
+        dist = np.zeros((m, m), dtype=np.float32)
+        minimum = np.Inf
+        min_idx_1 = 0
+        min_idx_2 = 0
+        for i in range(m):
+            for j in range(m):
+                dist[i, j] = np.Inf
+                if (i > j):
+                    dist[i,j]=calculate_cluster_distance(clusters[i], clusters[j], link_type, ord)
+                    if dist[i,j] < minimum:
+                        minimum = dist[i,j]
+                        idx = sorted([i,j])
+                        min_idx_1 = idx[0]
+                        min_idx_2 = idx[1]
+        print(f"distances:\n{dist}\n")
+        temp = clusters[min_idx_2].get_samples()
+        for i in range(len(temp)):
+            clusters[min_idx_1].add_sample(temp[i])
+        print(f"minimum: {minimum}")
+        print(f"merge cluster {min_idx_1+1} and {min_idx_2+1}")
+        del clusters[min_idx_2]
+        new_clusters = {}
+        cnt = 0
+        for i in clusters.keys():
+            new_clusters[cnt] = copy.deepcopy(clusters[i])
+            cnt+=1
+        clusters = copy.deepcopy(new_clusters)
+        print("\n")
+        for i in clusters.keys():
+            print(f"cluster {i+1}")
+            clusters[i].show_cluster()
+            print("\n")
+    print(f"------------Final Clusters -----------")
+    for i in clusters.keys():
+        print(f"cluster {i + 1}")
+        clusters[i].show_cluster()
+        print("\n")
+    return
 
 def k_means(datapoint, c, cluster_point=None, randomized=False, mode="euclidean"):
     data = datapoint.copy()
@@ -91,102 +190,148 @@ def k_means(datapoint, c, cluster_point=None, randomized=False, mode="euclidean"
 
 
 
-# from collections import Counter
-# def iterative_optimization(datapoint, initial_datapoint_class, clusters, selected_datapoint_tomove=None):
-#     """
-#     Basic idea lies in starting from a reasonable initial partition and move samples from one cluster
-#     to another trying to minimize criterion function
-#
-#     :param datapoint:
-#     :return:
-#     """
-#     num_samples = len(datapoint)
-#     num_cluster = len(clusters)
-#     n = Counter(initial_datapoint_class)  #{key--> cluster: value-->number of sample in cluster}
-#     print(n)
-#     J = dict()
-#     x_hat = selected_datapoint_tomove
-#     # initial cost
-#     total_loss = 0.0
-#     new_temp_loss = []
-#     # calculate the Initial total cost
-#     for i, data in enumerate(datapoint):
-#         for j in n:
-#             if initial_datapoint_class[i]==j:
-#                 loss = np.linalg.norm(datapoint[i] - clusters[j])
-#                 try:
-#                     J[j] += loss
-#                 except KeyError:
-#                     J[j] = loss
-#     print(f"Loss dictionary: {J}")
-#     total_loss = sum(J.values())
-#     print(f"Initial total loss is: {total_loss}")
-#
-#     # Case 1: x_hat in the original dataset move to another cluster
-#     assigned_list = []
-#     for i in range(len(selected_datapoint_tomove)):
-#         for j in range(len(clusters)):
-#             ed = np.linalg.norm(selected_datapoint_tomove[i] - clusters[j])
-#             assigned_list.append(ed)
-#     print(assigned_list)
-#     i_assign = np.argmin(assigned_list)
-#     print(f"i_assign: {i_assign}")
-#
-#     index = None
-#     for i in range(num_samples):
-#         for j in range(len(selected_datapoint_tomove)):
-#             if np.array_equal(datapoint[i], selected_datapoint_tomove[j]):
-#                 index = i
-#     # New data point class
-#     new_datapoint_class = initial_datapoint_class.copy()
-#     new_datapoint_class[index] = i_assign
-#     print(f"New datapoint class: {new_datapoint_class}") # [0, 0, 1, 1, ,1 ,1]
-#     #
-#     # need to change below code!!!!!!!!
-#     for i in n:
-#         if new_datapoint_class[index] != i:
-#             print(f"-----Move to Cluster {i}-----")
-#             new_datapoint_class[index] = i
-#             n_new = Counter(new_datapoint_class)
-#
-#             print(f"New datapoint class: {new_datapoint_class}")
-#             # print(n)
-#             # update loss
-#             for j in range(len(selected_datapoint_tomove)):
-#                 for k in J:
-#                     if new_datapoint_class[index] == k:
-#                         phi_loss = (n[k] / (n[k] + 1)) * np.linalg.norm(selected_datapoint_tomove[j] - clusters[k])
-#                         J[k] += phi_loss
-#
-#                     elif initial_datapoint_class[index] == k:
-#                         phi_loss = (n[k] / (n[k] - 1)) * np.linalg.norm(selected_datapoint_tomove[j] - clusters[k])
-#                         J[k] -= phi_loss
-#             print(f"Loss dictionary: {J}")
-#             new_temp_loss.append(sum(J.values()))
-#             print(f"New loss is: {new_temp_loss}")
-#
-#     if np.min(new_temp_loss) < total_loss:
-#         total_loss = np.min(new_temp_loss)
-#         print(f"New cluster formed, loss is smaller, new total loss is {total_loss}")
-#         return total_loss
-#
-#
-# datapoint = np.array([
-#     [1, 1],
-#     [1, 2],
-#     [2, 1],
-#     [3, 2],
-#     [3, 3],
-#     [4, 3]
-# ])
+from collections import Counter
+def iterative_optimization(datapoint, initial_clustering, clusters, selected_datapoint_tomove=None, maximum_iteration=1):
+    """
+    Basic idea lies in starting from a reasonable initial partition and move samples from one cluster
+    to another trying to minimize criterion function
+
+    :param datapoint:
+    :return:
+    """
+    num_samples = len(datapoint) # n
+    num_cluster = len(clusters) # c
+    # number of points in cluster
+    n = dict()
+    # total cost dictionary
+    J = dict()
+    # initialize z first
+    for j in range(num_cluster):
+        J[j] = 0
+    # find initial loss
+    for i in range(num_samples):
+        for j in range(num_cluster):
+            if initial_clustering[i] == j:
+                J[j] += np.linalg.norm(datapoint[i] - clusters[j])
+    print(f"Initial total loss: {J}")
+    cnt = 1
+    initial_clustering_copy = initial_clustering.copy()
+
+
+    print(f"Initial clustering is: {initial_clustering}")
+    assigned_cluster = []
+    for i in range(num_samples):
+        print(f"==========Round {cnt}--Sample {i+1}: {datapoint[i]}============")
+        init = []
+        for j in range(num_cluster):
+            result = np.linalg.norm(datapoint[i] - clusters[j])
+            init.append(result)
+        # print(init)
+        assigned_cluster.append(np.argmin(init))
+        initial_clustering[i] = np.argmin(init)
+        print(f"Initial assigned cluster before ro {initial_clustering}")
+        print(f"i<-- {assigned_cluster}")
+        n = Counter(initial_clustering)
+        print(f"Count of number of datapoint in each cluster:{n}")
+    # print(f"Assigned Cluster: {assigned_cluster}")
+
+        # initialize ro_list and loss
+        ro_list = {}
+        for j in range(num_cluster):
+            ro_list[j] = 0
+
+        print(f"ro_list is initialized: {ro_list}")
+
+        if len(assigned_cluster) > 0: # not destroying singleton cluster
+            old_loss = J.copy() # current loss for comparision
+            print(f"Old loss is: {old_loss}")
+            for j in range(num_cluster):
+                if assigned_cluster[i] == j:
+                    try:
+                        ro = (n[j]/(n[j]-1)) * (np.linalg.norm(datapoint[i]-clusters[j]))
+                    except ZeroDivisionError:
+                        ro = 0
+                    print(f"when i==j: {ro}")
+                    ro_list[j] = ro
+                    J[j] -= ro
+                elif assigned_cluster[i] != j:
+                    try:
+                        ro = (n[j]/(n[j]+1)) * (np.linalg.norm(datapoint[i]-clusters[j]))
+                    except ZeroDivisionError:
+                        ro = 0
+                    print(f"when i!=j: {ro}")
+                    ro_list[j] = ro
+                    J[j] += ro
+            print(f"ro_j in each cluster is :{ro_list}")
+            k = min(ro_list, key=ro_list.get)
+            if initial_clustering[i] == k:
+                print("Original cluster is better")
+            else:
+                print("Change to another cluster")
+                # update the assigned cluster
+                assigned_cluster[i] = k
+                initial_clustering[i] = k
+                print(f"New assigned cluster after ro:{initial_clustering}")
+
+
+            # recompute cluster point
+            datapoint_classify_dict = {}
+            for j in range(num_cluster):
+                datapoint_classify_dict[j] = []
+            for k in range(num_samples):
+                for j in range(num_cluster):
+                    if initial_clustering[k] == j:
+                        datapoint_classify_dict[j].append([datapoint[k]])
+
+            # update cluster point
+            for keys in datapoint_classify_dict:
+                for j in range(num_cluster):
+                    if keys == j:
+                        clusters[j] = np.mean(datapoint_classify_dict[keys], axis=0)
+
+
+            print(f"Updated New clusters are: \n {clusters}")
+            # recompute J
+            print(J)
+            print(f"Sum of the total loss is: {sum(J.values())}")
+
+
+            if sum(J.values()) < sum(old_loss.values()):
+                print("###############J is smaller now###############")
+                print("==============================================")
+                print(f"Final cluster is:\n {clusters}")
+                print(f"Initial classified list: \n {initial_clustering_copy}")
+                print(f"Final classified list: \n {initial_clustering}")
+                return clusters
+            else:
+                print("J is still larger, continue")
+
+
+
+    print("==============================================")
+    print(f"Final cluster is:\n {clusters}")
+    print(f"Initial classified list: \n {initial_clustering_copy}")
+    print(f"Final classified list: \n {initial_clustering}")
+    return clusters
+
+datapoint = np.array([
+    [2, 3],
+    [3, 2],
+    [4, 3],
+    [6, 3],
+    [8, 2],
+    [9, 3],
+    [10, 1]
+])
 # initial_datapoint_class = np.asarray([0, 0, 0, 1, 1, 1])
-# cluster_point=np.asarray([
-#     [0, 0],
-#     [3, 1]
-# ])
-# selected_datapoint_tomove = np.array([[2,1]])
-#
-# iterative_optimization(datapoint=datapoint, initial_datapoint_class=initial_datapoint_class, clusters=cluster_point, selected_datapoint_tomove= selected_datapoint_tomove)
+cluster_point=np.asarray([
+    [4.000, 1.000],
+    [7.000, 1.000]
+])
+initial_clustering = np.array([0, 0, 0, 1, 1, 1, 1])
+selected_datapoint_tomove = np.array([[6,3]])
+
+iterative_optimization(datapoint=datapoint, initial_clustering= initial_clustering, clusters=cluster_point, selected_datapoint_tomove= selected_datapoint_tomove)
 
 def PCA(S, dimension, new_samples_to_be_classified):
     n = len(S)
@@ -504,134 +649,6 @@ def fuzzyKMeans(dataset, numCluster, initial_membership, b, criteria):
 
 
 from sklearn.metrics.pairwise import euclidean_distances
-def agglomerative_clustering(dataset, numCluster, link_type=None):
-    # link_type--> "single", "complete", "average" (還有complete 跟average)
-    distance_matrix = euclidean_distances(dataset, dataset)
-    distance_matrix = np.tril(distance_matrix)
-    distance_matrix[distance_matrix==0] = np.inf
-    print(distance_matrix)
-    df = pd.DataFrame(data=np.ones(dataset.shape[0])*np.inf) # initialized dataframe
-    # error handling if numCluster is over needed
-    if numCluster > distance_matrix.shape[0]:
-        print("Reconsider the number of clusters!")
-        numCluster = distance_matrix.shape[0]
-
-    if link_type == "single":
-        d = {}  # This dictionary keeps record of which data points or cluster are merging
-        for i in range(0, numCluster):
-            print(f"=======Iteration {i+1} Started========")
-            print(f"The minimum value founded is {np.min(distance_matrix)}")
-            #argmin returns the indexes of the first occureneces of the minimum values in flattened matrix
-            ij_min = np.unravel_index(distance_matrix.argmin(),
-                                      distance_matrix.shape)  # from the distance matrix, get the minimum distance
-            # np.unravel_index gives us the position of minimum distance. e.g. (1,2) and (0,1) is where minimum value is present in matrix.
-            # This is what we need as in Hierarchical clustering, we merge the two pairs with minimum distance
-            if i == 0:
-                df.iloc[ij_min[0]] = 0
-                df.iloc[ij_min[1]] = 0
-                print(f"df is {df}")
-            else:
-                try:
-                    a = int(df.iloc[ij_min[0]])
-
-                except:
-                    df.iloc[ij_min[0]] = i
-                    a = i
-
-                try:
-                    b = int(df.iloc[ij_min[1]])
-                except:
-                    df.iloc[ij_min[1]] = i
-                    b = i
-                df[(df[0] == a) | (df[0] == b)] = i
-                print(df)
-            d[i] = ij_min
-            print(f"d is {d}")
-            # The if, else code till here is just filling the dataframe as the two points/clusters combine.
-            # So, for example if 1 and 2 combines, dataframe will have 1 : 0, 2 : 0. Which means point 1 and 2 both are in same cluster (0th cluster)
-            for j in range(0, ij_min[0]):
-                # we want to ignore the diagonal, and diagonal is 0. We replaced 0 by infinte.
-                # So this if condition will skip diagonals
-                if np.isfinite(distance_matrix[ij_min[0]][j]) and np.isfinite(distance_matrix[ij_min[1]][j]):
-                    # after two points/cluster are linked, to calculate new distance we take minimum distance for single linkage
-                    distance_matrix[ij_min[1]][j] = min(distance_matrix[ij_min[0]][j], distance_matrix[ij_min[1]][j])
-            # To avoid the combined data points/cluster in further calculations, we make them infinte.
-            # Our if loop above this, will therefore skip the infinite record entries.
-            distance_matrix[ij_min[0]] = np.inf
-            print(distance_matrix)
-
-            # print out the information we need
-            print(f"Combine datapoint {dataset[d[i][0]]} and datapoint {dataset[d[i][1]]}")
-
-
-        return d, df[0].to_numpy()
-
-    elif link_type == "complete":
-        d_complete = {}
-        for i in range(0, numCluster):
-            print(f"=======Iteration {i+1} Started========")
-            print(f"The minimum value founded is {np.min(distance_matrix)}")
-            ij_min = np.unravel_index(distance_matrix.argmin(), distance_matrix.shape)
-            if i == 0:
-                df.iloc[ij_min[0]] = 0
-                df.iloc[ij_min[1]] = 0
-            else:
-                try:
-                    a = int(df.iloc[ij_min[0]])
-                except:
-                    df.iloc[ij_min[0]] = i
-                    a = i
-                try:
-                    b = int(df.iloc[ij_min[1]])
-                except:
-                    df.iloc[ij_min[1]] = i
-                    b = i
-                df[(df[0] == a) | (df[0] == b)] = i
-            d_complete[i] = ij_min
-            for j in range(0, ij_min[0]):
-                if np.isfinite(distance_matrix[ij_min[0]][j]) and np.isfinite(distance_matrix[ij_min[1]][j]):
-                    # after two points/cluster are linked, to calculate new distance we take maximum distance for complete linkage
-                    distance_matrix[ij_min[1]][j] = max(distance_matrix[ij_min[0]][j], distance_matrix[ij_min[1]][j])
-
-            distance_matrix[ij_min[0]] = np.inf
-            print(distance_matrix)
-
-            print(f"Combine datapoint {dataset[d_complete[i][0]]} and datapoint {dataset[d_complete[i][1]]}")
-
-        return d_complete, df[0].to_numpy()
-
-
-    elif link_type == "average":
-        d_average = {}
-        for i in range(0, numCluster):
-            ij_min = np.unravel_index(distance_matrix.argmin(), distance_matrix.shape)
-            if i == 0:
-                df.iloc[ij_min[0]] = 0
-                df.iloc[ij_min[1]] = 0
-            else:
-                try:
-                    a = int(df.iloc[ij_min[0]])
-                except:
-                    df.iloc[ij_min[0]] = i
-                    a = i
-                try:
-                    b = int(df.iloc[ij_min[1]])
-                except:
-                    df.iloc[ij_min[1]] = i
-                    b = i
-                df[(df[0] == a) | (df[0] == b)] = i
-            d_average[i] = ij_min
-            for j in range(0, ij_min[0]):
-                if np.isfinite(distance_matrix[ij_min[0]][j]) and np.isfinite(distance_matrix[ij_min[1]][j]):
-                    # after two points/cluster are linked, to calculate new distance we take average distance for average linkage
-                    distance_matrix[ij_min[1]][j] = (distance_matrix[ij_min[0]][j] + distance_matrix[ij_min[1]][
-                        j]) / 2.0
-            distance_matrix[ij_min[0]] = np.inf
-            print(distance_matrix)
-
-            print(f"Combine datapoint {dataset[d_average[i][0]]} and datapoint {dataset[d_average[i][1]]}")
-
-        return d_average, df[0].to_numpy()
 
 def euclidean_distance(cluster, datapoint):
     """
@@ -765,19 +782,18 @@ def abs_distance(cluster, datapoint):
 # ])
 # fuzzyKMeans(dataset=dataset, numCluster=2, initial_membership=u, b=2, criteria=0.5)
 
-# for agglomerative_clustering
-hdataset = np.asarray([
-    [-1, 3],
-    [1, 2],
-    [0, 1],
-    [4, 0],
-    [5, 4],
-    [3, 2]
-])
-# d , df = agglomerative_clustering(dataset= hdataset, numCluster= 3, link_type="single")
-# print("=====Return value ======")
-# print(d)
-# print(df)
-
+# # for agglomerative_clustering
+# hdataset = [
+#     [-1, 3],
+#     [1, 2],
+#     [0, 1],
+#     [4, 0],
+#     [5, 4],
+#     [3, 2]
+# ]
+# Agglomerative_clustering(dataset= hdataset, numCluster= 3, link_type="single", ord=2)
+# Agglomerative_clustering(dataset= hdataset, numCluster= 3, link_type="complete", ord=2)
+# Agglomerative_clustering(dataset= hdataset, numCluster= 3, link_type="average", ord=2)
+# Agglomerative_clustering(dataset= hdataset, numCluster= 3, link_type="mean", ord=2)
 
 # print(euclidean_distance(np.asarray([[-2.8284, 0],[2.8284, 0]]), np.asarray([-0.7071, -3.5355])))
