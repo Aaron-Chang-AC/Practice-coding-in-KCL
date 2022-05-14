@@ -109,7 +109,10 @@ def find_weight_in_ffn(input, output, given_weight):
     # output of neural network z=(W_kj)*(W_ji)*x
     weights = np.zeros_like(given_weight)
     w_ji = np.linalg.inv(given_weight) @ output @ input.T @ np.linalg.inv((input @ input.T))
-    weights = w_ji
+    weights = w_ji.copy()
+    for i in range(len(weights)):
+        for j in range(len(weights[i])):
+            print(f"w_{i+1}{j+1} = {weights[i][j]}")
     return weights
 
 #
