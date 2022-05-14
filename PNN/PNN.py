@@ -31,15 +31,15 @@ Week 1 Introduction
 # w1.knn_classifier(
 #     feature_vectors = np.asarray(
 #         [
-#             [5, 1],
-#             [5, -1],
-#             [3, 0],
-#             [2, 1],
-#             [4, 2]
+#             [0.3, 0.35],
+#             [0.3, 0.28],
+#             [0.24, 0.2],
+#             [0.2, 0.32],
+#             [0.12, 0.25]
 #         ]
 #     ),
-#     given_target = np.asarray([4, 0]),
-#     classes = np.asarray([1, 1, 2, 2, 2], dtype = np.int8),
+#     given_target = np.asarray([0.2, 0.25]),
+#     classes = np.asarray([1, 2, 2, 3, 3], dtype = np.int8),
 #     k = 3,
 #     euclidean_dist= True
 # )
@@ -80,10 +80,12 @@ Week 2 Discriminant Functions
 # )
 # ========================================================================
 # w2.dichotomizer_determine_class(
-#     initial_at = np.asarray([-1, 2, 2]),
+#     initial_at = np.asarray([-5, 2, 1]),
 #     xt = np.asarray(
 #         [
-#             [0, 1],
+#             [1, 1],
+#             [2, 2],
+#             [3, 3]
 #         ]
 #     )
 # )
@@ -122,6 +124,8 @@ Week 2 Discriminant Functions
 #     epochs = 10
 # )
 # ============================================================================
+# basically the same as sequential perceptron learning sample normalization
+
 # w2.sequential_perceptron_learning_using_wk(
 #     initial_at = np.asarray([1,0,0]),
 #     xt = np.asarray(
@@ -142,18 +146,18 @@ Week 2 Discriminant Functions
 # w2.sequential_multiclass_learning(
 #     initial_at = np.asarray(
 #         [
-#             [1,0.5,0.5, -0.75],
-#             [-1,2,2, 1],
-#             [2,-1,-1, 1]
+#             [0, 0, 0],
+#             [0, 0, 0],
+#             [0, 0, 0]
 #         ]
 #     ),
 #     xt = np.asarray(
 #         [
-#             [0, 1, 0],
-#             [1, 0, 0],
-#             [0.5, 0.5, 0.25],
-#             [1, 1, 1],
-#             [0,0, 0]
+#             [1, 1],
+#             [2, 0],
+#             [0, 2],
+#             [-1, 1],
+#             [-1, -1]
 #         ]
 #     ),
 #     true_label = np.asarray([1,1,2,2,3]),
@@ -183,7 +187,9 @@ Week 2 Discriminant Functions
 
 """
 Week 3 
-
+- Sequential Delta Learning Rule (Supervised)
+- Hebbian Learning Rule (Unsupervised)
+- 
 """
 
 
@@ -201,26 +207,25 @@ Week 3
 #
 # )
 # ============================================================
-# w3.sequential_delta_learning_rule(
-#     initial_theta=-1.0,
-#     initial_w = np.asarray([0,0], dtype=np.float32),
-#     xt=np.asarray(
-#         [
-#             [0,2],
-#             [1,2],
-#             [2,1],
-#             [-3,1],
-#             [-2,-1],
-#             [-3,-2],
-#         ],
-#         dtype=np.float32
-#     ),
-#     true_values = np.asarray([1,1,1,0,0,0], dtype=np.float32),
-#     H_0=0.5,
-#     learning_rate=1.0,
-#     epochs=10
-#
-# )
+w3.sequential_delta_learning_rule(
+    initial_theta=-1.0,
+    initial_w = np.asarray([3,0.5], dtype=np.float32),
+    xt=np.asarray(
+        [
+            [2,-1],
+            [-1,0],
+            [0,0],
+            [1,1],
+            [0,-1]
+        ],
+        dtype=np.float32
+    ),
+    true_values = np.asarray([0,1,1,0,1], dtype=np.float32),
+    H_0=0.5,
+    learning_rate=1.0,
+    epochs=10
+
+)
 
 # =============================================================
 # w3.batch_delta_learning_rule(
@@ -267,6 +272,22 @@ Week 4
 
 """
 
+input = np.array([
+    [2, -4],  # x1
+    [-0.5, -6]  # x2
+])
+
+output = np.array([
+    [98, -168],  # z1
+    [7.5, -246]  # z2
+])
+
+given_weight= np.array([
+    [8, -4],
+    [6, 9]
+])
+
+print(w4.find_weight_in_ffn(input, output, given_weight))
 
 """
 Week 5 Deep Discriminative Neural Network
@@ -784,3 +805,22 @@ from sklearn.metrics.pairwise import euclidean_distances
 # print(euclidean_distance(np.asarray([[-2.8284, 0],[2.8284, 0]]), np.asarray([-0.7071, -3.5355])))
 
 #===================================================================================================
+
+# for iterative optimization
+# datapoint = np.array([
+#     [2, 3],
+#     [3, 2],
+#     [4, 3],
+#     [6, 3],
+#     [8, 2],
+#     [9, 3],
+#     [10, 1]
+# ])
+# # initial_datapoint_class = np.asarray([0, 0, 0, 1, 1, 1])
+# cluster_point=np.asarray([
+#     [4.000, 1.000],
+#     [7.000, 1.000]
+# ])
+# initial_clustering = np.array([0, 0, 0, 1, 1, 1, 1]) # use k-mean to obtain this
+# selected_datapoint_tomove = np.array([[6,3]])
+# w10.iterative_optimization(datapoint=datapoint, initial_clustering= initial_clustering, clusters=cluster_point, selected_datapoint_tomove= selected_datapoint_tomove)

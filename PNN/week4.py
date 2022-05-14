@@ -103,6 +103,32 @@ def func_diff(function = None, value = None):
     x = symbols('x', real=True)
     f_d = diff(function, x)
     return f_d.subs(x,value)
+
+
+def find_weight_in_ffn(input, output, given_weight):
+    # output of neural network z=(W_kj)*(W_ji)*x
+    weights = np.zeros_like(given_weight)
+    w_ji = np.linalg.inv(given_weight) @ output @ input.T @ np.linalg.inv((input @ input.T))
+    weights = w_ji
+    return weights
+
+#
+# input = np.array([
+#     [2, -4],  # x1
+#     [-0.5, -6]  # x2
+# ])
+#
+# output = np.array([
+#     [98, -168],  # z1
+#     [7.5, -246]  # z2
+# ])
+#
+# given_weight= np.array([
+#     [8, -4],
+#     [6, 9]
+# ])
+#
+# print(find_weight_in_ffn(input, output, given_weight))
 '''
 tutorial Q4: forward NN
 X = np.asarray([
