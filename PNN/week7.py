@@ -96,6 +96,8 @@ def KL_Transform(S, dimension, new_samples_to_be_classified):
 # print(PCA(results.T, dimension=2, new_samples_to_be_classified=[]))
 #
 
+
+
 def hebbian_learning(datapoints, initial_weight,learning_rate = 0.01, epoch=2, mode=None):
     n = len(datapoints)
     X = datapoints.copy().T
@@ -131,7 +133,7 @@ def hebbian_learning(datapoints, initial_weight,learning_rate = 0.01, epoch=2, m
                 print(f"new weight:\n{initial_weight}\n")
                 print(f"--------------------------")
             print(f"new weight:\n{initial_weight}\n")
-
+    print(f"projection using the trained weight:\n{initial_weight@Xi_m}")
     return initial_weight
 
 
@@ -171,12 +173,33 @@ def oja_learning(datapoints, initial_weight,learning_rate = 0.01, epoch=2, mode=
                 print(f"new weight:\n{initial_weight}\n")
                 print(f"--------------------------")
             print(f"new weight:\n{initial_weight}\n")
-
+    print(f"projection using the trained weight:\n{initial_weight@Xi_m}")
     return initial_weight
 
 
 # print(oja_learning(datapoints=S, initial_weight=np.asarray([-1, 0]), learning_rate=0.01, epoch=6, mode="batch"))
 
+
+def LDA(datapoints, classes, projection_vector):
+    for i in range(len(datapoints)):
+        y = projection_vector @ datapoints[i]
+        print(f"y = w_T * x = {y}")
+        print(f"The belonging class is: {classes[i]}")
+
+    print("Check with your common sense if it is obviously separable")
+    return
+
+# datapoints = np.array([
+#     [1, 2],
+#     [2, 1],
+#     [3, 3],
+#     [6, 5],
+#     [7, 8]
+# ])
+#
+# classes = np.array([1, 1, 1, 2, 2])
+# projection_vector = np.array([1, 2])
+# LDA(datapoints=datapoints, classes= classes, projection_vector=projection_vector)
 
 def fisher_linear_discriminant_analysis(datapoints, classes, projection_weight):
     number_classes = int(np.max(classes))
@@ -224,7 +247,7 @@ def fisher_method(datapoints, classes, projection_weight):
         counter[classes[i] - 1] = np.add(counter[classes[i] - 1], 1)
     for i in range(number_classes):
         means[i] = means[i] / counter[i]
-        print(f"mean {i + 1}: {means[i]}\n")
+        print(f"mean for class {i + 1}: {means[i]}\n")
 
     cost = np.zeros(len(projection_weight))
 
@@ -247,6 +270,7 @@ def fisher_method(datapoints, classes, projection_weight):
         print(f"Cost of w{i + 1} is {cost[i]}\n")
         print(f"----------------------------------------")
     winner = np.argmax(cost)
+    print("The larger the cost, the more effective it is")
     print(f"Effective projection weight is {projection_weight[winner]}")
     return projection_weight[winner]
 
