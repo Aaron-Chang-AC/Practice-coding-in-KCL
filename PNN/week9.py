@@ -79,34 +79,34 @@ def bagging_algo(output_class, classfier_table):
 
 # for adaboost
 # select select_highest = True
-# X = np.asarray([[1,0],[-1,0],[0,1],[0,-1]])
-# y = np.asarray([1,1,-1,-1])
-# table = np.asarray([
-#     [1,-1,1,1],
-#     [-1,1,-1,-1],
-#     [1,-1,-1,-1],
-#     [-1,1,1,1],
-#     [1,1,1,-1],
-#     [-1,-1,-1,1],
-#     [-1,-1,1,-1],
-#     [1,1,-1,1]
-# ])
-# print(adaboost(len(table), X, y, table, select_highest = True))
+X = np.asarray([[1,0],[-1,0],[0,1],[0,-1]])
+y = np.asarray([1,1,-1,-1])
+table = np.asarray([
+    [1,-1,1,1],
+    [-1,1,-1,-1],
+    [1,-1,-1,-1],
+    [-1,1,1,1],
+    [1,1,1,-1],
+    [-1,-1,-1,1],
+    [-1,-1,1,-1],
+    [1,1,-1,1]
+])
+print(adaboost(len(table), X, y, table, select_highest = True))
 
 # select select_highest = False
-# X = np.asarray([[1,0],[-1,0],[0,1],[0,-1]])
-# y = np.asarray([1,1,-1,-1])
-# table = np.asarray([
-#     [1,-1,1,1],
-#     [-1,1,-1,-1],
-#     [1,-1,-1,-1],
-#     [-1,1,1,1],
-#     [1,1,1,-1],
-#     [-1,-1,-1,1],
-#     [-1,-1,1,-1],
-#     [1,1,-1,1]
-# ])
-# print(adaboost(len(table), X, y, table, select_highest = False))
+X = np.asarray([[1,0],[-1,0],[0,1],[0,-1]])
+y = np.asarray([1,1,-1,-1])
+table = np.asarray([
+    [1,-1,1,1],
+    [-1,1,-1,-1],
+    [1,-1,-1,-1],
+    [-1,1,1,1],
+    [1,1,1,-1],
+    [-1,-1,-1,1],
+    [-1,-1,1,-1],
+    [1,1,-1,1]
+])
+print(adaboost(len(table), X, y, table, select_highest = False))
 
 # for bagging
 # y = np.asarray([1,1,-1,-1])

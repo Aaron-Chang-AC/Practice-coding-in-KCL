@@ -321,7 +321,7 @@ print(0.3-0.25*(-0.7869-0.5)*func_diff(function = func,value = -1.0633)*1.6*func
 #     [0.75],
 #     [0.9]
 # ],dtype=np.float32)
-# rho = np.asarray([0.1,0.1,],dtype=np.float32)
+# rho = np.asarray([0.1,0.1],dtype=np.float32)
 # rbf_network(X = X,
 #             true_label = true_label,
 #             centers = centers,

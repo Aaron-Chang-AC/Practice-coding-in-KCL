@@ -25,7 +25,7 @@ def classify_class_by_given_linear_discriminant_function(initial_at, xt, true_la
         result_class = []
         for a in range(num_at):
             gt = np.matmul(at[a], yt[i].transpose()).transpose()
-            print(f"gt{a+1}: {gt}")
+            print(f"gt{a}: {gt}")
             result_class.append(gt)
         if len(true_label) != 0:
             predicted_class = int(np.argmax(result_class)+1)
@@ -256,7 +256,6 @@ def sequential_perceptron_learning_using_wk(initial_at,xt,true_label,learning_ra
         if np.sum(misclassified, dtype=np.int8) > 0:
             misclassified = np.zeros(num_xt, dtype=np.int8)
         else:
-            print(f"Final aT is: {at}")
             break
     return
 
@@ -315,7 +314,7 @@ def sequential_multiclass_learning(initial_at,xt,true_label,learning_rate,epochs
                 at[result_class-1] = at[result_class-1] - learning_rate * yt[i]
                 misclassified[i] = 1
                 print("y", str(i), ":gt=", gt, "pred_class: ", str(result_class) ," true_class: ", str(true_class), " misclassified")
-                print(f"updated at= \n {at}")
+                print("updated at=",at)
             else:
                 print("y", str(i), ":gt=", gt, "pred_class: ", str(result_class) ," true_class: ", str(true_class), " correct")
             cnt += 1
@@ -325,7 +324,7 @@ def sequential_multiclass_learning(initial_at,xt,true_label,learning_rate,epochs
         else:
             break
 
-    print(f"Final result at (each ROW is a linear discriminant function):\n {at}")
+    print(f"Final result at:\n {at}")
     return
 
 def sequential_widrow_hoff(initial_at,xt,true_label,margin_vector,learning_rate,epochs):

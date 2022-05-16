@@ -314,24 +314,24 @@ def iterative_optimization(datapoint, initial_clustering, clusters, selected_dat
     print(f"Final classified list: \n {initial_clustering}")
     return clusters
 
-# datapoint = np.array([
-#     [2, 3],
-#     [3, 2],
-#     [4, 3],
-#     [6, 3],
-#     [8, 2],
-#     [9, 3],
-#     [10, 1]
-# ])
-# # initial_datapoint_class = np.asarray([0, 0, 0, 1, 1, 1])
-# cluster_point=np.asarray([
-#     [4.000, 1.000],
-#     [7.000, 1.000]
-# ])
-# initial_clustering = np.array([0, 0, 0, 1, 1, 1, 1]) # use k-mean to obtain this
-# selected_datapoint_tomove = np.array([[6,3]])
+datapoint = np.array([
+    [2, 3],
+    [3, 2],
+    [4, 3],
+    [6, 3],
+    [8, 2],
+    [9, 3],
+    [10, 1]
+])
+# initial_datapoint_class = np.asarray([0, 0, 0, 1, 1, 1])
+cluster_point=np.asarray([
+    [4.000, 1.000],
+    [7.000, 1.000]
+])
+initial_clustering = np.array([0, 0, 0, 1, 1, 1, 1]) # use k-mean to obtain this
+selected_datapoint_tomove = np.array([[6,3]])
 
-# iterative_optimization(datapoint=datapoint, initial_clustering= initial_clustering, clusters=cluster_point, selected_datapoint_tomove= selected_datapoint_tomove)
+iterative_optimization(datapoint=datapoint, initial_clustering= initial_clustering, clusters=cluster_point, selected_datapoint_tomove= selected_datapoint_tomove)
 
 def PCA(S, dimension, new_samples_to_be_classified):
     n = len(S)
