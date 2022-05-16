@@ -21,6 +21,12 @@ Week 1 Introduction
 """
 # ==============================================================================
 
+# error_rate = (FP+FN)/(TP+TN+FP+FN)
+# accuracy = (TP+TN)/(TP+TN+FP+FN)
+# recall = (TP) /(TP+FN)
+# Precision = (TP) / (TP+FP)
+# f1_score = (2* recall* precision) /(recall + precision)
+
 # w1.confusion_matrix(
 #     y_pred = np.asarray([1, 0, 1, 1, 0, 1, 0], dtype = np.int8),
 #     y_true = np.asarray([1, 1, 0, 1, 0, 1, 1], dtype = np.int8),
@@ -31,21 +37,21 @@ Week 1 Introduction
 # w1.knn_classifier(
 #     feature_vectors = np.asarray(
 #         [
-#             [0.3, 0.35],
-#             [0.3, 0.28],
-#             [0.24, 0.2],
-#             [0.2, 0.32],
-#             [0.12, 0.25]
+#             [-2, 6],
+#             [-1, -4],
+#             [3, -1],
+#             [-3, -2],
+#             [-4, -5]
 #         ]
 #     ),
-#     given_target = np.asarray([0.2, 0.25]),
-#     classes = np.asarray([1, 2, 2, 3, 3], dtype = np.int8),
-#     k = 3,
+#     given_target = np.asarray([-2, 0]),
+#     classes = np.asarray([1, 1, 1, 2, 3], dtype = np.int8),
+#     k = 5,
 #     euclidean_dist= True
 # )
 
 # =================================================================================
-# euclidean_distance = w1.euclidean_distance(x = np.asarray([1, 2]), y= np.asarray([1, 1]))
+# euclidean_distance = w1.euclidean_distance(x = np.asarray([2, 2]), y= np.asarray([1, 1]))
 # print(f"Euclidean distance is : {euclidean_distance}")
 
 # manhattan_distance = w1.manhattan_distance(x = np.asarray([1.0, 2.0]), y= np.asarray([1.0, 1.0]))
@@ -59,40 +65,43 @@ Week 2 Discriminant Functions
 - Batch perceptron learning (with augmentation and sample normalisation)
 - Sequential perceptron learning (with augmentation notation and sample normalisation)
 - Sequential perceptron learning using_wk (with augmented notation and NO sample normalisation)
-- Sequential multiclass learning 
+- Sequential multiclass learning
+ 
+Minimum Squared Error Procedure
 - Sequential Widrowhoff
 """
 
 # w2.classify_class_by_given_linear_discriminant_function(
 #     initial_at= np.asarray([
-#         [1, 0.5, 0.5],
-#         [-1, 2, 2],
-#         [2, -1, -1]
+#         [-2, 1, 2, 1, 2]
 #     ]),
 #     xt = np.asarray([
-#         [0, 1],
-#         [1, 0],
-#         [0.5, 0.5],
-#         [1, 1],
-#         [0, 0]
+#          [1, 1, 1, 1],
+#         [0, -1, 0, 1]
 #     ]),
-#     true_label= np.asarray([1,1,2,2,3]) # keep empty np.asarray([]) if no label need to be check
+#     true_label= np.asarray([1, 2]) # keep empty np.asarray([]) if no label need to be check
 # )
 # ========================================================================
+
+# (with augmented notation and sample normalisation)
+# a = (w0, wt)t
+# misclassified -> when g(x)<=0 !!
+
 # w2.dichotomizer_determine_class(
 #     initial_at = np.asarray([-5, 2, 1]),
 #     xt = np.asarray(
 #         [
-#             [1, 1],
-#             [2, 2],
-#             [3, 3]
+#             [1,1],
+#             [2,2],
+#             [3,3]
 #         ]
 #     )
 # )
 # ===========================================================================
 
+# originally g(x) > 0, change the code if question give different indication
 # w2.batch_perceptron_learning(
-#     initial_at = np.asarray([-25, 6, 3]),
+#     initial_at = np.asarray([-25, 6, 3], dtype=float),
 #     xt = np.asarray(
 #         [
 #             [1,5],
@@ -100,26 +109,28 @@ Week 2 Discriminant Functions
 #             [4,1],
 #             [5,1]
 #         ]
-#     ),
+#     , dtype=float),
 #     true_label = np.asarray([1,1,2,2]),
 #     learning_rate = 1.0,
 #     epochs = 10
 # )
 
 # ==========================================================================
+
+# originally g(x) > 0, change the code if question give different indication
+
+#
 # w2.sequential_perceptron_learning_sample_normalisation(
-#     initial_at = np.asarray([1,0,0]),
+#     initial_at = np.asarray([-25, 6, 3], dtype=float),
 #     xt = np.asarray(
 #         [
-#             [0,2],
-#             [1,2],
-#             [2,1],
-#             [-3,1],
-#             [-2,-1],
-#             [-3,-2]
+#             [1,5],
+#             [2,5],
+#             [4,1],
+#             [5,1]
 #         ]
-#     ),
-#     true_label = np.asarray([1,1,1,2,2,2]),
+#     , dtype=float),
+#     true_label = np.asarray([1,1,2,2]),
 #     learning_rate = 1.0,
 #     epochs = 10
 # )
@@ -127,7 +138,7 @@ Week 2 Discriminant Functions
 # basically the same as sequential perceptron learning sample normalization
 
 # w2.sequential_perceptron_learning_using_wk(
-#     initial_at = np.asarray([1,0,0]),
+#     initial_at = np.asarray([1,0,0], dtype=float),
 #     xt = np.asarray(
 #         [
 #             [0,2],
@@ -137,7 +148,7 @@ Week 2 Discriminant Functions
 #             [-2,-1],
 #             [-3,-2]
 #         ]
-#     ),
+#     , dtype=float),
 #     true_label = np.asarray([1,1,1,2,2,2]),
 #     learning_rate = 1.0,
 #     epochs = 10
@@ -150,7 +161,7 @@ Week 2 Discriminant Functions
 #             [0, 0, 0],
 #             [0, 0, 0]
 #         ]
-#     ),
+#     , dtype=float),
 #     xt = np.asarray(
 #         [
 #             [1, 1],
@@ -159,15 +170,18 @@ Week 2 Discriminant Functions
 #             [-1, 1],
 #             [-1, -1]
 #         ]
-#     ),
+#     , dtype=float),
 #     true_label = np.asarray([1,1,2,2,3]),
 #     learning_rate = 1.0,
 #     epochs = 10,
 #     select_highest_index=True
 # )
 # ===================================================================================
+# Update by a<-a+lr*(b_k - at_yk)*y_k
+# b is the margin vector
+
 # w2.sequential_widrow_hoff(
-#     initial_at = np.asarray([1,0,0]),
+#     initial_at = np.asarray([1,0,0], dtype=float),
 #     xt=np.asarray(
 #         [
 #             [0, 2],
@@ -177,9 +191,9 @@ Week 2 Discriminant Functions
 #             [-2, -1],
 #             [-3, -2]
 #         ]
-#     ),
+#     , dtype=float),
 #     true_label = np.asarray([1,1,1,2,2,2]),
-#     margin_vector = np.asarray([1,1,1,1,1,1]).transpose(),
+#     margin_vector = np.asarray([1,1,1,1,1,1], dtype=float).transpose(),
 #     learning_rate = 0.1,
 #     epochs = 2
 # )
@@ -188,44 +202,55 @@ Week 2 Discriminant Functions
 """
 Week 3 
 - Sequential Delta Learning Rule (Supervised)
-- Hebbian Learning Rule (Unsupervised)
-- 
+- Batch Delta Learning Rule
+- Negative Feedback 
 """
-
+# ======================================================
+# H_0 = 0
+# w = np.array([0.1, -0.5, 0.4])
+# x1 = np.array([0.1, -0.5, 0.4])
+# x2 = np.array([0.1, 0.5, 0.4])
+#
+# wx = w @ x2
+# print(wx)
+# print(w3.heaviside_function(H_0, wx))
 
 # ======================================================
-
+# linear threshold neuron
 # w3.simple_neuron(
 #     initial_theta = -2,
-#     initial_w = np.asarray([-1, 3], dtype=np.float32),
+#     initial_w = np.asarray([0.5, 1], dtype=np.float32),
 #     xt = np.asarray(
 #         [
-#             [2, 0.5]
+#             [0, 2],
+#             [2, 1],
+#             [-3, 1],
+#             [-2, -1],
+#             [0, -1]
 #         ]
 #     ),
-#     H_0 = 1
+#     H_0 = 0.5
 #
 # )
 # ============================================================
-w3.sequential_delta_learning_rule(
-    initial_theta=-1.0,
-    initial_w = np.asarray([3,0.5], dtype=np.float32),
-    xt=np.asarray(
-        [
-            [2,-1],
-            [-1,0],
-            [0,0],
-            [1,1],
-            [0,-1]
-        ],
-        dtype=np.float32
-    ),
-    true_values = np.asarray([0,1,1,0,1], dtype=np.float32),
-    H_0=0.5,
-    learning_rate=1.0,
-    epochs=10
-
-)
+# w3.sequential_delta_learning_rule(
+#     initial_theta=-0.5,
+#     initial_w = np.asarray([1, 1], dtype=np.float32),
+#     xt=np.asarray(
+#         [
+#             [0, 0],
+#             [0, 1],
+#             [1, 0],
+#             [1, 1],
+#         ],
+#         dtype=np.float32
+#     ),
+#     true_values = np.asarray([0, 0, 0, 1], dtype=np.float32), # true value can only be 0 or 1
+#     H_0=0.5,
+#     learning_rate=1.0,
+#     epochs=10
+#
+# )
 
 # =============================================================
 # w3.batch_delta_learning_rule(
@@ -241,7 +266,7 @@ w3.sequential_delta_learning_rule(
 #     true_values = np.asarray([1, 0], dtype=np.float32),
 #     H_0=0.5,
 #     learning_rate=1.0,
-#     epochs=7
+#     epochs=7  # decision on epochs depends on the answer convergence
 #
 # )
 # ================================================================
@@ -263,31 +288,150 @@ w3.sequential_delta_learning_rule(
 #         dtype=np.float32
 #     ),
 #     alpha=0.25,
-#     epochs=4
+#     epochs=5
+#
+# )
+
+# ================================================================
+
+# w3.negative_feedback_network_stable(
+#     initial_W = np.asarray(
+#         [
+#             [1,1,0],
+#             [1,1,1]
+#         ],
+#         dtype=np.float32
+#     ),
+#     initial_yt = np.asarray([0, 0], dtype=np.float32),
+#     xt=np.asarray(
+#         [
+#             [1,1,0],
+#         ],
+#         dtype=np.float32
+#     ),
+#     alpha=0.25,
+#     epochs=5,
+#     epsilon1= 0.01,
+#     epsilon2= 0.01
 #
 # )
 
 """
 Week 4
-
+- Find input weight when given all other information
+- RBF
+- Forward Neural Network (can be use when backpropagation is not needed)
 """
+# ====================================================================================================
 
-input = np.array([
-    [2, -4],  # x1
-    [-0.5, -6]  # x2
-])
+# input = np.array([
+#     [2, -4],  # only x1
+#     [-0.5, -6],  # only x2
+# ])
+#
+# output = np.array([
+#     [98, -168],  # only z1
+#     [7.5, -246],  # only z2
+# ])
+#
+# given_weight= np.array([
+#     [8, -4], # weights connected to z1
+#     [6, 9],   # weights connected to z2
+# ])
+#
+# print(w4.find_weight_in_ffn(input, output, given_weight))
 
-output = np.array([
-    [98, -168],  # z1
-    [7.5, -246]  # z2
-])
+# ====================================================================================================
 
-given_weight= np.array([
-    [8, -4],
-    [6, 9]
-])
+# X = np.asarray([
+#     [0.05],
+#     [0.2],
+#     [0.25],
+#     [0.3],
+#     [0.4],
+#     [0.43],
+#     [0.48],
+#     [0.6],
+#     [0.7],
+#     [0.8],
+#     [0.9],
+#     [0.95]
+# ],dtype=np.float32)
+# true_label = np.asarray([
+#     [0.0863],
+#     [0.2662],
+#     [0.2362],
+#     [0.1687],
+#     [0.126],
+#     [0.1756],
+#     [0.3290],
+#     [0.6694],
+#     [0.4573],
+#     [0.332],
+#     [0.4063],
+#     [0.3535]
+# ],dtype=np.float32)
+#
+# centers = np.asarray([
+#     [0.1667],
+#     [0.35],
+#     [0.5525],
+#     [0.8833]
+# ],dtype=np.float32)
+#
+# samples_to_be_classified = np.asarray([
+#     [0.1],
+#     [0.35],
+#     [0.55],
+#     [0.75],
+#     [0.9]
+# ],dtype=np.float32)
+# # Note that the length of rho equals the number of centers
+# rho = np.asarray([0.1,0.1,0.1],dtype=np.float32)
+# w4.rbf_network(X = X,
+#             true_label = true_label,
+#             centers = centers,
+#             rho = None, # if assigned rho rho = rho and change above value
+#             samples_to_be_classified = samples_to_be_classified,
+#             beta = 0.5,
+#             function = "gaussian",
+#             rho_j_method = "average", # max or average
+#             bias=True
+#             )
+#
 
-print(w4.find_weight_in_ffn(input, output, given_weight))
+
+
+# ====================================================================================================
+# X = np.asarray([
+#     [1,0,1,0],
+#     [0,1,0,1],
+#     [1,1,0,0]
+# ],dtype=np.float32)
+#
+# W = {
+#     'W1': np.asarray([
+#         [-0.7057,1.9061,2.6605,-1.1359],
+#         [0.4900,1.9324,-0.4269,-5.1570],
+#         [0.9438,-5.4160,-0.3431,-0.2931]
+#     ]),
+#     'B1': np.asarray([
+#         [4.8432,0.3973,2.1761]
+#     ]),
+#     'W2': np.asarray([
+#         [-1.1444,0.3115,-9.9812],
+#         [0.0106,11.5477,2.6479]
+#     ]),
+#     'B2': np.asarray([
+#         [2.5230,2.6463]
+#     ]),
+# }
+# activation_function_dict = {
+#     'input': w4.activation_function_spec(name='linear'),
+#     'hidden1': w4.activation_function_spec(name='tanh'),
+#     'output': w4.activation_function_spec(name='sigmoid'),
+# }
+# w4.neural_network_forward(weight_dict=W, input=X, activation_function_dict=activation_function_dict)
 
 """
 Week 5 Deep Discriminative Neural Network
@@ -370,8 +514,8 @@ Week 5 Deep Discriminative Neural Network
 #     [-0.5, -0.5]
 # ])
 # # parameters setting
-# padding=0
-# stride=1
+# padding= 0
+# stride= 1
 # dilation = 2
 # use_dilation = True # set True if dilation is used
 #
@@ -417,9 +561,9 @@ Week 5 Deep Discriminative Neural Network
 # # calculate output dimension after CNN
 # # [height, width, channels] for input
 # # [height, width, channels, number of mask] for mask
-# input_dimension = [49, 49, 3]
-# mask_dimension = [1, 1, 0,  20]
-# pooling = 2
+# input_dimension = [49, 49, 80]
+# mask_dimension = [1, 1, 1,  20]
+# pooling = 1
 # stride = 1
 # padding = 1
 # use_pooling = False
@@ -444,20 +588,20 @@ Week 6 GAN
 - Cost function of GAN: V(D,G) -->w6.gan
 - Mini-batch GAN
 """
-# X=np.asarray([
-#     [1,2],
-#     [3,4]
-# ])
-# X_fake=np.asarray([
-#     [5,6],
-#     [7,8]
-# ])
-# thetas=np.asarray([0.1,0.2])
-# x1, x2, t1, t2 = symbols('x1 x2 t1 t2', real=True)
-# # self define discriminator function
-# Dx = 1/(1+exp(-(t1*x1-t2*x2-2)))
-#
-# # f_d = diff(Dx, t1) # just for testing- comment out
+X=np.asarray([
+    [1,2],
+    [3,4]
+], dtype=np.float32)
+X_fake=np.asarray([
+    [5,6],
+    [7,8]
+], dtype=np.float32)
+thetas=np.asarray([0.1,0.2])
+x1, x2, t1, t2 = symbols('x1 x2 t1 t2', real=True)
+# self define discriminator function
+Dx = 1/(1+exp(-(t1*x1-t2*x2-2)))
+
+# f_d = diff(Dx, t1) # just for testing- comment out
 
 # ==================================================================================================
 # w6.gan(Dx,X,X_fake,thetas)
@@ -478,13 +622,18 @@ Week 7 Feature Extraction
 
 # KLTransform(Michael Version)/PCA(Wang's Version)
 # S = np.asarray([
-#     [1,2,1],
-#     [2,3,1],
-#     [3,5,1],
-#     [2,2,1]
+#     [1, 2],
+#     [3,5],
+#     [5,4],
+#     [8,7],
+#     [11,7]
 # ])
 # new_samples_to_be_classified = np.asarray([
-#         [3,-2,5]
+#     [1, 2],
+#     [3, 5],
+#     [5, 4],
+#     [8, 7],
+#     [11, 7]
 # ])
 
 # S = np.asarray([
@@ -496,7 +645,7 @@ Week 7 Feature Extraction
 # ])
 
 
-# w7.KL_Transform(S = S, dimension = 2, new_samples_to_be_classified = new_samples_to_be_classified)
+# w7.KL_Transform(S = S, dimension = 1, new_samples_to_be_classified = new_samples_to_be_classified)
 # w7.PCA(S= S, dimension= 2, new_samples_to_be_classified= new_samples_to_be_classified)
 
 #=====================================================================================
@@ -538,6 +687,11 @@ Week 7 Feature Extraction
 
 # Oja's Learning Rule
 # mode is either "batch" or anything else
+# will give zero-mean dataset as well
+
+# Note that given_zero_mean is a flag which should be true when given
+# dataset is zero mean
+
 # S = np.asarray([
 #     [0,1],
 #     [3,5],
@@ -545,28 +699,49 @@ Week 7 Feature Extraction
 #     [5,6],
 #     [8,7],
 #     [9,7]
-# ])
-# print(w7.oja_learning(datapoints=S, initial_weight=np.asarray([-0.2, -0.2, 0.2, 0]), learning_rate=0.01, epoch=1, mode="sequential"))
-
+# ],dtype=np.float32)
+# w7.oja_learning(datapoints=S, given_zero_mean=False, initial_weight=np.asarray([-1, 0]), learning_rate=0.01, epoch=2, mode="batch")
 
 #===================================================================================================
 # Hebbian Learning Rule
+# for hebbian_learning
+# Note that given_zero_mean is a flag which should be true when given
+# dataset is zero mean
 # S = np.asarray([
-#     [0, 1],
-#     [1, 2],
-#     [3, 1],
-#     [-1, -2],
-#     [-3, -2]
-# ])
-# print(w7.hebbian_learning(datapoints=S, initial_weight=np.asarray([0.5, -0.2]), learning_rate=0.1, epoch=2, mode="sequential"))
+#     [0,1],
+#     [3,5],
+#     [5,4],
+#     [5,6],
+#     [8,7],
+#     [9,7]
+# ],dtype=np.float32)
+# initial_weight=np.asarray([-1, 0],dtype=np.float32)
+# w7.hebbian_learning(datapoints=S, given_zero_mean=True, initial_weight=initial_weight, learning_rate=0.01, epoch=6, mode="batch")
 
+#===================================================================================================
+# For LDA
+# support multi-dimension
+# datapoints = np.array([
+#     [0, 0],
+#     [1, 0],
+#     [2, 1],
+#     [0, 1],
+#     [1, 2]
+# ], dtype=np.float32)
+#
+# classes = np.array([1, 1, 1, 2, 2])
+# projection_vector = np.array([
+#     [3, 2],
+#     [-10, 6]
+# ], dtype=np.float32)
+# w7.LDA(datapoints=datapoints, classes= classes, projection_vector=projection_vector)
 #===================================================================================================
 
 # # LDA
 # # Fisher's Method
 # datapoints = np.asarray([[1, 2], [2, 1],[3, 3], [6, 5], [7, 8]])
 # classes = np.asarray([1, 1, 1, 2, 2])
-# projection_weight = np.asarray([[-1, 5], [2, -3]])
+# projection_weight = np.asarray([[-1, 5], [2, -6]])
 # print(w7.fisher_method(datapoints, classes, projection_weight=projection_weight))
 
 #===================================================================================================
@@ -607,12 +782,17 @@ Week 7 Feature Extraction
 Week 8 Support Vector Machines
 
 """
-# svs = [
-#     [-1, 0],
-#     [1, 0]
-# ]
-# classes = [1,-1]
-# w8.LinearSVM(svs, classes)
+svs = [
+    [5, 1],
+    [5, -1],
+    [3, 0]
+]
+classes = [1,1,-1]
+hyperplane = w8.LinearSVM(svs, classes)
+print(hyperplane)
+# Margin given by hyperplane
+w8.margin_from_hyperplane(hyperplane)
+
 
 
 #===================================================================================================
@@ -674,19 +854,18 @@ from sklearn.metrics.pairwise import euclidean_distances
 # Note that each "row" is a sample, c is the number of clusters
 # cluster_point is the initial clusters
 # datapoint = np.asarray([
-#     [-1, 3],
-#     [1, 4],
-#     [0, 5],
-#     [4, -1],
+#     [1, 0],
+#     [0, 2],
+#     [1, 3],
 #     [3, 0],
-#     [5, 1]
+#     [3, 1]
 # ])
 # cluster_point=np.asarray([
-#     [-1, 3],
-#     [5, 1]
+#     [3, 2],
+#     [4, 0]
 # ])
 # # mode can be either "euclidean" or in "manhattan"
-# w10.k_means(datapoint=datapoint, c=2, cluster_point=cluster_point, randomized=False, mode="manhattan")
+# w10.k_means(datapoint=datapoint, c=2, cluster_point=cluster_point, randomized=False, mode="euclidean")
 
 
 #===================================================================================================
@@ -695,19 +874,17 @@ from sklearn.metrics.pairwise import euclidean_distances
 # competitive_learning_algorithm
 # Note that each integer in chosen_order is >= 0
 # S = np.asarray([
-#     [-1,3],
-#     [1,4],
-#     [0,5],
-#     [4,-1],
-#     [3,0],
-#     [5,1]
+#     [1, 0],
+#     [0, 2],
+#     [1, 3],
+#     [3, 0],
+#     [3, 1]
 # ], dtype=np.float32)
 # initial_centers=np.asarray([
-#     [-0.5,1.5],
-#     [0,2.5],
-#     [1.5,0]
-# ])
-# chosen_order=np.asarray([2,0,0,4,5]) # if no chosen order then 0,1,2,3,....
+#     [1,1],
+#     [2, 2]
+# ], dtype=float)
+# chosen_order=np.asarray([0, 1, 2, 3, 4]) # if no chosen order then 0,1,2,3,....
 # new_data_to_be_classfied = np.asarray([
 #     [0,-2],
 #     [-0.2,2.8],
@@ -716,7 +893,7 @@ from sklearn.metrics.pairwise import euclidean_distances
 # w10.competitive_learning_algorithm(S,iterations=5,initial_centers= initial_centers,
 #                                chosen_order=chosen_order,
 #                                new_data_to_be_classfied=new_data_to_be_classfied,
-#                                learning_rate=0.1,
+#                                learning_rate=0.5,
 #                                normalization_flag=False
 #                                )
 
@@ -775,16 +952,15 @@ from sklearn.metrics.pairwise import euclidean_distances
 
 # for Agglomerative_clustering
 # hdataset = [
-#     [-1, 3],
-#     [1, 2],
-#     [0, 1],
-#     [4, 0],
-#     [5, 4],
-#     [3, 2]
+#     [1, 0],
+#     [0, 2],
+#     [1, 3],
+#     [3, 0],
+#     [3, 1]
 # ]
 
 ## ord 1 --> manhattan /////  ord 2 --> euclidean
-# w10.Agglomerative_clustering(dataset= hdataset, numCluster= 3, link_type="single", ord=2)
+# w10.Agglomerative_clustering(dataset= hdataset, numCluster= 2, link_type="single", ord=2)
 # w10.Agglomerative_clustering(dataset= hdataset, numCluster= 3, link_type="complete", ord=2)
 # w10.Agglomerative_clustering(dataset= hdataset, numCluster= 3, link_type="average", ord=2)
 # w10.Agglomerative_clustering(dataset= hdataset, numCluster= 3, link_type="mean", ord=2) # so-called centroid

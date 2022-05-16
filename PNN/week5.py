@@ -272,34 +272,34 @@ print(activation_function(input, alpha=0.1, mode="lrelu"))
 print(activation_function(input, mode="tanh"))
 print(activation_function(input, H_0=0.5, threshold=0.1, mode="heaviside"))
 '''
-conv_input1 = np.array([
-    [0.2, 1,  0],
-    [ -1, 0,  -0.1],
-    [0.1, 0,  0.1]
-])
-conv_input2 = np.array([
-    [1, 0.5,  0.2],
-    [ -1, -0.5,  -0.2],
-    [0.1, -0.1,  0]
-])
-H1 = np.array([
-    [1,  -0.1],
-    [1,  -0.1]
-])
-H2 = np.array([
-    [0.5,  0.5],
-    [-0.5, -0.5]
-])
-stride=1
-padding=0
-
-H1_after_dilation1 = mask_dilation(H1, dilation=2)
-H2_after_dilation2 = mask_dilation(H2, dilation=2)
-
-pool_result1 = get_pooling(img=conv_input1, pool_size= H1_after_dilation1.shape[0], stride=stride, padding=padding)
-pool_result2 = get_pooling(img=conv_input2, pool_size= H2_after_dilation2.shape[0], stride=stride, padding=padding)
-
-print(mask_convolution(img=conv_input1, mask = H1_after_dilation1, pools=pool_result1, stride=stride, padding=padding)+mask_convolution(img=conv_input2, mask = H2_after_dilation2, pools=pool_result2, stride=stride, padding=padding))
+# conv_input1 = np.array([
+#     [0.2, 1,  0],
+#     [ -1, 0,  -0.1],
+#     [0.1, 0,  0.1]
+# ])
+# conv_input2 = np.array([
+#     [1, 0.5,  0.2],
+#     [ -1, -0.5,  -0.2],
+#     [0.1, -0.1,  0]
+# ])
+# H1 = np.array([
+#     [1,  -0.1],
+#     [1,  -0.1]
+# ])
+# H2 = np.array([
+#     [0.5,  0.5],
+#     [-0.5, -0.5]
+# ])
+# stride=1
+# padding=0
+#
+# H1_after_dilation1 = mask_dilation(H1, dilation=2)
+# H2_after_dilation2 = mask_dilation(H2, dilation=2)
+#
+# pool_result1 = get_pooling(img=conv_input1, pool_size= H1_after_dilation1.shape[0], stride=stride, padding=padding)
+# pool_result2 = get_pooling(img=conv_input2, pool_size= H2_after_dilation2.shape[0], stride=stride, padding=padding)
+#
+# print(mask_convolution(img=conv_input1, mask = H1_after_dilation1, pools=pool_result1, stride=stride, padding=padding)+mask_convolution(img=conv_input2, mask = H2_after_dilation2, pools=pool_result2, stride=stride, padding=padding))
 
 
 

@@ -46,7 +46,7 @@ def margin_from_hyperplane(hyperplane):
     print(hyperplane[:-1])
     print(np.linalg.norm(hyperplane[:-1]))
     margin = 2 / (np.linalg.norm(hyperplane[:-1]))
-    print(margin)
+    print(f"Margin is: {margin}")
     return margin
 
 # EXECUTION ##################
