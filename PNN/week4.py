@@ -34,12 +34,12 @@ def rbf_function(dist,sigma,beta = 0.5,function = "gaussian"):
         return dist
     else:
         return 0.0
-def rbf_network(X,true_label,centers,rho=None,samples_to_be_classified=[],beta = 0.5,function = "gaussian", rho_j_method = "max"):
+def rbf_network(X,true_label,centers,rho=None,samples_to_be_classified=[],beta = 0.5,function = "gaussian", rho_j_method = "max", bias=True):
     n = len(X)
     n_new = len(samples_to_be_classified)
     num_centers = len(centers)
     rho_j_list = []
-    rho_j = 0.0
+    rho_j_specified=[]
 
     for i in range(num_centers):
         for j in range(num_centers):
@@ -48,26 +48,30 @@ def rbf_network(X,true_label,centers,rho=None,samples_to_be_classified=[],beta =
     rho_j_list = np.asarray(rho_j_list)
 
     if rho_j_method == "max":
-        rho_j = np.max(rho_j_list) / ((2.0*len(centers[0]))**0.5)
+        for i in range(num_centers):
+            rho_j_specified.append(np.max(rho_j_list) / ((2.0*len(centers[0]))**0.5))
     else:
-        rho_j = 2 * np.mean(rho_j_list) # 2 * mean
+        for i in range(num_centers):
+            rho_j_specified.append(2 * np.mean(rho_j_list))  # 2 * mean
 
     if rho is not None:
-        rho_j=rho
+        rho_j_specified=rho
+    else:
+        rho_j_specified=np.asarray(rho_j_specified)
 
-    print(f"rho_j: {rho_j}\n")
+    print(f"rho_j_specified: {rho_j_specified}\n")
     y_list = []
     y_list_new = []
     for i in range(n):
         y_list.append([])
         for j in range(num_centers):
             temp = np.sqrt(np.sum((X[i]-centers[j])**2))
-            y_list[i].append(rbf_function(temp,rho_j,beta,function))
-        y_list[i].append(1.0)
+            y_list[i].append(rbf_function(temp,rho_j_specified[j],beta,function))
+        if bias:
+            y_list[i].append(1.0)
     y_list=np.asarray(y_list)
     print(f"y_list (each row is the hidden output of a sample):\n{np.round(y_list,5)}\n")
     weights = np.linalg.pinv(y_list) @ true_label
-    print("In the form of [w1, w2, -theta]")
     print(f"weight matrix:\n{np.round(weights,5)}")
     result = y_list @ weights
     print(f"--------classify original samples--------")
@@ -79,15 +83,15 @@ def rbf_network(X,true_label,centers,rho=None,samples_to_be_classified=[],beta =
         y_list_new.append([])
         for j in range(num_centers):
             temp = np.sqrt(np.sum((samples_to_be_classified[i]-centers[j])**2))
-            y_list_new[i].append(rbf_function(temp,rho_j,beta,function))
-        y_list_new[i].append(1.0)
+            y_list_new[i].append(rbf_function(temp,rho_j_specified[j],beta,function))
+        if bias:
+            y_list_new[i].append(1.0)
     y_list_new=np.asarray(y_list_new)
     print(f"y_list_new (each row is the hidden output of a sample):\n{np.round(y_list_new,5)}\n")
     result_new = y_list_new @ weights
     for i in range(n_new):
         print(f"output of new sample{i+1}: {result_new[i]}")
     return
-
 
 def sgn(input):
     if (input < (10 ** (-9))) and (input > (10 ** (-9) * (-1))):
@@ -182,35 +186,6 @@ def func_diff(function = None, value = None):
     x = symbols('x', real=True)
     f_d = diff(function, x)
     return f_d.subs(x,value)
-
-
-def find_weight_in_ffn(input, output, given_weight):
-    # output of neural network z=(W_kj)*(W_ji)*x
-    weights = np.zeros_like(given_weight)
-    w_ji = np.linalg.inv(given_weight) @ output @ input.T @ np.linalg.inv((input @ input.T))
-    weights = w_ji.copy()
-    for i in range(len(weights)):
-        for j in range(len(weights[i])):
-            print(f"w_{i+1}{j+1} = {weights[i][j]}")
-    return weights
-
-#
-# input = np.array([
-#     [2, -4],  # x1
-#     [-0.5, -6]  # x2
-# ])
-#
-# output = np.array([
-#     [98, -168],  # z1
-#     [7.5, -246]  # z2
-# ])
-#
-# given_weight= np.array([
-#     [8, -4],
-#     [6, 9]
-# ])
-#
-# print(find_weight_in_ffn(input, output, given_weight))
 '''
 tutorial Q4: forward NN
 X = np.asarray([
@@ -266,7 +241,6 @@ print(func.subs(x,3.0))
 print(0.3-0.25*(-0.7869-0.5)*func_diff(function = func,value = -1.0633)*1.6*func_diff(function = func,value = -0.6)*0.1)
 '''
 
-
 # for rbf_network version 1
 # X = np.asarray([
 #     [0,0],
@@ -281,7 +255,7 @@ print(0.3-0.25*(-0.7869-0.5)*func_diff(function = func,value = -1.0633)*1.6*func
 #     [1],
 #     [0]
 # ],dtype=np.float32)
-#
+# 
 # centers = np.asarray([
 #     [0,0],
 #     [1,1]
@@ -300,7 +274,8 @@ print(0.3-0.25*(-0.7869-0.5)*func_diff(function = func,value = -1.0633)*1.6*func
 #             samples_to_be_classified = samples_to_be_classified,
 #             beta = 0.5,
 #             function = "gaussian",
-#             rho_j_method = "max"
+#             rho_j_method = "max",
+#             bias=True
 #             )
 
 # for rbf_network version 2
@@ -346,14 +321,16 @@ print(0.3-0.25*(-0.7869-0.5)*func_diff(function = func,value = -1.0633)*1.6*func
 #     [0.75],
 #     [0.9]
 # ],dtype=np.float32)
+# rho = np.asarray([0.1,0.1],dtype=np.float32)
 # rbf_network(X = X,
 #             true_label = true_label,
 #             centers = centers,
-#             rho = 0.1,
+#             rho = rho,
 #             samples_to_be_classified = samples_to_be_classified,
 #             beta = 0.5,
 #             function = "gaussian",
-#             rho_j_method = "max"
+#             rho_j_method = "max",
+#             bias=True
 #             )
 
 # for rbf_network version 3
@@ -387,10 +364,9 @@ print(0.3-0.25*(-0.7869-0.5)*func_diff(function = func,value = -1.0633)*1.6*func
 # ],dtype=np.float32)
 #
 # centers = np.asarray([
-#     [0.1667],
-#     [0.35],
-#     [0.5525],
-#     [0.8833]
+#     [0.2],
+#     [0.6],
+#     [0.9]
 # ],dtype=np.float32)
 #
 # samples_to_be_classified = np.asarray([
@@ -400,12 +376,14 @@ print(0.3-0.25*(-0.7869-0.5)*func_diff(function = func,value = -1.0633)*1.6*func
 #     [0.75],
 #     [0.9]
 # ],dtype=np.float32)
+# rho = np.asarray([0.1,0.1,0.1],dtype=np.float32) #Note that the length of rho equals the number of centers
 # rbf_network(X = X,
 #             true_label = true_label,
 #             centers = centers,
-#             rho = None,
+#             rho = rho,
 #             samples_to_be_classified = samples_to_be_classified,
 #             beta = 0.5,
-#             function = "thin_plate_spline",
-#             rho_j_method = "average"
+#             function = "gaussian",
+#             rho_j_method = "max",
+#             bias=True
 #             )
