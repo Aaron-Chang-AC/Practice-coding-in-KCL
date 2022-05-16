@@ -34,12 +34,20 @@ def LinearSVM(svs, classes):
 
     w = np.zeros(len(support_vectors[0]))
     for i in range(len(support_vectors)):
-        w = w + y[i] * res[i] * support_vectors[i]
+        w = w + y[i] * round(res[i],4) * support_vectors[i]
     hyperplane = np.zeros(len(support_vectors[0]) + 1)
     print("w:\n", w.T)
     hyperplane[0:len(support_vectors[0])] = w[0:len(support_vectors[0])].copy()
     hyperplane[-1] = res[-1]
     print("hyperplane(the first term is w1 and the last one is w0): \n", hyperplane)
+    return hyperplane
+
+def margin_from_hyperplane(hyperplane):
+    print(hyperplane[:-1])
+    print(np.linalg.norm(hyperplane[:-1]))
+    margin = 2 / (np.linalg.norm(hyperplane[:-1]))
+    print(margin)
+    return margin
 
 # EXECUTION ##################
 # svs = [
@@ -51,10 +59,10 @@ def LinearSVM(svs, classes):
 # classes = [1,1,-1,-1]
 # LinearSVM(svs, classes)
 
-svs = [
-    [-1, 0],
-    [1, 0]
-]
-classes = [1,-1]
-LinearSVM(svs, classes)
+# svs = [
+#     [-1, 0],
+#     [1, 0]
+# ]
+# classes = [1,-1]
+# LinearSVM(svs, classes)
 
