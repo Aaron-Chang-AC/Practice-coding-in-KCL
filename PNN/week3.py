@@ -48,12 +48,14 @@ def sequential_delta_learning_rule(initial_theta, initial_w, xt, true_values, H_
     t = true_values
 
     for e in range(epochs):
+        print(f"-------Epoch {e+1}-------")
         for i in range(num_xt):
             wx = np.matmul(w, xt_new[i].transpose())
             y = heaviside_function(H_0, wx)
             delta_w = learning_rate * (t[i]-y) * xt_new[i]
             w = w + delta_w
             print("x", str(i + 1), "=", xt_new[i], " , t=", str(t[i]), " , y =H(", str(round(wx, 5)) , ")=",str(y), " , (t−y)=",str(t[i]-y), " , η*(t-y)*xt=",delta_w, " , w_new=",w)
+            print("\n")
     return
 
 def batch_delta_learning_rule(initial_theta, initial_w, xt, true_values, H_0, learning_rate, epochs):
@@ -79,6 +81,9 @@ def batch_delta_learning_rule(initial_theta, initial_w, xt, true_values, H_0, le
             print("x", str(i + 1), "=", xt_new[i], " , t=", str(t[i]), " , y =H(", str(round(wx, 5)) , ")=",str(y), " , (t−y)=",str(t[i]-y), " , η*(t-y)*xt=",delta_w)
         w = w + total_delta_w
         print("total_delta_w= ",total_delta_w," , w_new= ",w)
+
+    print("Remember theta has a negative, answer given below")
+    print(f"theta = -{w[0]}, the rest of weight w1, w2,..... = {w[1:]}")
     return
 
 # e = x − WT * y
@@ -100,6 +105,52 @@ def negative_feedback_network_original(initial_W, initial_yt , xt , alpha, epoch
 
     print("\n\nOutput is(if 1d array, y will be flattened):",yt.transpose())
     return
+
+def negative_feedback_network_stable(initial_W, initial_yt, xt, alpha, epochs, epsilon1, epsilon2):
+    W = initial_W
+    yt = initial_yt
+    num_xt = len(xt)
+
+    sum_of_rows = W.sum(axis=1)
+    W_dash = W / sum_of_rows[:, np.newaxis]
+    print(W_dash)
+    for e in range(epochs):
+        print("\n\nepoch ", str(e + 1), ":")
+        for i in range(num_xt):
+            # decision between maximum epsilon or W_Ty
+            WTy = np.maximum(epsilon2, np.matmul(yt, W))
+            et = xt[i] / WTy
+            Wdash_eT = np.matmul(et, W_dash.transpose())
+            yt = np.maximum(epsilon1, yt)
+            yt =  yt  * Wdash_eT
+            Wty_t = np.matmul(yt, W)
+            print("et: ", et, " , Wdash_eT: ", Wdash_eT, " , yt: ", yt, " , (Wt*y)t:", Wty_t)
+
+    print("\n\nOutput is(if 1d array, y will be flattened):",yt.transpose())
+
+
+
+# negative_feedback_network_stable(
+#     initial_W = np.asarray(
+#         [
+#             [1,1,0],
+#             [1,1,1]
+#         ],
+#         dtype=np.float32
+#     ),
+#     initial_yt = np.asarray([0, 0], dtype=np.float32),
+#     xt=np.asarray(
+#         [
+#             [1,1,0],
+#         ],
+#         dtype=np.float32
+#     ),
+#     alpha=0.25,
+#     epochs=5,
+#     epsilon1= 0.01,
+#     epsilon2= 0.01
+#
+# )
 
 ##########################################EXECUTION
 # simple_neuron(
