@@ -54,7 +54,7 @@ class my_network():
         self.m20 = torch.tensor([-1], dtype=torch.float, requires_grad=True)
 
 
-        x = [[-0.3, -0.5]]  # input_sample
+        x = [[-0.3, 0.5]]  # input_sample
         t = [[-1, -2]]  # target
 
         self.x_data = torch.tensor(x, dtype=torch.float)

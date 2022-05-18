@@ -105,3 +105,51 @@ def confusion_matrix_multi_class_supported(y_pred,y_true, labels=None, confusion
 #     [1, 0 , 2]
 # ])
 # confusion_matrix_multi_class_supported(y_pred, y_true, confusion_table=confusion_table)
+
+def cohen_kappa(y_pred, y_true, agreement_matrix=None):
+    n = 0.0
+    aa = 0.0
+    bb = 0.0
+    ab = 0.0
+    ba = 0.0
+    k = 0.0
+    final_k_list = []
+    if agreement_matrix is None:
+        print("Need to make a matrix")
+        matrix = confusion_matrix(y_true, y_pred)
+        print(matrix)
+        matrix = np.reshape(matrix, (1, 4))
+
+
+    else:
+        matrix = agreement_matrix.copy()
+        print(matrix)
+
+    for i in range(len(matrix)):
+        n = sum(matrix[i])
+        print(f"n is {n}")
+        aa = matrix[i][0]
+        ab = matrix[i][1]
+        ba = matrix[i][2]
+        bb = matrix[i][3]
+
+        pr_a = (aa+bb) / n
+        pr_e = ((aa+ba)/n) * ((aa+ab)/n) + ((bb+ab)/n)*((bb+ba)/n)
+        k = (pr_a - pr_e) / (1-pr_e)
+        print(f"Compare the agreement between two classifiers, class {i+1}")
+        print(f"The final answer of k is: {k}")
+        final_k_list.append(k)
+    print('\n')
+    return final_k_list
+
+
+# support multi-class
+# agreement_matrix=np.array([
+#     [2, 0,
+#     1, 3],
+#     # [2, 1,
+#     # 1, 3]
+# ])
+# y_pred = np.array([])
+# y_true = np.array([])
+# print(cohen_kappa(y_pred, y_true, agreement_matrix))

@@ -49,7 +49,7 @@ Week 3
 - Entropy
 - Chi-Square
 - Confusion Matrix
-- 
+- Cohen Kappa
 """
 #==================================================================
 # probability_k = np.array([
@@ -99,25 +99,40 @@ Week 3
 # # Precision = (TP) / (TP+FP)
 # # f1_score = (2* recall* precision) /(recall + precision)
 #
-y_true = [2, 3, 3, 2, 1, 3, 2, 2, 3]
-y_pred = [2, 3, 2, 3, 3, 3, 2, 2, 1]
+y_true = [0,0,0,0,1,0,1,1,0,0,0,1,0,1,0,0,1,1,1,1]
+y_pred = [0,0,0,0,1,0,1,1,0,0,0,1,0,1,0,0,0,1,1,1]
 w3.confusion_matrix_multi_class_supported(y_pred, y_true, confusion_table=None)
-
-
-# if given confusion table, use below code
-
-confusion_table_2d=np.array([
-    [2, 0],
-    [1, 3]
-])
-
-confusion_table_3d=np.array([
-    [2, 0, 0],
-    [0, 0, 1],
-    [1, 0 , 2]
-])
-# remember to change the input of confusion table, either 2d or 3d
-w3.confusion_matrix_multi_class_supported(y_pred, y_true, confusion_table=confusion_table_3d)
+#
+#
+# # if given confusion table, use below code
+#
+# confusion_table_2d=np.array([
+#     [2, 0],
+#     [1, 3]
+# ])
+#
+# confusion_table_3d=np.array([
+#     [2, 0, 0],
+#     [0, 0, 1],
+#     [1, 0 , 2]
+# ])
+# # remember to change the input of confusion table, either 2d or 3d
+# w3.confusion_matrix_multi_class_supported(y_pred, y_true, confusion_table=confusion_table_3d)
 #==================================================================
 
-
+## cohen kappa
+## support multi-class
+# agreement_matrix=np.array([
+#     [2, 0,
+#     1, 3]
+#     # [2, 1,
+#     # 1, 3]
+# ])
+#
+# y_true = np.array([0, 0, 1, 1, 1,1])
+#
+# y_pred = np.array([0, 0, 1, 0, 1,1])
+#
+# # if want to use self-defined agreement_matrix , agreement_matrix=agreement_matrix
+# print(w3.cohen_kappa(y_pred, y_true, agreement_matrix=None))
+#==================================================================
