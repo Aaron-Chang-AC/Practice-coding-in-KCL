@@ -1,5 +1,13 @@
 import numpy as np
+import matplotlib.pyplot as plt
 
+def show_points(datapoint, classes):
+    datapoint=np.asarray(datapoint)
+    classes = np.asarray(classes)
+
+    plt.scatter(datapoint[:,0],datapoint[:,1], c = classes)
+    plt.show()
+    return
 
 def LinearSVM(svs, classes):
     """
@@ -43,8 +51,8 @@ def LinearSVM(svs, classes):
     return hyperplane
 
 def margin_from_hyperplane(hyperplane):
-    print(hyperplane[:-1])
-    print(np.linalg.norm(hyperplane[:-1]))
+    # print(hyperplane[:-1])
+    # print(np.linalg.norm(hyperplane[:-1]))
     margin = 2 / (np.linalg.norm(hyperplane[:-1]))
     print(f"Margin is: {margin}")
     return margin
@@ -66,3 +74,12 @@ def margin_from_hyperplane(hyperplane):
 # classes = [1,-1]
 # LinearSVM(svs, classes)
 
+# To plot the dataset
+# svs = [
+#     [1,1],
+#     [1,-1],
+#     [-1,1],
+#     [-1,-1]
+# ]
+# classes = [1,1,-1,-1]
+# show_points(svs,classes)

@@ -1,3 +1,5 @@
+import math
+
 import numpy as np
 import random
 from scipy.spatial.distance import cityblock
@@ -140,8 +142,12 @@ def k_means(datapoint, c, cluster_point=None, randomized=False, mode="euclidean"
                 # print(result)
             print("-------Next sample-------")
             print(f"euclidean distances: {euclidean}")
-            print(f"Argmin is {np.argmin(euclidean)}")
-            assigned_new_class_list.append(np.argmin(euclidean))
+            if math.isclose(euclidean[0],euclidean[1]):
+                print(f"Argmin is class 1")
+                assigned_new_class_list.append(1)
+            else:
+                print(f"Argmin is {np.argmin(euclidean)}")
+                assigned_new_class_list.append(np.argmin(euclidean))
             print(f"Assigned Class List: {assigned_new_class_list}")
 
             euclidean[:] = [] # empty list
@@ -462,6 +468,7 @@ def competitive_learning_algorithm(S,iterations,initial_centers,chosen_order,new
             sample_x = target[:, i]
             for j in range(n_centers):
                 dist[j] = np.linalg.norm(sample_x - m[:, j])
+            print(f"Distance to centres in order (Find the closest): {dist}")
             print(f"sample {i + 1}: class {np.argmin(dist) + 1}")
 
 def basic_leader_follower_algorithm(S,iterations,initial_centers,chosen_order,new_data_to_be_classfied,learning_rate,theta,normalization_flag):

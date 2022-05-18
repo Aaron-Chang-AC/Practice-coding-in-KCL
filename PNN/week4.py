@@ -49,6 +49,7 @@ def rbf_network(X,true_label,centers,rho=None,samples_to_be_classified=[],beta =
 
     if rho_j_method == "max":
         for i in range(num_centers):
+            print(np.max(rho_j_list))
             rho_j_specified.append(np.max(rho_j_list) / ((2.0*len(centers[0]))**0.5))
     else:
         for i in range(num_centers):

@@ -30,7 +30,7 @@ def adaboost(k_max, dataset, output_class, classfier_table, select_highest = Fal
             hk_list[i] = len(training_error) - hk_list[i] - 1
             ek_index = len(training_error) - ek_index - 1
         ek = np.min(training_error)
-        print(f"Overall weighted error rate:{ek}")
+        print(f"Overall(Minimum) weighted error rate:{ek}")
         if ek > 0.5:
             k_max = k-1
             print("Process done with ek > 0.5")

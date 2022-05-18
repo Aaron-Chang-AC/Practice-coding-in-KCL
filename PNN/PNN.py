@@ -28,8 +28,8 @@ Week 1 Introduction
 # f1_score = (2* recall* precision) /(recall + precision)
 
 # w1.confusion_matrix(
-#     y_pred = np.asarray([1, 0, 1, 1, 0, 1, 0], dtype = np.int8),
-#     y_true = np.asarray([1, 1, 0, 1, 0, 1, 1], dtype = np.int8),
+#     y_pred = np.asarray([2,3,3,2,1,3,2,2,3], dtype = np.int8),
+#     y_true = np.asarray([2,3,2,3,3,3,2,2,1], dtype = np.int8),
 # )
 
 # ==============================================================================
@@ -51,8 +51,8 @@ Week 1 Introduction
 # )
 
 # =================================================================================
-# euclidean_distance = w1.euclidean_distance(x = np.asarray([2, 2]), y= np.asarray([1, 1]))
-# print(f"Euclidean distance is : {euclidean_distance}")
+euclidean_distance = w1.euclidean_distance(x = np.asarray([2.58, -3.9]), y= np.asarray([-1, -2]))
+print(f"Euclidean distance is : {0.5*(euclidean_distance**2)}")
 
 # manhattan_distance = w1.manhattan_distance(x = np.asarray([1.0, 2.0]), y= np.asarray([1.0, 1.0]))
 # print(f"Manhattan distance is : {manhattan_distance}")
@@ -73,13 +73,15 @@ Minimum Squared Error Procedure
 
 # w2.classify_class_by_given_linear_discriminant_function(
 #     initial_at= np.asarray([
-#         [-2, 1, 2, 1, 2]
-#     ]),
+#         [4.5, 6.7, 9.4, 6.6,1.7,2.5]
+#     ], dtype=np.float32),
 #     xt = np.asarray([
-#          [1, 1, 1, 1],
-#         [0, -1, 0, 1]
+#          [-1, 1],
+#         [1, 1],
+#         [-1, 0],
+#         [0.5, -0.5]
 #     ]),
-#     true_label= np.asarray([1, 2]) # keep empty np.asarray([]) if no label need to be check
+#     true_label= np.asarray([1, 1, 2, 2]) # keep empty np.asarray([]) if no label need to be check
 # )
 # ========================================================================
 
@@ -124,10 +126,11 @@ Minimum Squared Error Procedure
 #     initial_at = np.asarray([-25, 6, 3], dtype=float),
 #     xt = np.asarray(
 #         [
-#             [1,5],
-#             [2,5],
-#             [4,1],
-#             [5,1]
+#             [0,1],
+#             [1,0],
+#             [0.5,1.5],
+#             [1.0,1.0],
+#             []
 #         ]
 #     , dtype=float),
 #     true_label = np.asarray([1,1,2,2]),
@@ -157,24 +160,24 @@ Minimum Squared Error Procedure
 # w2.sequential_multiclass_learning(
 #     initial_at = np.asarray(
 #         [
-#             [0, 0, 0],
-#             [0, 0, 0],
-#             [0, 0, 0]
+#             [-0.5, 0.0, 1.5],
+#             [-3.0, -0.5, 0],
+#             [0.5, -0.5, 0.5]
 #         ]
 #     , dtype=float),
 #     xt = np.asarray(
 #         [
+#             [0, 1],
+#             [1, 0],
+#             [0.5, 1.5],
 #             [1, 1],
-#             [2, 0],
-#             [0, 2],
-#             [-1, 1],
-#             [-1, -1]
+#             [-0.5, 0]
 #         ]
 #     , dtype=float),
 #     true_label = np.asarray([1,1,2,2,3]),
 #     learning_rate = 1.0,
-#     epochs = 10,
-#     select_highest_index=True
+#     epochs = 1,
+#     select_highest_index=False
 # )
 # ===================================================================================
 # Update by a<-a+lr*(b_k - at_yk)*y_k
@@ -344,39 +347,34 @@ Week 4
 # ====================================================================================================
 
 # X = np.asarray([
-#     [0.05],
-#     [0.2],
-#     [0.25],
-#     [0.3],
-#     [0.4],
-#     [0.43],
-#     [0.48],
-#     [0.6],
-#     [0.7],
-#     [0.8],
-#     [0.9],
-#     [0.95]
+#     [0.1, 0.4],
+#     [0.5, 0.3],
+#     [0.0, 0.6],
+#     [0.6, 0.3],
+#     [1.0, 0.9],
+#     [0.5, 0.5],
+#     [0.5, 0.1],
+#     [0.6, 0.8],
+#     [0.9, 0.1],
+#     [0.2, 0.5]
 # ],dtype=np.float32)
 # true_label = np.asarray([
-#     [0.0863],
-#     [0.2662],
-#     [0.2362],
-#     [0.1687],
-#     [0.126],
-#     [0.1756],
-#     [0.3290],
-#     [0.6694],
-#     [0.4573],
-#     [0.332],
-#     [0.4063],
-#     [0.3535]
+#     [1],
+#     [0],
+#     [1],
+#     [0],
+#     [0],
+#     [0],
+#     [0],
+#     [1],
+#     [1],
+#     [1]
 # ],dtype=np.float32)
 #
 # centers = np.asarray([
-#     [0.1667],
-#     [0.35],
-#     [0.5525],
-#     [0.8833]
+#     [1, 0.9],
+#     [0.2, 0.5],
+#     [0.5, 0.5]
 # ],dtype=np.float32)
 #
 # samples_to_be_classified = np.asarray([
@@ -395,7 +393,7 @@ Week 4
 #             samples_to_be_classified = samples_to_be_classified,
 #             beta = 0.5,
 #             function = "gaussian",
-#             rho_j_method = "average", # max or average
+#             rho_j_method = "max", # max or average
 #             bias=True
 #             )
 #
@@ -404,32 +402,30 @@ Week 4
 
 # ====================================================================================================
 # X = np.asarray([
-#     [1,0,1,0],
-#     [0,1,0,1],
-#     [1,1,0,0]
+#     [-0.3, 0.5]
 # ],dtype=np.float32)
 #
 # W = {
 #     'W1': np.asarray([
-#         [-0.7057,1.9061,2.6605,-1.1359],
-#         [0.4900,1.9324,-0.4269,-5.1570],
-#         [0.9438,-5.4160,-0.3431,-0.2931]
+#         [5, 3],
+#         [1, -4],
+#         [-5, -2]
 #     ]),
 #     'B1': np.asarray([
-#         [4.8432,0.3973,2.1761]
+#         [3, 3, -4]
 #     ]),
 #     'W2': np.asarray([
-#         [-1.1444,0.3115,-9.9812],
-#         [0.0106,11.5477,2.6479]
+#         [3, 1, 2],
+#         [-5, 3, -5]
 #     ]),
 #     'B2': np.asarray([
-#         [2.5230,2.6463]
+#         [-1, -1]
 #     ]),
 # }
 # activation_function_dict = {
 #     'input': w4.activation_function_spec(name='linear'),
-#     'hidden1': w4.activation_function_spec(name='tanh'),
-#     'output': w4.activation_function_spec(name='sigmoid'),
+#     'hidden1': w4.activation_function_spec(name='sigmoid'),
+#     'output': w4.activation_function_spec(name='linear'),
 # }
 # w4.neural_network_forward(weight_dict=W, input=X, activation_function_dict=activation_function_dict)
 
@@ -463,32 +459,28 @@ Week 5 Deep Discriminative Neural Network
 
 # # Batch normalization for output neurons
 # input1 = np.array([
-#     [1, 0.5,  0.2],
-#     [ -1, -0.5,  -0.2],
-#     [0.1, -0.1,  0],
-# ])
+#     [-0.5, 0.2,  0.9],
+#     [ 0.5, 0.6,  0.5],
+#     [-0.2, 0.4,  -0.7],
+# ], dtype=np.float32)
 #
 # input2 = np.array([
-#     [1, -1,  0.1],
-#     [0.5, -0.5,  -0.1],
-#     [0.2, -0.2,  0],
-# ])
+#     [0, 0.3,  0.2],
+#     [-0.4, 0.4,  -0.3],
+#     [0.8, -0.8,  -0.2],
+# ], dtype=np.float32)
 #
 # input3 = np.array([
-#     [0.5, -0.5,  -0.1],
-#     [ 0, -0.4,  0],
-#     [0.5, 0.5,  0.2],
-# ])
+#     [-0.6, 0.8,  -1.0],
+#     [ 0.7, 0.2,  -0.9],
+#     [0.9, -0.2,  0.0],
+# ], dtype=np.float32)
 #
-# input4 = np.array([
-#     [0.2, 1,  -0.2],
-#     [-1, -0.6,  -0.1],
-#     [0.1, 0,  0.1],
-# ])
 #
-# final_input_array = np.stack([input1, input2, input3, input4])
+#
+# final_input_array = np.stack([input1, input2, input3])
 # # print(final_input_array)
-# print(w5.batch_normalization(final_input_array, beta=0, gamma=1, eta=0.1))
+# print(w5.batch_normalization(final_input_array, beta=0.1, gamma=0.4, eta=0.2))
 
 # ====================================================================================================
 # For the purpose of image convolution with mask H
@@ -561,10 +553,10 @@ Week 5 Deep Discriminative Neural Network
 # # calculate output dimension after CNN
 # # [height, width, channels] for input
 # # [height, width, channels, number of mask] for mask
-# input_dimension = [49, 49, 80]
-# mask_dimension = [1, 1, 1,  20]
+# input_dimension = [200, 300, 50]
+# mask_dimension = [6, 6, 1,  40]
 # pooling = 1
-# stride = 1
+# stride = 2
 # padding = 1
 # use_pooling = False
 #
@@ -588,18 +580,18 @@ Week 6 GAN
 - Cost function of GAN: V(D,G) -->w6.gan
 - Mini-batch GAN
 """
-X=np.asarray([
-    [1,2],
-    [3,4]
-], dtype=np.float32)
-X_fake=np.asarray([
-    [5,6],
-    [7,8]
-], dtype=np.float32)
-thetas=np.asarray([0.1,0.2])
-x1, x2, t1, t2 = symbols('x1 x2 t1 t2', real=True)
-# self define discriminator function
-Dx = 1/(1+exp(-(t1*x1-t2*x2-2)))
+# X=np.asarray([
+#     [1,2],
+#     [3,4]
+# ], dtype=np.float32)
+# X_fake=np.asarray([
+#     [5,6],
+#     [7,8]
+# ], dtype=np.float32)
+# thetas=np.asarray([0.1,0.2])
+# x1, x2, t1, t2 = symbols('x1 x2 t1 t2', real=True)
+# # self define discriminator function
+# Dx = 1/(1+exp(-(t1*x1-t2*x2-2)))
 
 # f_d = diff(Dx, t1) # just for testing- comment out
 
@@ -722,17 +714,15 @@ Week 7 Feature Extraction
 # For LDA
 # support multi-dimension
 # datapoints = np.array([
-#     [0, 0],
-#     [1, 0],
-#     [2, 1],
-#     [0, 1],
-#     [1, 2]
+#     [6, 0],
+#     [0, 4],
+#     [5, -2],
+#     [4, -4]
 # ], dtype=np.float32)
 #
-# classes = np.array([1, 1, 1, 2, 2])
+# classes = np.array([1, 1, 2, 2])
 # projection_vector = np.array([
-#     [3, 2],
-#     [-10, 6]
+#     [1, 1]
 # ], dtype=np.float32)
 # w7.LDA(datapoints=datapoints, classes= classes, projection_vector=projection_vector)
 #===================================================================================================
@@ -780,22 +770,32 @@ Week 7 Feature Extraction
 #===================================================================================================
 """
 Week 8 Support Vector Machines
-
+- Hyperplane
+- Margin of hyperplane
+- Plot and find support vector
 """
-svs = [
-    [5, 1],
-    [5, -1],
-    [3, 0]
-]
-classes = [1,1,-1]
-hyperplane = w8.LinearSVM(svs, classes)
-print(hyperplane)
-# Margin given by hyperplane
-w8.margin_from_hyperplane(hyperplane)
-
+# svs = [
+#     [3, 3],
+#     [-1, -2]
+# ]
+# # class only 1 or -1
+# classes = [1,-1]
+# hyperplane = w8.LinearSVM(svs, classes)
+#
+# # Margin given by hyperplane
+# w8.margin_from_hyperplane(hyperplane)
 
 
 #===================================================================================================
+
+# svs = [
+#     [1,1],
+#     [1,-1],
+#     [-1,1],
+#     [-1,-1]
+# ]
+# classes = [1,1,-1,-1]
+# w8.show_points(svs,classes)
 """
 Week 9 Support Vector Machines
 
@@ -803,7 +803,6 @@ Week 9 Support Vector Machines
 - Bagging Algorithm 
 """
 #===================================================================================================
-# ask aaron what if the same h is resulted and teacher ask us to use the one in high index or low index
 # for adaboost
 # X = np.asarray([[1,0],[-1,0],[0,1],[0,-1]])
 # y = np.asarray([1,1,-1,-1])
@@ -854,19 +853,20 @@ from sklearn.metrics.pairwise import euclidean_distances
 # Note that each "row" is a sample, c is the number of clusters
 # cluster_point is the initial clusters
 # datapoint = np.asarray([
-#     [1, 0],
-#     [0, 2],
-#     [1, 3],
-#     [3, 0],
-#     [3, 1]
+#     [4, 5],
+#     [4, 10],
+#     [1, 5],
+#     [2, 1],
+#     [0, 9],
+#     [0, 6]
 # ])
 # cluster_point=np.asarray([
-#     [3, 2],
-#     [4, 0]
+#     [1, 5],
+#     [4, 10]
 # ])
 # # mode can be either "euclidean" or in "manhattan"
 # w10.k_means(datapoint=datapoint, c=2, cluster_point=cluster_point, randomized=False, mode="euclidean")
-
+#
 
 #===================================================================================================
 
@@ -874,26 +874,27 @@ from sklearn.metrics.pairwise import euclidean_distances
 # competitive_learning_algorithm
 # Note that each integer in chosen_order is >= 0
 # S = np.asarray([
-#     [1, 0],
-#     [0, 2],
-#     [1, 3],
+#     [-1, 3],
+#     [1, 4],
+#     [0, 5],
+#     [4, -1],
 #     [3, 0],
-#     [3, 1]
+#     [5, 1]
 # ], dtype=np.float32)
 # initial_centers=np.asarray([
-#     [1,1],
-#     [2, 2]
+#     [-0.5, 1.5],
+#     [0, 2.5],
+#     [1.5, 0]
 # ], dtype=float)
-# chosen_order=np.asarray([0, 1, 2, 3, 4]) # if no chosen order then 0,1,2,3,....
+# # remember chosen order need to start from 0 because of the design of code
+# chosen_order=np.asarray([2, 0, 0, 4, 5]) # if no chosen order then 0,1,2,3,....
 # new_data_to_be_classfied = np.asarray([
-#     [0,-2],
-#     [-0.2,2.8],
-#     [0,1.5]
+#     [0,-2]
 # ])
 # w10.competitive_learning_algorithm(S,iterations=5,initial_centers= initial_centers,
 #                                chosen_order=chosen_order,
 #                                new_data_to_be_classfied=new_data_to_be_classfied,
-#                                learning_rate=0.5,
+#                                learning_rate=0.1,
 #                                normalization_flag=False
 #                                )
 
